@@ -1,0 +1,25 @@
+.
+├── README.md
+├── firebase.json
+├── package.json
+├── rules
+├── src
+│   ├── app.d.ts
+│   ├── app.html
+│   ├── lib
+│   │   ├── firebase
+│   │   │   └── client
+│   │   │       └── config.ts
+│   │   ├── index.ts
+│   │   └── stores
+│   └── routes
+│       └── +page.svelte
+├── static
+│   └── favicon.png
+├── structure.txt
+├── svelte.config.js
+├── tsconfig.json
+├── vite.config.ts
+└── yarn.lock
+
+9 directories, 14 files
