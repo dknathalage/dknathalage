@@ -1,4 +1,8 @@
-## Developing
+# Application
+
+## Development Instructions
+
+### Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
@@ -9,7 +13,7 @@ npm run dev
 npm run dev -- --open
 ```
 
-## Building
+### Building
 
 To create a production version of your app:
 
@@ -21,10 +25,20 @@ You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
 
-## Deploying to Firebase
+### Deploying to Firebase
 
 To deploy the applica†ion to firebase hosting, cloud functions:
 
 ```bash
 npm run deploy
+```
+
+## Folder Structure
+
+```
+|- rules\ containes the firebase rules
+|- src\ source code of the application
+  |- lib\ shared code throught the application
+  |- routes\ application routes and pages
+|- static\ static web content
 ```
