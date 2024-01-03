@@ -8,10 +8,13 @@
 │   ├── app.html
 │   ├── lib
 │   │   ├── firebase
-│   │   │   └── client
-│   │   │       └── config.ts
+│   │   │   ├── client
+│   │   │   │   ├── authentication.ts
+│   │   │   │   └── config.ts
+│   │   │   └── server
 │   │   ├── index.ts
 │   │   └── stores
+│   │       └── user.ts
 │   └── routes
 │       └── +page.svelte
 ├── static
@@ -22,4 +25,4 @@
 ├── vite.config.ts
 └── yarn.lock
 
-9 directories, 14 files
+10 directories, 16 files

@@ -1,15 +1,11 @@
 {
-  "hosting": {
-    "source": ".",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "frameworksBackend": {
-      "region": "australia-southeast2",
-      "minInstances": 0,
-      "maxInstances": 5
-    }
-  }
+	"hosting": {
+		"source": ".",
+		"ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+		"frameworksBackend": {
+			"region": "australia-southeast2",
+			"minInstances": 0,
+			"maxInstances": 5
+		}
+	}
 }
