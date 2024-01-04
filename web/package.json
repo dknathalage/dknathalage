@@ -36,6 +36,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@stripe/stripe-js": "^2.2.2",
 		"firebase": "^10.7.1"
 	}
 }

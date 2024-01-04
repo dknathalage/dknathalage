@@ -2,6 +2,7 @@
 	import { signin, signout } from '$lib/firebase/client/authentication';
 	import { user } from '$lib/stores/user';
 	import { add } from '$lib/collections/user';
+	import { create} from '$lib/payments/session';
 
 	$user;
 
@@ -13,6 +14,10 @@
 	async function signOut() {
 		await signOut();
 	}
+
+	function createSub() {
+		create($user.uid);
+	}
 </script>
 
 <h1>Welcome to SvelteKit</h1>
@@ -21,6 +26,7 @@
 {#if $user}
 	<button on:click={signout} class="btn btn-secondary">Signout</button>
 	<p>Logged in as {$user.email}</p>
+	<button on:click={createSub} class="btn btn-primary">Create Payment</button>
 {:else}
 	<button on:click={signIn} class="btn btn-primary">Signin</button>
 
