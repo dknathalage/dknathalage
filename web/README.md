@@ -33,12 +33,6 @@ To deploy the applica†ion to firebase hosting, cloud functions:
 npm run deploy
 ```
 
-## Folder Structure
+## Stripe Setup
 
-```
-|- rules\ containes the firebase rules
-|- src\ source code of the application
-  |- lib\ shared code throught the application
-  |- routes\ application routes and pages
-|- static\ static web content
-```
+- [https://www.youtube.com/watch?v=P0Udy2Gi7n8](https://www.youtube.com/watch?v=P0Udy2Gi7n8)
