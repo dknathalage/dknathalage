@@ -8,27 +8,30 @@
 
 	async function signIn() {
 		await signin();
-		await add($user);
+		add($user);
 	}
 
 	async function signOut() {
 		await signOut();
 	}
 
-	function createSub() {
-		create($user.uid);
+	async function createSub() {
+		console.log($user);
+		await create($user.uid);
 	}
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
-
+<div class="h-screen flex items-center justify-center">
 {#if $user}
-	<button on:click={signout} class="btn btn-secondary">Signout</button>
-	<p>Logged in as {$user.email}</p>
-	<button on:click={createSub} class="btn btn-primary">Create Payment</button>
+	<div class="flex flex-col items-center">
+		<div class="m-1">
+			<button class="btn btn-primary m-1" on:click={createSub}>Personal</button>
+			<button class="btn btn-primary m-1">Business</button>
+			<button class="btn btn-primary m-1">Organisation</button>
+		</div>
+		<button on:click={signout} class="btn btn-outline m-1">Sign Out from {$user.email}</button>
+	</div>
 {:else}
 	<button on:click={signIn} class="btn btn-primary">Signin</button>
-
-	<p>Not logged in</p>
 {/if}
+</div>
