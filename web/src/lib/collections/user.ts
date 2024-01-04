@@ -7,8 +7,6 @@ export const add = async function (user: User) {
 		return;
 	}
 
-	console.log(user);
-
 	const batch = writeBatch(db);
 	batch.set(doc(db, 'users', user!.uid), {
 		uid: user.uid,
