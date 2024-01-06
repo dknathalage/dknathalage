@@ -9,7 +9,7 @@
 		<div class="flex flex-col items-center">
 			<p>Authentication Required</p>
 			Please login to continue
-            <a href="/login" class="link">Login</a>
+			<a href="/login" class="link">Login</a>
 		</div>
 	</div>
 {/if}

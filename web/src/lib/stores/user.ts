@@ -1,4 +1,4 @@
-import { writable, readable } from 'svelte/store';
+import { readable } from 'svelte/store';
 import { auth } from '$lib/firebase/client/config';
 
 interface UserData {
@@ -8,8 +8,8 @@ interface UserData {
 	email: string | null;
 }
 
-export const userStore = readable<UserData | null>(null, set => {
-	const unsubscribe = auth.onAuthStateChanged(user => {
+export const userStore = readable<UserData | null>(null, (set) => {
+	const unsubscribe = auth.onAuthStateChanged((user) => {
 		if (user) {
 			set({
 				uid: user.uid,
