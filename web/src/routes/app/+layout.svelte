@@ -14,7 +14,7 @@
 			<li>
 				<a class:active={$active === $appName} on:click={() => active.set($appName)} href="/app">
 					<svg
-						class="w-5 h-5"
+						class="w-6 h-6 md:w-5 md:h-5"
 						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -41,7 +41,7 @@
 					href="/app/people"
 				>
 					<svg
-						class="w-5 h-5"
+						class="w-6 h-6 md:w-5 md:h-5"
 						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -65,7 +65,7 @@
 					href="/app/transactions"
 				>
 					<svg
-						class="w-5 h-5"
+						class="w-6 h-6 md:w-5 md:h-5"
 						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="currentColor"
@@ -88,7 +88,7 @@
 					href="/app/notifications"
 				>
 					<svg
-						class="w-5 h-5"
+						class="w-6 h-6 md:w-5 md:h-5"
 						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
@@ -115,7 +115,7 @@
 					href="/app/preferences"
 				>
 					<svg
-						class="w-5 h-5"
+						class="w-6 h-6 md:w-5 md:h-5"
 						aria-hidden="true"
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
