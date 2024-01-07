@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { signout } from '$lib/firebase/client/auth';
-	import { auth } from '$lib/firebase/client/config';
 	import Authenticated from '$lib/components/Authenticated.svelte';
 	import { writable } from 'svelte/store';
 
