@@ -4,15 +4,17 @@
 	import Authenticated from '$lib/components/Authenticated.svelte';
 	import { writable } from 'svelte/store';
 
-	const appName = writable('[Business Name]')
-	const active = writable($appName);
+	const busName = writable('[Business Name]');
+	const active = writable('Home');
 </script>
 
 <Authenticated>
 	<div class="navbar fixed bottom-0 sm:bottom-auto justify-center z-50 items-center">
 		<ul class="menu bg-base-300 menu-horizontal rounded-box shadow-xl">
+			<span class="ml-4 text-xl hidden sm:block">{$busName}</span>
+			<span class="border border-neutral h-7 mx-4 hidden sm:block"></span>
 			<li>
-				<a class:active={$active === $appName} on:click={() => active.set($appName)} href="/app">
+				<a class:active={$active === 'Home'} on:click={() => active.set('Home')} href="/app">
 					<svg
 						class="w-6 h-6 md:w-5 md:h-5"
 						aria-hidden="true"
@@ -29,7 +31,7 @@
 						/>
 					</svg>
 					<div class="hidden lg:block">
-						{$appName}
+						Home
 						<!-- <span class="badge badge-sm">99+</span> -->
 					</div>
 				</a>
@@ -135,10 +137,11 @@
 		</ul>
 	</div>
 	<div>
-	<div class="h-14 hidden sm:block" />
-	<div class="m-4">
-		<slot/>	
-	</div>
-	<div class="h-14 block sm:hidden" />
-	<div/>
-</Authenticated>
+		<div class="h-14 hidden sm:block" />
+		<div class="m-4">
+			<slot />
+		</div>
+		<div class="h-14 block sm:hidden" />
+		<div />
+	</div></Authenticated
+>
