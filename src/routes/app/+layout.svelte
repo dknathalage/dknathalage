@@ -9,7 +9,7 @@
 </script>
 
 <Authenticated>
-	<div class="navbar fixed bottom-0 sm:bottom-auto justify-center z-50 items-center">
+	<div class="navbar fixed bottom-0 sm:bottom-auto justify-center z-50 items-center my-4">
 		<ul class="menu bg-base-300 menu-horizontal rounded-box shadow-xl">
 			<span class="ml-4 text-xl hidden sm:block">{$busName}</span>
 			<span class="border border-neutral h-7 mx-4 hidden sm:block"></span>
@@ -136,12 +136,9 @@
 			</li>
 		</ul>
 	</div>
-	<div>
-		<div class="h-14 hidden sm:block" />
-		<div class="m-4">
-			<slot />
-		</div>
-		<div class="h-14 block sm:hidden" />
-		<div />
-	</div></Authenticated
->
+	<div class="h-14 hidden sm:block" />
+	<div class="m-4 my-12">
+		<slot />
+	</div>
+	<div class="h-14 block sm:hidden" />
+</Authenticated>
