@@ -8,12 +8,14 @@
 </script>
 
 <Authenticated>
-	<div class="flex-1 navbar bg-base-100 fixed bottom-0 sm:bottom-auto justify-center">
+	<div class="flex-1 navbar bg-base-100 fixed sm:relative bottom-0 sm:bottom-auto justify-center">
 		<div class="md:flex-1 hidden sm:block">
-			<a class="btn btn-ghost text-lg"> [Business Name] / {$active} </a>
+			<a class="btn btn-ghost text-lg" on:click={() => active.set('Home')} href="/app">
+				[Business Name] / {$active}
+			</a>
 		</div>
 		<div class="items-center">
-			<ul class="menu bg-base-200 menu-horizontal rounded-box">
+			<ul class="menu bg-base-300 menu-horizontal rounded-box shadow-xl">
 				<li>
 					<a class:active={$active === 'Home'} on:click={() => active.set('Home')} href="/app">
 						<svg
@@ -33,12 +35,16 @@
 						</svg>
 						<div class="hidden md:block">
 							Home
-							<span class="badge badge-sm">99+</span>
+							<!-- <span class="badge badge-sm">99+</span> -->
 						</div>
 					</a>
 				</li>
 				<li>
-					<a class:active={$active === 'People'} on:click={() => active.set('People')} href="/app/people">
+					<a
+						class:active={$active === 'People'}
+						on:click={() => active.set('People')}
+						href="/app/people"
+					>
 						<svg
 							class="w-5 h-5"
 							aria-hidden="true"
@@ -58,7 +64,11 @@
 					</a>
 				</li>
 				<li>
-					<a class:active={$active === 'Transactions'} on:click={() => active.set('Transactions')} href="/app/transactions">
+					<a
+						class:active={$active === 'Transactions'}
+						on:click={() => active.set('Transactions')}
+						href="/app/transactions"
+					>
 						<svg
 							class="w-5 h-5"
 							aria-hidden="true"
@@ -72,7 +82,7 @@
 						</svg>
 						<div class="hidden md:block">
 							Transactions
-							<span class="badge badge-sm badge-success">+99</span>
+							<!-- <span class="badge badge-sm badge-success">+99</span> -->
 						</div>
 					</a>
 				</li>
@@ -99,12 +109,16 @@
 						</svg>
 						<div class="hidden md:block">
 							Notifications
-							<span class="badge badge-sm badge-warning">NEW</span>
+							<!-- <span class="badge badge-sm badge-warning">NEW</span> -->
 						</div>
 					</a>
 				</li>
 				<li>
-					<a class:active={$active === 'Preferences'} on:click={() => active.set('Preferences')} href="/app/preferences">
+					<a
+						class:active={$active === 'Preferences'}
+						on:click={() => active.set('Preferences')}
+						href="/app/preferences"
+					>
 						<svg
 							class="w-5 h-5"
 							aria-hidden="true"
@@ -124,9 +138,9 @@
 					</a>
 				</li>
 			</ul>
-			<ul class="menu bg-base-200 lg:menu-horizontal rounded-box ml-2 hidden md:block">
+			<ul class="menu bg-base-300 lg:menu-horizontal rounded-box ml-2 hidden md:block shadow-xl">
 				<li>
-					<a
+					<button
 						on:click={() => {
 							signout(auth);
 						}}
@@ -147,10 +161,12 @@
 								d="M1 7.5h11m0 0L8 3.786M12 7.5l-4 3.714M12 1h3c.53 0 1.04.196 1.414.544.375.348.586.82.586 1.313v9.286c0 .492-.21.965-.586 1.313A2.081 2.081 0 0 1 15 14h-3"
 							/>
 						</svg>
-					</a>
+					</button>
 				</li>
 			</ul>
 		</div>
 	</div>
-	<slot />
+	<div class="m-5">
+		<slot />
+	</div>
 </Authenticated>
