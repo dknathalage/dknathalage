@@ -3,6 +3,12 @@
 	import { signin, signout } from '$lib/firebase/client/auth';
 	import { GoogleAuthProvider } from 'firebase/auth';
 	import { auth } from '$lib/firebase/client/config';
+	import { redirect } from '@sveltejs/kit';
+
+	async function handleSignIn() {
+		await signin(new GoogleAuthProvider());
+		window.location.href = '/app';
+	}
 </script>
 
 {#if $userStore}
@@ -15,7 +21,5 @@
 		Logout
 	</button>
 {:else}
-	<button on:click={() => signin(new GoogleAuthProvider())} class="btn btn-primary">
-		Google Signin
-	</button>
+	<button on:click={handleSignIn} class="btn btn-primary"> Google Signin </button>
 {/if}
