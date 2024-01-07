@@ -4,18 +4,18 @@
 	import Authenticated from '$lib/components/Authenticated.svelte';
 	import { writable } from 'svelte/store';
 
-	const active = writable('home');
+	const active = writable('Home');
 </script>
 
 <Authenticated>
 	<div class="flex-1 navbar bg-base-100 fixed bottom-0 sm:bottom-auto justify-center">
 		<div class="md:flex-1 hidden sm:block">
-			<a class="btn btn-ghost text-lg"> [Business Name] </a>
+			<a class="btn btn-ghost text-lg"> [Business Name] / {$active} </a>
 		</div>
 		<div class="items-center">
 			<ul class="menu bg-base-200 menu-horizontal rounded-box">
 				<li>
-					<a class:active={$active === 'home'} on:click={() => active.set('home')}>
+					<a class:active={$active === 'Home'} on:click={() => active.set('Home')} href="/app">
 						<svg
 							class="w-5 h-5"
 							aria-hidden="true"
@@ -38,7 +38,7 @@
 					</a>
 				</li>
 				<li>
-					<a class:active={$active === 'people'} on:click={() => active.set('people')}>
+					<a class:active={$active === 'People'} on:click={() => active.set('People')} href="/app/people">
 						<svg
 							class="w-5 h-5"
 							aria-hidden="true"
@@ -58,7 +58,7 @@
 					</a>
 				</li>
 				<li>
-					<a class:active={$active === 'transactions'} on:click={() => active.set('transactions')}>
+					<a class:active={$active === 'Transactions'} on:click={() => active.set('Transactions')} href="/app/transactions">
 						<svg
 							class="w-5 h-5"
 							aria-hidden="true"
@@ -78,8 +78,9 @@
 				</li>
 				<li>
 					<a
-						class:active={$active === 'notifications'}
-						on:click={() => active.set('notifications')}
+						class:active={$active === 'Notifications'}
+						on:click={() => active.set('Notifications')}
+						href="/app/notifications"
 					>
 						<svg
 							class="w-5 h-5"
@@ -103,7 +104,7 @@
 					</a>
 				</li>
 				<li>
-					<a class:active={$active === 'preferences'} on:click={() => active.set('preferences')}>
+					<a class:active={$active === 'Preferences'} on:click={() => active.set('Preferences')} href="/app/preferences">
 						<svg
 							class="w-5 h-5"
 							aria-hidden="true"
