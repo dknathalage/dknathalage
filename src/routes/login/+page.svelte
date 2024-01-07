@@ -3,7 +3,6 @@
 	import { signin, signout } from '$lib/firebase/client/auth';
 	import { GoogleAuthProvider } from 'firebase/auth';
 	import { auth } from '$lib/firebase/client/config';
-	import { redirect } from '@sveltejs/kit';
 
 	async function handleSignIn() {
 		await signin(new GoogleAuthProvider());
