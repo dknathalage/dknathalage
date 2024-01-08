@@ -1,8 +1,11 @@
 <script lang="ts">
 	import Authenticated from '$lib/components/Authenticated.svelte';
 	import { writable } from 'svelte/store';
+	import { business } from '$lib/models';
 
-	const busName = writable('[Business Name]');
+	$business;
+
+	const busName = writable($business?.name);
 	const active = writable('Home');
 </script>
 

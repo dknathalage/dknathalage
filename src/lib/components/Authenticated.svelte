@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { userStore } from '$lib/stores/user';
+	import { authUser } from '$lib/stores/user';
 </script>
 
-{#if $userStore}
+{#if $authUser}
 	<slot />
 {:else}
 	<div class="h-screen flex items-center justify-center">

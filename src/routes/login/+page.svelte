@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { userStore } from '$lib/stores/user';
+	import { authUser } from '$lib/stores/user';
 	import { signin, signout } from '$lib/firebase/client/auth';
 	import { GoogleAuthProvider } from 'firebase/auth';
 	import { auth } from '$lib/firebase/client/config';
@@ -10,9 +10,9 @@
 	}
 </script>
 
-{#if $userStore}
+{#if $authUser}
 	<h1 class="text-2xl">
-		Welcome {$userStore.displayName}
+		Welcome {$authUser.displayName}
 	</h1>
 
 	<a href="/app" class="btn btn-primary m-1"> Home </a>
