@@ -1,9 +1,17 @@
 <script lang="ts">
 	import Authenticated from '$lib/components/Authenticated.svelte';
 	import { writable } from 'svelte/store';
-	import { business } from '$lib/models';
+	import { business } from '$lib/stores/business';
+	import { afterUpdate } from 'svelte';
 
 	$business;
+
+	// must have business to access this page
+	if (!$business) {
+		afterUpdate(() => {
+			window.location.href = '/login';
+		});
+	}
 
 	const busName = writable($business?.name);
 	const active = writable('Home');
