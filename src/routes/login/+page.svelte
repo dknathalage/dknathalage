@@ -24,9 +24,9 @@
 	</h1>
 	{#if !$business}
 		<br />
-		<span class="text text-accent text-4xl"> Let's setup your business </span>
+		<span class="text text-accent text-4xl font-bold"> Let's setup your business </span>
 		<br />
-		<a href="/login/onboard" class="link link-primary text-4xl"> Click to get started </a>
+		<a href="/login/onboard" class="link link-primary text-4xl font-black"> Click to get started </a>
 	{/if}
 {:else}
 	<button on:click={handleSignIn} class="btn btn-primary"> Google Signin </button>
