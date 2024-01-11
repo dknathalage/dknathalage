@@ -20,15 +20,12 @@
 		<a href="/login/onboarding/features" class="step" class:step-primary={$currentStep >= 1}>
 			Choose Username
 		</a>
-		<!-- <a href="/login/onboard/photo" class="step" class:step-primary={$page.route.id?.includes('photo')}>
-			Upload Photo
-		</a> -->
 	</ul>
 </nav>
 
 <AnimatedRoute>
-	<div class="bg-neutral text-neutral-content mx-auto">
-		<div class="items-center text-center">
+	<div class="mx-auto card">
+		<div class="items-center text-center p-4 card-body">
 			<slot />
 		</div>
 	</div>
