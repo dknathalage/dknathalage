@@ -19,15 +19,18 @@
 </script>
 
 {#if $authUser}
-	<h1 class="text-4xl">
-		Welcome {$authUser.displayName}
-	</h1>
-	{#if !$business}
-		<br />
-		<span class="text text-accent text-4xl font-bold"> Let's setup your business </span>
-		<br />
-		<a href="/login/onboard" class="link link-primary text-4xl font-black"> Click to get started </a>
-	{/if}
+	<div class="justify-normal md:justify-center">
+		<h1 class="text-4xl">
+			Welcome
+			<span class="text-accent font-semibold">{$authUser.displayName}</span>
+		</h1>
+		{#if !$business}
+			<br />
+			<a href="/login/onboarding" class="link link-primary text-4xl font-black">
+				Click to get started.
+			</a>
+		{/if}
+	</div>
 {:else}
 	<button on:click={handleSignIn} class="btn btn-primary"> Google Signin </button>
 {/if}
