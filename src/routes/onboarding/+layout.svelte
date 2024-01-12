@@ -4,18 +4,16 @@
 	import { currentStep, steps } from './components/onboarding.store';
 
 	$: {
-		const currentPageId = $page.route.id || steps[0];
-		const currentIndex = steps.indexOf(currentPageId);
+		const currentIndex = steps.indexOf($page.route.id || steps[0]);
 		currentStep.set(currentIndex);
 	}
 </script>
 
 <nav class="flex justify-center my-6">
 	<ul class="steps">
-		<a href="/onboarding/name" class="step" class:step-primary={$currentStep >= 0}>Business Name</a>
-		<a href="/onboarding/features" class="step" class:step-primary={$currentStep >= 1}>
-			Choose Username
-		</a>
+		{#each steps as step, index}
+			<a href={step} class="step" class:step-primary={$currentStep >= index}> </a>
+		{/each}
 	</ul>
 </nav>
 
