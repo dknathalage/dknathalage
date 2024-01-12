@@ -26,7 +26,7 @@
 		</h1>
 		{#if !$business}
 			<br />
-			<a href="/login/onboarding" class="link link-primary text-4xl font-black">
+			<a href="/onboarding" class="link link-primary text-4xl font-black">
 				Click to get started.
 			</a>
 		{/if}
