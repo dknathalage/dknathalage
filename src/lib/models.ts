@@ -1,18 +1,13 @@
-interface BusinessMember {
-    uid: string;
+export interface BusinessMember {
     role: string;
     user: User;
     business: Business;
 }
 
-export interface User{
-    uid: string;
+export interface User {
     phone: string | null;
-    employments: BusinessMember[];
 }
 
 export interface Business {
-    uid: string;
     name: string;
-    employments: BusinessMember[];
 }

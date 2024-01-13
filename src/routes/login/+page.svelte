@@ -5,12 +5,10 @@
 	import { business } from '$lib/stores/business';
 	import { afterUpdate } from 'svelte';
 
-	if ($authUser) {
-		if ($business) {
-			afterUpdate(() => {
-				window.location.href = '/app';
-			});
-		}
+	if ($authUser && $business) {
+		afterUpdate(() => {
+			window.location.href = '/app';
+		});
 	}
 
 	async function handleSignIn() {
