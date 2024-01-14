@@ -2,10 +2,10 @@
 	import OnboardActions from '../components/OnboardActions.svelte';
 	import { createBusiness } from '$lib/stores/business';
 	import { businessOnboardingStore } from '../components/onboarding.store';
+	import { authUser } from '$lib/stores/user';
 
 	async function handleCreateBusiness() {
-		const results = await createBusiness($businessOnboardingStore);
-		console.log(results);
+		await createBusiness($businessOnboardingStore, $authUser);
 	}
 </script>
 

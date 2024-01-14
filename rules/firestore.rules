@@ -3,6 +3,10 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /businesses/{id} {
       allow read, write: if request.auth != null;
+
+      match /employments/{id} {
+        allow read, write: if request.auth != null;
+      }
     }
 
     match /users/{uid} {
@@ -11,11 +15,17 @@ service cloud.firestore {
       match /checkout_sessions/{id} {
         allow read, write: if request.auth.uid == uid;
       }
+
       match /subscriptions/{id} {
         allow read: if request.auth.uid == uid;
       }
+
       match /payments/{id} {
         allow read: if request.auth.uid == uid;
+      }
+
+      match /employments/{id} {
+        allow read, write: if request.auth.uid == uid;
       }
     }
 

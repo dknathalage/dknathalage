@@ -17,6 +17,7 @@ export const authUser = readable<any | null>(null, (set) => {
 			const userDoc = await getDoc(userRef);
 			if (!userDoc.exists()) {
 				const saveUser: User = {
+					uid: user.uid,
 					phone: user.phoneNumber,
 				};
 
