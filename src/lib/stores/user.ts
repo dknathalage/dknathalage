@@ -13,13 +13,11 @@ export const authUser = readable<any | null>(null, (set) => {
 				email: user.email,
 				phoneNumber: user.phoneNumber,
 			});
-			const userRef= doc(db, `users/${user.uid}`);
+			const userRef = doc(db, `users/${user.uid}`);
 			const userDoc = await getDoc(userRef);
 			if (!userDoc.exists()) {
 				const saveUser: User = {
-					uid: user.uid,
 					phone: user.phoneNumber,
-					employments: [],
 				};
 
 				await setDoc(userRef, saveUser);
