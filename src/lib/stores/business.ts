@@ -1,9 +1,9 @@
 import type { Readable } from "svelte/motion";
-import { derived, readable } from "svelte/store";
+import { derived } from "svelte/store";
 import { authUser as user } from "$lib/stores/user";
 import type { Business, User, Employment } from "$lib/models";
 import { db } from "$lib/firebase/client/config";
-import { doc, collection, setDoc, writeBatch, addDoc } from "firebase/firestore";
+import { doc, collection, writeBatch } from "firebase/firestore";
 
 export const business: Readable<Business | null> = derived(user, ($user, set) => {
     if ($user && $user?.employments?.length > 0) {
@@ -20,8 +20,14 @@ export const createBusiness = async (business: Business, user: User): Promise<an
 
     const employment: Employment = {
         role: "owner",
-        user,
-        business,
+        user: {
+            uid: user.uid,
+            phone: user.phone,
+        },
+        business: {
+            uid: "",
+            name: business.name,
+        },
     }
 
     // const businessRef = doc(db, "businesses", business.uid)

@@ -1,7 +1,13 @@
 export interface Employment {
     role: string;
-    user: User;
-    business: Business;
+    user: {
+        uid: string;
+        phone: string | null;
+    };
+    business: {
+        uid: string;
+        name: string;
+    }
 }
 
 export interface User {

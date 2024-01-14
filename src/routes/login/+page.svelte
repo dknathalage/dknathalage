@@ -1,26 +1,21 @@
 <script lang="ts">
-	import { authUser } from '$lib/stores/user';
-	import { signin } from '$lib/firebase/client/auth';
 	import { GoogleAuthProvider } from 'firebase/auth';
 	import { business } from '$lib/stores/business';
 	import { afterUpdate } from 'svelte';
+	import { user } from '$lib/repositories/user';
 
-	if ($authUser && $business) {
+	if ($user && $business) {
 		afterUpdate(() => {
 			window.location.href = '/app';
 		});
 	}
-
-	async function handleSignIn() {
-		await signin(new GoogleAuthProvider());
-	}
 </script>
 
-{#if $authUser}
+{#if $user}
 	<div class="justify-normal md:justify-center">
 		<h1 class="text-4xl">
 			Welcome
-			<span class="text-accent font-semibold">{$authUser.displayName}</span>
+			<span class="text-accent font-semibold">{$user.displayName}</span>
 		</h1>
 		{#if !$business}
 			<br />
@@ -29,6 +24,9 @@
 			</a>
 		{/if}
 	</div>
+	<button on:click={user.logOut} class="btn btn-primary"> Signout </button>
 {:else}
-	<button on:click={handleSignIn} class="btn btn-primary"> Google Signin </button>
+	<button on:click={async () => await user.logIn(new GoogleAuthProvider())} class="btn btn-primary">
+		Google Signin
+	</button>
 {/if}
