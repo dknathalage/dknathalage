@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -10,11 +9,13 @@ import (
 
 func NewApp() *cli.App {
 	return &cli.App{
-		Name:  "boom",
-		Usage: "make an explosive entrance",
-		Action: func(c *cli.Context) error {
-			fmt.Println("boom! I say!")
-			return nil
+		Name:  "dknathalage",
+		Usage: "Utility cli for dknathalage",
+		Commands: []*cli.Command{
+			{
+				Name:  "cloudrun",
+				Usage: "add a task to the list",
+			},
 		},
 	}
 }
