@@ -1,0 +1,47 @@
+name: Go Test Coverage
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Go environment
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.20" # Set the desired Go version
+
+      # Step 3: Cache Go modules for faster builds
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      # Step 4: Install dependencies
+      - name: Install dependencies
+        run: go mod download
+
+      # Step 5: Run tests with coverage
+      - name: Run tests and generate coverage report
+        run: go test ./... -coverprofile=coverage.out
+
+      # Step 6: Verify test coverage
+      - name: Check test coverage
+        run: |
+          coverage=$(go tool cover -func=coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
+          echo "Test coverage is $coverage%"
+          if (( $(echo "$coverage < 80.0" | bc -l) )); then
+            echo "Test coverage is below 80%! Failing the workflow."
+            exit 1
+          fi
