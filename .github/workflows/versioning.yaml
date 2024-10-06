@@ -1,8 +1,12 @@
 name: Bump version
+# main can only have prs merged into it
 on:
   push:
     branches:
       - main
+  pull_request:
+    types:
+      - closed
 jobs:
   build:
     runs-on: ubuntu-latest
