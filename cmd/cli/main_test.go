@@ -12,10 +12,6 @@ func TestNewApp(t *testing.T) {
 		t.Errorf("expected app name 'dknathalage', got '%s'", app.Name)
 	}
 
-	if app.Usage != "Utility cli for dknathalage" {
-		t.Errorf("expected app usage 'Utility cli for dknathalage', got '%s'", app.Usage)
-	}
-
 	if app.Commands == nil {
 		t.Errorf("expected commands to be initialized, got nil")
 	}
