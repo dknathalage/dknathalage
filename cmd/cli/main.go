@@ -8,22 +8,15 @@ import (
 
 func NewApp() *cli.App {
 	return &cli.App{
-		Name:  "dknathalage",
-		Usage: "Utility cli for dknathalage",
+		Name: "dknathalage",
 		Commands: []*cli.Command{
 			{
-				Name:  "cloudrun",
-				Usage: "cloud run commands",
+				Name: "cloudrun",
 				Subcommands: []*cli.Command{
 					{
-						Name:  "generate",
-						Usage: "generate cloudrun configs",
+						Name: "generate",
 						Flags: []cli.Flag{
-							&cli.StringFlag{
-								Name:    "name",
-								Aliases: []string{"n"},
-								Usage:   "service name",
-							},
+							&cli.StringFlag{Name: "name", Aliases: []string{"n"}},
 						},
 					},
 				},
