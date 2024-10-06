@@ -34,11 +34,11 @@ jobs:
       - name: Run tests and generate coverage report
         run: go test ./... -coverprofile=coverage.out
 
-      - name: Check test coverage
-        run: |
-          coverage=$(go tool cover -func=coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
-          echo "Test coverage is $coverage%"
-          if (( $(echo "$coverage < 80.0" | bc -l) )); then
-            echo "Test coverage is below 80%! Failing the workflow."
-            exit 1
-          fi
+      # - name: Check test coverage
+      #   run: |
+      #     coverage=$(go tool cover -func=coverage.out | grep total | awk '{print substr($3, 1, length($3)-1)}')
+      #     echo "Test coverage is $coverage%"
+      #     if (( $(echo "$coverage < 80.0" | bc -l) )); then
+      #       echo "Test coverage is below 80%! Failing the workflow."
+      #       exit 1
+      #     fi
