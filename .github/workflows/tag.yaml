@@ -28,6 +28,12 @@ jobs:
           branch: main
 
       - name: create-tag
-        run: |
-          git tag -a "v${{ steps.semver.outputs.next }}"
-          git push origin "v${{ steps.semver.outputs.next }}"
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ steps.semver.outputs.next }}',
+              sha: context.sha
+            })
