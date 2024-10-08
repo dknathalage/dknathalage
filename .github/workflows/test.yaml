@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage
-          path: coverage.txt
+          path: coverage.out
 
   code_coverage:
     runs-on: ubuntu-latest
@@ -62,7 +62,7 @@ jobs:
       - uses: fgrosse/go-coverage-report@v1.1.1
         with:
           coverage-artifact-name: "code-coverage"
-          coverage-file-name: "coverage.txt"
+          coverage-file-name: "coverage.out"
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
