@@ -22,13 +22,10 @@ jobs:
           token: ${{ github.token }}
           branch: main
 
-      - name: tag
-        uses: actions/github-script@v5
-        with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/${{ steps.semver.outputs.next }}',
-              sha: context.sha
-            })
+      - name: tag-create
+        run: |
+          git tag ${{ steps.semver.outputs.next }}
+
+      - name: tag-push
+        run: |
+          git push origin ${{ steps.semver.outputs.next }}
