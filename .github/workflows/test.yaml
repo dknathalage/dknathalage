@@ -53,6 +53,12 @@ jobs:
       contents: read
       actions: read
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Download coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: code-coverage
       - uses: fgrosse/go-coverage-report@v1.1.1
         with:
           coverage-artifact-name: "code-coverage"
