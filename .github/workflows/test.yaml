@@ -47,13 +47,6 @@ jobs:
           name: code-coverage
           path: coverage.txt
 
-  coverage_report:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
   code_coverage:
     runs-on: ubuntu-latest
     permissions:
