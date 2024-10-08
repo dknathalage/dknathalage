@@ -34,4 +34,4 @@ jobs:
           new_tag="${{ steps.semver.outputs.next }}"
           echo "Creating new tag: $new_tag"
           git tag $new_tag
-          git push origin $new_tag  # Push the newly created tag
+          git push --tags
