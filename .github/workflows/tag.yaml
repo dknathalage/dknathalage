@@ -27,13 +27,10 @@ jobs:
           branch: main
 
       - name: create-tag
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NEXT_VERSION: ${{ steps.semver.outputs.next }}
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git fetch --tags
-          echo "Creating new tag: $NEXT_VERSION"
-          git tag $NEXT_VERSION
+          echo "Creating new tag: $(echo ${{ steps.semver.outputs.new_tag }})"
+          git tag $(echo ${{ steps.semver.outputs.new_tag }})
           git push --tags
