@@ -32,4 +32,4 @@ jobs:
 
       - name: tag-push
         run: |
-          git push origin ${{ steps.semver.outputs.next }}
+          git push --tags
