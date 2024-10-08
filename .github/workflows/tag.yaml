@@ -26,9 +26,10 @@ jobs:
         with:
           token: ${{ github.token }}
           branch: main
-          noVersionBumpBehavior: 'warn'
+          noVersionBumpBehavior: "warn"
 
       - name: create-tag
+        if: steps.semver.outputs.next != ''
         uses: actions/github-script@v5
         with:
           script: |
