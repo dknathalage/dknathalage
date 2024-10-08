@@ -20,11 +20,46 @@ jobs:
         id: latest-tag
         run: |
           echo LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`) >> $GITHUB_OUTPUT
+          echo SECOND_LATEST_TAG=$(git describe --tags `git rev-list --tags --skip=1 --max-count=1`) >> $GITHUB_OUTPUT
+
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          mode: "COMMIT"
+          fromTag: ${{ steps.latest-tag.outputs.SECOND_LATEST_TAG }}
+          toTag: ${{ steps.latest-tag.outputs.LATEST_TAG }}
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}",
+              "categories": [
+                {
+                    "title": "## Feature",
+                    "labels": ["feat", "feature"]
+                },
+                {
+                    "title": "## Fix",
+                    "labels": ["fix", "bug"]
+                },
+                {
+                    "title": "## Other",
+                    "labels": []
+                }
+              ],
+              "label_extractor": [
+                {
+                  "pattern": "^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\\([\\w\\-\\.]+\\))?(!)?: ([\\w ])+([\\s\\S]*)",
+                  "target": "$1"
+                }
+              ]
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: release
         uses: ncipollo/release-action@v1.14.0
         with:
           allowUpdates: true
-          body: Changelog Contents
+          body: ${{ steps.github_release.outputs.changelog }}
           token: ${{ github.token }}
           tag: ${{ steps.latest-tag.outputs.LATEST_TAG }}
