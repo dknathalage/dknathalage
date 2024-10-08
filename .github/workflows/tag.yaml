@@ -18,3 +18,14 @@ jobs:
         with:
           token: ${{ github.token }}
           branch: main
+
+      - name: tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ steps.semver.outputs.new_tag }}',
+              sha: context.sha
+            })
