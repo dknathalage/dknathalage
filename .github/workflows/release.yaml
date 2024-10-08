@@ -11,9 +11,15 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
+      - name: latest-tag
+        id: latest-tag
+        run: |
+          LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`) >> $GITHUB_ENV
+
       - name: release
         uses: ncipollo/release-action@v1.14.0
         with:
           allowUpdates: true
           body: Changelog Contents
           token: ${{ github.token }}
+          tag: ${{ steps.latest-tag.outputs.LATEST_TAG }}
