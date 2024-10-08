@@ -1,4 +1,4 @@
-name: Go Test Coverage
+name: Testing
 
 on:
   push:
