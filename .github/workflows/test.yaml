@@ -9,8 +9,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
-  test:
+  unit_tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,3 +40,32 @@ jobs:
       #       echo "Test coverage is below 80%! Failing the workflow."
       #       exit 1
       #     fi
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage
+          path: coverage.txt
+
+  coverage_report:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+  code_coverage:
+    runs-on: ubuntu-latest
+    needs: unit_tests
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: fgrosse/go-coverage-report@v1.1.1
+        with:
+          coverage-artifact-name: "code-coverage"
+          coverage-file-name: "coverage.txt"
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
