@@ -43,6 +43,6 @@ jobs:
         with:
           push: true
           tags: |
-            australia-southeast2-docker.pkg.dev-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
+            australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
           build-args: |
             APP_NAME=${{ matrix.service }}
