@@ -46,8 +46,6 @@ jobs:
             australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
           build-args: |
             APP_NAME=${{ matrix.service }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.20.0
