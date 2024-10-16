@@ -46,3 +46,13 @@ jobs:
             australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
           build-args: |
             APP_NAME=${{ matrix.service }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: false
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
