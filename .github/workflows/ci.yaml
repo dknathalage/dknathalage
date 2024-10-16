@@ -22,17 +22,16 @@ jobs:
         with:
           go-version: 1.23
 
-      - name: generate test coverage
-        run: go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
+      - name: Install dependencies
+        run: go mod download
 
-      - name: check test coverage
-        uses: vladopajic/go-test-coverage@v2
+      - name: Run tests
+        run: go test -v ./...
+
+      - uses: gwatts/go-coverage-action@v2
+        id: coverage
         with:
-          profile: cover.out
-          local-prefix: github.com/dknathalage/dknathalage
-          threshold-file: 0
-          threshold-package: 0
-          threshold-total: 0
+          coverage-threshold: 10
 
   docker-build:
     needs:
