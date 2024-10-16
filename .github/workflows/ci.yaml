@@ -30,6 +30,8 @@ jobs:
         run: go test -v ./...
 
   docker-build:
+    needs:
+      - test
     runs-on: ubuntu-latest
     strategy:
       matrix:
