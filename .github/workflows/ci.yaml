@@ -19,10 +19,10 @@ jobs:
 
       - id: auth
         name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v0
+        uses: google-github-actions/auth@v2
         with:
           token_format: access_token
-          workload_identity_provider: dknathalage-id-provider
+          workload_identity_provider: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
           service_account: gha-ci-sa@dknathalage.iam.gserviceaccount.com
           access_token_lifetime: 300s
 
