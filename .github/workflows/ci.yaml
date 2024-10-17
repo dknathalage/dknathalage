@@ -40,9 +40,6 @@ jobs:
           category: gosec
 
   docker-build:
-    needs:
-      - test
-      - gosec
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -102,6 +99,8 @@ jobs:
   production:
     needs:
       - nonproduction
+      - test
+      - gosec
     runs-on: ubuntu-latest
 
     steps:
