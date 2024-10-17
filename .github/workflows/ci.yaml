@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: securego/gosec@master
         with:
-          args: '-no-fail -fmt sarif -out results.sarif ./...'
+          args: "-no-fail -fmt sarif -out results.sarif ./..."
       - uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
@@ -89,4 +89,4 @@ jobs:
       - uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: "trivy-results.sarif"
-          tool_name: "trivy"
+          category: trivy
