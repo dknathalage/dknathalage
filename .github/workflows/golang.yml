@@ -21,7 +21,7 @@ jobs:
         with:
           build-args: APP_NAME=${{ matrix.service }}
           push: true
-          tags: australia-southeast2-docker.pkg.dev/dknathalage/${{matrix.service}}:latest
+          tags: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{matrix.service}}:latest
       - env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
         uses: aquasecurity/trivy-action@0.20.0
@@ -29,7 +29,7 @@ jobs:
           exit-code: "1"
           format: table
           ignore-unfixed: false
-          image-ref: australia-southeast2-docker.pkg.dev/dknathalage/${{matrix.service}}:latest
+          image-ref: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{matrix.service}}:latest
           severity: LOW,MEDIUM,HIGH,CRITICAL
           vuln-type: os,library
     strategy:

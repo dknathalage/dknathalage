@@ -1,4 +1,6 @@
-{
+local services = ['service'];
+
+local workflow = {
   on: {
     push: {
       branches: ['main'],
@@ -39,9 +41,7 @@
         'runs-on': 'ubuntu-latest',
         strategy: {
           matrix: {
-            service: [
-              'service',
-            ],
+            service: services,
           },
         },
         steps: [
@@ -70,14 +70,14 @@
             uses: 'docker/build-push-action@v2',
             with: {
               push: true,
-              tags: 'australia-southeast2-docker.pkg.dev/dknathalage/${{matrix.service}}:latest',
+              tags: 'australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{matrix.service}}:latest',
               'build-args': 'APP_NAME=${{ matrix.service }}',
             },
           },
           {
             uses: 'aquasecurity/trivy-action@0.20.0',
             with: {
-              'image-ref': 'australia-southeast2-docker.pkg.dev/dknathalage/${{matrix.service}}:latest',
+              'image-ref': 'australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{matrix.service}}:latest',
               format: 'table',
               'exit-code': '1',
               'ignore-unfixed': false,
@@ -91,4 +91,6 @@
         ],
       },
   },
-}
+};
+
+workflow
