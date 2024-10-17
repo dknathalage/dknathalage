@@ -110,6 +110,7 @@ jobs:
           category: trivy
 
   nonproduction:
+    environment: nonproduction
     needs:
       - docker-build
     runs-on: ubuntu-latest
@@ -118,6 +119,7 @@ jobs:
       - run: echo "Deploying to non-production environment"
 
   production:
+    environment: production
     needs:
       - nonproduction
     runs-on: ubuntu-latest
