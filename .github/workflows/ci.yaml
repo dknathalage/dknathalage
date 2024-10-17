@@ -32,11 +32,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: securego/gosec@master
         with:
-          args: ./...
-          sarif_file: gosec-report.sarif
+          args: '-no-fail -fmt sarif -out results.sarif ./...'
       - uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: gosec-report.sarif
+          sarif_file: results.sarif
           category: gosec
 
   docker-build:
