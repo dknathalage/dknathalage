@@ -31,7 +31,7 @@ jobs:
       - uses: gwatts/go-coverage-action@v2
         id: coverage
         with:
-          coverage-threshold: 10
+          coverage-threshold: 80
 
   docker-build:
     needs:
@@ -40,7 +40,9 @@ jobs:
     strategy:
       matrix:
         service:
-          - service
+          - service1:
+              docker_vars:
+                - APP_NAME=service1
 
     steps:
       - name: Checkout
