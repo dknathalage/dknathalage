@@ -90,7 +90,7 @@ local workflow = {
             },
           },
           {
-            run: 'cat ${{ steps.trivy_scan.outputs.results }} >> $GITHUB_STEP_SUMMARY',
+            run: 'cat ${{ steps.trivy.outputs.results }} >> $GITHUB_STEP_SUMMARY',
           },
         ],
       },
