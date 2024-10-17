@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "*.go"
+      - "go.mod"
+      - "go.sum"
+      - "Dockerfile"
+      - ".github/workflows/*.yaml"
 
 permissions:
   contents: write
@@ -11,6 +17,16 @@ permissions:
   security-events: write
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.23
+      - uses: golangci/golangci-lint-action@v6
+
   test:
     runs-on: ubuntu-latest
 
@@ -45,6 +61,11 @@ jobs:
       matrix:
         service:
           - service
+
+    needs:
+      - lint
+      - test
+      - gosec
 
     steps:
       - uses: actions/checkout@v4
@@ -99,8 +120,6 @@ jobs:
   production:
     needs:
       - nonproduction
-      - test
-      - gosec
     runs-on: ubuntu-latest
 
     steps:
