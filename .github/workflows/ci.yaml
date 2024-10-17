@@ -90,3 +90,19 @@ jobs:
         with:
           sarif_file: "trivy-results.sarif"
           category: trivy
+
+  nonproduction:
+    needs:
+      - docker-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Deploying to non-production environment"
+
+  production:
+    needs:
+      - nonproduction
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Deploying to production environment"
