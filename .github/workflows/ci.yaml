@@ -123,4 +123,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: macnev2013/manual-approval@latest
+        with:
+          secret: ${{ secrets.GITHUB_TOKEN }}
+          approvers: dknathalage
+          minimum-approvals: 1
+          approval-wait: 600
       - run: echo "Deploying to production environment"
