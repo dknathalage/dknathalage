@@ -31,9 +31,10 @@ jobs:
           format: table
           ignore-unfixed: false
           image-ref: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{matrix.service}}:latest
+          output: results.txt
           severity: LOW,MEDIUM,HIGH,CRITICAL
           vuln-type: os,library
-      - run: cat ${{ steps.trivy_scan.outputs.results }} >> $GITHUB_STEP_SUMMARY
+      - run: cat results.txt >> $GITHUB_STEP_SUMMARY
     strategy:
       matrix:
         service:

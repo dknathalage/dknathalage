@@ -83,6 +83,7 @@ local workflow = {
               'exit-code': '1',
               'ignore-unfixed': false,
               'vuln-type': 'os,library',
+              output: 'results.txt',
               severity: 'LOW,MEDIUM,HIGH,CRITICAL',
             },
             env: {
@@ -90,7 +91,7 @@ local workflow = {
             },
           },
           {
-            run: 'cat ${{ steps.trivy.outputs.results }} >> $GITHUB_STEP_SUMMARY',
+            run: 'cat results.txt >> $GITHUB_STEP_SUMMARY',
           },
         ],
       },
