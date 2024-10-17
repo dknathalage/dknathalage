@@ -24,6 +24,7 @@ jobs:
           tags: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{matrix.service}}:latest
       - env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+        id: trivy
         uses: aquasecurity/trivy-action@0.20.0
         with:
           exit-code: "1"
@@ -32,6 +33,7 @@ jobs:
           image-ref: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{matrix.service}}:latest
           severity: LOW,MEDIUM,HIGH,CRITICAL
           vuln-type: os,library
+      - run: cat ${{ steps.trivy_scan.outputs.results }} >> $GITHUB_STEP_SUMMARY
     strategy:
       matrix:
         service:

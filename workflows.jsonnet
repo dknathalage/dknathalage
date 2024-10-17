@@ -76,6 +76,7 @@ local workflow = {
           },
           {
             uses: 'aquasecurity/trivy-action@0.20.0',
+            id: 'trivy',
             with: {
               'image-ref': 'australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{matrix.service}}:latest',
               format: 'table',
@@ -87,6 +88,9 @@ local workflow = {
             env: {
               TRIVY_DB_REPOSITORY: 'public.ecr.aws/aquasecurity/trivy-db',
             },
+          },
+          {
+            run: 'cat ${{ steps.trivy_scan.outputs.results }} >> $GITHUB_STEP_SUMMARY',
           },
         ],
       },
