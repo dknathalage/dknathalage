@@ -19,7 +19,7 @@ jobs:
           username: oauth2accesstoken
       - uses: docker/build-push-action@v2
         with:
-          build_args: APP_NAME=${{matrix.service}}
+          build-args: APP_NAME=${{ matrix.service }}
           push: true
           tags: australia-southeast2-docker.pkg.dev/dknathalage/${{matrix.service}}:latest
       - env:

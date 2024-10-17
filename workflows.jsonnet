@@ -71,7 +71,7 @@
             with: {
               push: true,
               tags: 'australia-southeast2-docker.pkg.dev/dknathalage/${{matrix.service}}:latest',
-              build_args: 'APP_NAME=${{matrix.service}}',
+              'build-args': 'APP_NAME=${{ matrix.service }}',
             },
           },
           {
