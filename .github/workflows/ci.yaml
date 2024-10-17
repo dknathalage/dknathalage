@@ -34,9 +34,10 @@ jobs:
         with:
           args: ./...
           sarif_file: gosec-report.sarif
-      - uses: github/codeql-action/upload-sarif@v1
+      - uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: gosec-report.sarif
+          category: gosec
 
   docker-build:
     needs:
@@ -85,6 +86,7 @@ jobs:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
         id: trivy
 
-      - uses: github/codeql-action/upload-sarif@v2
+      - uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: "trivy-results.sarif"
+          tool_name: "trivy"
