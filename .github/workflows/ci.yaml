@@ -33,10 +33,15 @@ jobs:
       - uses: securego/gosec@master
         with:
           args: ./...
+          sarif_file: gosec-report.sarif
+      - uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: gosec-report.sarif
 
   docker-build:
     needs:
       - test
+      - gosec
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -72,15 +77,15 @@ jobs:
       - uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
-          format: "table"
           vuln-type: "os,library"
           severity: "LOW,MEDIUM,HIGH,CRITICAL"
-          output: trivy-report.md
+          format: "sarif"
+          output: "trivy-results.sarif"
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
         id: trivy
 
-      - shell: bash
-        run: |
-          echo "## Trivy: \`${{ steps.trivy.outcome }}\`" >> $GITHUB_STEP_SUMMARY
-          cat trivy-report.md >> $GITHUB_STEP_SUMMARY
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: "trivy-results.sarif"
