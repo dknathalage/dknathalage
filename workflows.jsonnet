@@ -1,41 +1,94 @@
 {
-  'go-ci.json': {
-    on: {
-      push: {
-        branches: ['main'],
-
-        permissions: {
-          contents: 'write',
-          'id-token': 'write',
-        },
-      },
+  on: {
+    push: {
+      branches: ['main'],
     },
-    jobs: {
-      test: {
+  },
+  permissions: {
+    contents: 'write',
+    'id-token': 'write',
+  },
+  jobs: {
+    test: {
+      'runs-on': 'ubuntu-latest',
+      steps: [
+        {
+          uses: 'actions/checkout@v4',
+        },
+        {
+          uses: 'actions/setup-go@v2',
+          with: {
+            'go-version': '1.23',
+          },
+        },
+        {
+          run: 'go mod download',
+        },
+        {
+          run: 'go test ./...',
+        },
+        {
+          uses: 'gwatts/go-coverage-action@v2',
+          with: { 'coverage-threshold': 80 },
+        },
+      ],
+    },
+    'docker-build':
+      {
+        needs: ['test'],
         'runs-on': 'ubuntu-latest',
+        strategy: {
+          matrix: {
+            service: [
+              'service',
+            ],
+          },
+        },
         steps: [
           {
             uses: 'actions/checkout@v4',
           },
           {
-            uses: 'actions/setup-go@v2',
+            id: 'auth',
+            uses: 'google-github-actions/auth@v2',
             with: {
-              'go-version': '1.23',
+              token_format: 'access_token',
+              workload_identity_provider: 'projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider',
+              service_account: 'gha-ci-sa@dknathalage.iam.gserviceaccount.com',
+              access_token_lifetime: '300s',
             },
           },
           {
-            run: 'go mod download',
+            uses: 'docker/login-action@v1',
+            with: {
+              registry: 'australia-southeast2-docker.pkg.dev',
+              username: 'oauth2accesstoken',
+              password: '${{ steps.auth.outputs.access_token }}',
+            },
           },
           {
-            run: 'go test ./...',
+            uses: 'docker/build-push-action@v2',
+            with: {
+              push: true,
+              tags: 'australia-southeast2-docker.pkg.dev/dknathalage/${{matrix.service}}:latest',
+              build_args: 'APP_NAME=${{matrix.service}}',
+            },
           },
           {
-            uses: 'gwatts/go-coverage-action@v2',
-            with: { 'coverage-threshold': 80 },
+            uses: 'aquasecurity/trivy-action@0.20.0',
+            with: {
+              'image-ref': 'australia-southeast2-docker.pkg.dev/dknathalage/${{matrix.service}}:latest',
+              format: 'table',
+              'exit-code': '1',
+              'ignore-unfixed': false,
+              'vuln-type': 'os,library',
+              severity: 'LOW,MEDIUM,HIGH,CRITICAL',
+            },
+            env: {
+              TRIVY_DB_REPOSITORY: 'public.ecr.aws/aquasecurity/trivy-db',
+            },
           },
         ],
       },
-    },
   },
-  'cd.json': {},
 }
