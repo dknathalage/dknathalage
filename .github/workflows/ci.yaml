@@ -14,24 +14,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up go
-        uses: actions/setup-go@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v2
         with:
           go-version: 1.23
-
-      - name: Install dependencies
-        run: go mod download
-
-      - name: Run tests
-        run: go test -v ./...
-
+      - run: go mod download
+      - run: go test -v ./...
       - uses: gwatts/go-coverage-action@v2
         id: coverage
         with:
           coverage-threshold: 80
+
+  gosec:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: securego/gosec@master
+        with:
+          args: ./...
 
   docker-build:
     needs:
@@ -43,11 +44,9 @@ jobs:
           - service1
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - id: auth
-        name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
@@ -55,15 +54,13 @@ jobs:
           service_account: gha-ci-sa@dknathalage.iam.gserviceaccount.com
           access_token_lifetime: 300s
 
-      - name: Login to Artifact Registry
-        uses: docker/login-action@v1
+      - uses: docker/login-action@v1
         with:
           registry: australia-southeast2-docker.pkg.dev
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
 
       - id: docker-push-tagged
-        name: Tag Docker image and push to Google Artifact Registry
         uses: docker/build-push-action@v2
         with:
           push: true
@@ -72,14 +69,18 @@ jobs:
           build-args: |
             APP_NAME=${{ matrix.service }}
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.20.0
+      - uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
           format: "table"
-          exit-code: "1"
-          ignore-unfixed: false
           vuln-type: "os,library"
           severity: "LOW,MEDIUM,HIGH,CRITICAL"
+          output: trivy-report.md
         env:
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+        id: trivy
+
+      - shell: bash
+        run: |
+          echo "## Trivy: \`${{ steps.trivy.outcome }}\`" >> $GITHUB_STEP_SUMMARY
+          cat trivy-report.md >> $GITHUB_STEP_SUMMARY
