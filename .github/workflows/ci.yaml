@@ -66,6 +66,7 @@ jobs:
           - service
     needs: docker-build
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/image-scans
         with:
           full-image-name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
