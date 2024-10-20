@@ -1,3 +1,5 @@
+name: go-scans
+
 inputs:
   go-version:
     description: "The Go version to use"
