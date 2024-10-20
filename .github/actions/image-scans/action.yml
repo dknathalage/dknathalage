@@ -5,9 +5,9 @@ inputs:
     description: "The full image name to scan"
     required: true
 
-jobs:
+runs:
   using: "composite"
-  runs:
+  steps:
     - uses: actions/checkout@v4
 
     - id: auth
