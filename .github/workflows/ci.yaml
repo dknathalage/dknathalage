@@ -58,6 +58,14 @@ jobs:
           build-args: |
             APP_NAME=${{ matrix.service }}
 
+  image-scans:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - service
+    needs: docker-build
+    steps:
       - uses: ./.github/actions/image-scans
         with:
           full-image-name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
