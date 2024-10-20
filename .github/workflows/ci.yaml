@@ -46,8 +46,6 @@ jobs:
 
   docker-build:
     runs-on: ubuntu-latest
-    needs:
-      - code-scans
     strategy:
       matrix:
         service:
