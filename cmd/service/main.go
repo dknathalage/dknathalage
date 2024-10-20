@@ -13,7 +13,11 @@ func main() {
 	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, World!"))
+		_, err := w.Write([]byte("Hello, World!"))
+		if err != nil {
+			http.Error(w, "Unable to write response", http.StatusInternalServerError)
+			return
+		}
 	})
 
 	log.Println("listening on", port)
