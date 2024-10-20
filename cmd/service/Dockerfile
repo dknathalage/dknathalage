@@ -3,9 +3,9 @@ FROM golang:1.23-bookworm as builder
 ARG PATH
 
 WORKDIR /usr/src/app
-COPY ../../go.mod ../../go.sum ./
+COPY go.mod go.sum ./
 RUN go mod download && go mod verify
-COPY ../../ .
+COPY . .
 RUN go build -v -o /run-app $PATH
 
 
