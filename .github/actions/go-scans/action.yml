@@ -6,27 +6,24 @@ inputs:
 runs:
   using: "composite"
   steps:
-    runs-on: ubuntu-latest
+    - uses: actions/checkout@v4
+    - uses: actions/setup-go@v2
+      with:
+        go-version: ${{ inputs.go-version }}
+    - uses: golangci/golangci-lint-action@v6
 
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v2
-        with:
-          go-version: ${{ inputs.go-version }}
-      - uses: golangci/golangci-lint-action@v6
+    - run: go mod download
+    - run: go test -v ./...
+    - uses: gwatts/go-coverage-action@v2
+      id: coverage
+      with:
+        coverage-threshold: 80
 
-      - run: go mod download
-      - run: go test -v ./...
-      - uses: gwatts/go-coverage-action@v2
-        id: coverage
-        with:
-          coverage-threshold: 80
+    - uses: securego/gosec@master
+      with:
+        args: "-no-fail -fmt sarif -out results.sarif ./..."
 
-      - uses: securego/gosec@master
-        with:
-          args: "-no-fail -fmt sarif -out results.sarif ./..."
-
-      - uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: results.sarif
-          category: gosec
+    - uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: results.sarif
+        category: gosec
