@@ -1,12 +1,10 @@
 FROM golang:1.23-bookworm as builder
 
-ARG PATH
-
 WORKDIR /usr/src/app
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 COPY . .
-RUN go build -v -o /run-app $PATH
+RUN go build -v -o /run-app ./cmd/service
 
 
 FROM debian:bookworm
