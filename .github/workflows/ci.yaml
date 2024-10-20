@@ -17,43 +17,12 @@ permissions:
   security-events: write
 
 jobs:
-  lint:
+  code-scans:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.23
-      - uses: golangci/golangci-lint-action@v6
-
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.23
-      - run: go mod download
-      - run: go test -v ./...
-      - uses: gwatts/go-coverage-action@v2
-        id: coverage
-        with:
-          coverage-threshold: 80
-
-  gosec:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: securego/gosec@master
-        with:
-          args: "-no-fail -fmt sarif -out results.sarif ./..."
-      - uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: results.sarif
-          category: gosec
+      - uses: ./.github/actions/go-scans
 
   docker-build:
     runs-on: ubuntu-latest
@@ -88,39 +57,6 @@ jobs:
           build-args: |
             APP_NAME=${{ matrix.service }}
 
-      - uses: aquasecurity/trivy-action@0.20.0
+      - uses: ./.github/actions/image-scans
         with:
-          image-ref: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
-          vuln-type: "os,library"
-          severity: "LOW,MEDIUM,HIGH,CRITICAL"
-          format: "sarif"
-          output: "trivy-results.sarif"
-        env:
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
-        id: trivy
-
-      - uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: "trivy-results.sarif"
-          category: trivy
-
-  nonproduction:
-    environment: nonproduction
-    needs:
-      - docker-build
-      - lint
-      - test
-      - gosec
-    runs-on: ubuntu-latest
-
-    steps:
-      - run: echo "Deploying to non-production environment"
-
-  production:
-    environment: production
-    needs:
-      - nonproduction
-    runs-on: ubuntu-latest
-
-    steps:
-      - run: echo "Deploying to production environment"
+          full-image-name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest

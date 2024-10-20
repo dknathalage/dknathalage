@@ -1,0 +1,41 @@
+name: action to run image scans
+
+inputs:
+  full-image-name:
+    description: "The full image name to scan"
+    required: true
+
+jobs:
+  using: "composite"
+  runs:
+    - uses: actions/checkout@v4
+
+    - id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        token_format: access_token
+        workload_identity_provider: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
+        service_account: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+        access_token_lifetime: 300s
+
+    - uses: docker/login-action@v1
+      with:
+        registry: australia-southeast2-docker.pkg.dev
+        username: oauth2accesstoken
+        password: ${{ steps.auth.outputs.access_token }}
+
+    - uses: aquasecurity/trivy-action@0.20.0
+      with:
+        image-ref: ${{ inputs.full-image-name }}
+        vuln-type: "os,library"
+        severity: "LOW,MEDIUM,HIGH,CRITICAL"
+        format: "sarif"
+        output: "trivy-results-${{ inputs.full-image-name }}.sarif"
+      env:
+        TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+      id: trivy
+
+    - uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: "trivy-results.sarif"
+        category: trivy
