@@ -55,6 +55,7 @@ jobs:
           push: true
           tags: |
             australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
+            australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:${{ github.sha }}
           build-args: |
             APP_NAME=${{ matrix.service }}
 
@@ -69,4 +70,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/image-scans
         with:
-          full-image-name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}:latest
+          image-name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}
+          image-tag: ${{ github.sha }}
