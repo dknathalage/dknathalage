@@ -47,6 +47,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --config ${{ matrix.service.fly_toml }} --yes
+      - name: get app name from fly toml
+        id: app_name
+        run: echo APP_NAME=$(cat ${{ matrix.service.fly_toml }} | grep -oP 'app = \"\K[^"]+')" >> $GITHUB_OUTPUT
+
+      - run: |
+          if flyctl apps list | grep -q $APP_NAME; then
+            flyctl deploy --config ${{ matrix.service.fly_toml }} --yes
+          else
+            flyctl create app $APP_NAME
+            flyctl deploy --config ${{ matrix.service.fly_toml }} --yes
+          fi
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
