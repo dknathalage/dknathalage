@@ -69,7 +69,7 @@ jobs:
       - uses: docker/login-action@v1
         with:
           registry: registry.fly.io
-          username: dknathalage
+          username: x
           password: ${{ secrets.FLY_API_TOKEN }}
       - uses: aquasecurity/trivy-action@0.20.0
         with:
@@ -97,18 +97,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - id: auth
-        uses: google-github-actions/auth@v2
-        with:
-          token_format: access_token
-          workload_identity_provider: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
-          service_account: gha-ci-sa@dknathalage.iam.gserviceaccount.com
-          access_token_lifetime: 300s
       - uses: docker/login-action@v1
         with:
-          registry: australia-southeast2-docker.pkg.dev
-          username: oauth2accesstoken
-          password: ${{ steps.auth.outputs.access_token }}
+          registry: registry.fly.io
+          username: x
+          password: ${{ secrets.FLY_API_TOKEN }}
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: |
           flyctl launch --config ${{ matrix.service.path }}/fly.toml --remote-only --image registry.fly.io/dknathalage/${{ matrix.service.name }}:${{ github.sha }} --yes
