@@ -103,6 +103,6 @@ jobs:
           password: ${{ secrets.FLY_API_TOKEN }}
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: |
-          flyctl launch --config ${{ matrix.service.path }}/fly.toml --remote-only --image registry.fly.io/dknathalage/${{ matrix.service.name }}:${{ github.sha }} --yes
+          flyctl launch --config ${{ matrix.service.path }}/fly.toml --remote-only --image registry.fly.io/${{ matrix.service.name }}:${{ github.sha }} --yes
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
