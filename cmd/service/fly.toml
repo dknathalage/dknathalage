@@ -7,7 +7,7 @@ app = 'dknathalage-service'
 primary_region = 'syd'
 
 [build]
-dockerfile = "Dockerfile"
+dockerfile = "./cmd/service/Dockerfile"
 
 [http_service]
 internal_port = 8080
