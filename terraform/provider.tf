@@ -10,6 +10,12 @@ terraform {
       version = "6.8.0"
     }
   }
+
+  backend "gcs" {
+    bucket  = "dknathalage-tfstate"
+    prefix  = "terraform/state"
+    project = "dknathalage"
+  }
 }
 
 provider "google" {
