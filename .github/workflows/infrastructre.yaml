@@ -32,11 +32,8 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
-        run: terraform plan
-        env:
-          VULTR_API_KEY: ${{ secrets.VULTR_API_KEY }}
+        run: terraform plan -var "VULTR_API_KEY=${{ secrets.VULTR_API_KEY }}"
+
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
-        env:
-          VULTR_API_KEY: ${{ secrets.VULTR_API_KEY }}
+        run: terraform apply -auto-approve -var "VULTR_API_KEY=${{ secrets.VULTR_API_KEY }}"
