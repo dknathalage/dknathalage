@@ -14,14 +14,12 @@ terraform {
   backend "gcs" {
     bucket  = "dknathalage-tfstate"
     prefix  = "terraform/state"
-    project = "dknathalage"
   }
 }
 
 provider "google" {
   project = "dknathalage"
   region  = "australia-southeast2"
-
 }
 
 provider "vultr" {
