@@ -24,9 +24,9 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
-          create_credentials_file: true
-          workload_identity_provider: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool
+          workload_identity_provider: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
           service_account: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+          access_token_lifetime: 300s
 
       - name: Terraform Init
         run: terraform init
