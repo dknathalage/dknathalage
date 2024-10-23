@@ -18,5 +18,8 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
         env:
           VULTR_API_KEY: ${{ secrets.VULTR_API_KEY }}
