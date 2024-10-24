@@ -1,5 +1,6 @@
-# resource "vultr_instance" "my_instance" {
-#   plan     = "vc2-1c-1gb"
-#   region   = "mel"
-#   image_id   = "docker"
-# }
+resource "vultr_instance" "test_instance" {
+  plan     = "vc2-1c-1gb"
+  region   = "mel"
+  image_id = "docker"
+  label    = "test-instance"
+}
