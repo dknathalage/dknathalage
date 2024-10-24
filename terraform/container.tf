@@ -1,5 +1,5 @@
 resource "vultr_container_registry" "vcr1" {
-  name   = "dknathalage-registry"
+  name   = "dknathalageregistry"
   region = "mel"
   plan   = "start_up"
   public = false
