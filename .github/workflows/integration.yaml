@@ -47,7 +47,7 @@ jobs:
           username: root
           key: ${{ secrets.VULTR_SSH_KEY }}
           script: |
-            cat ${{ steps.auth.outputs.access_token }} | docker login -u oauth2accesstoken --password-stdin australia-southeast2-docker.pkg.dev
+            echo ${{ steps.auth.outputs.access_token }} | docker login -u oauth2accesstoken --password-stdin australia-southeast2-docker.pkg.dev
             docker pull australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/test:latest
             docker stop $(docker ps -q)
             docker run -d -p 80:80 australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/test:latest
