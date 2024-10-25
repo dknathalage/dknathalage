@@ -51,7 +51,7 @@ jobs:
 
       - name: Image base
         id: image_base
-        run: echo IMAGE_BASE=${{ env.GCP_CTX_GAR_REGISTRY }}/${{ env.GCP_CTX_GAR_REPOSITORY }}${{ matrix.services.name }} >> GITHUB_OUTPUT
+        run: echo IMAGE_BASE=${{ env.GCP_CTX_GAR_REGISTRY }}/${{ env.GCP_CTX_GAR_REPOSITORY }}${{ matrix.services.name }} >> $GITHUB_OUTPUT
 
       - name: Build and push
         uses: docker/build-push-action@v6
