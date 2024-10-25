@@ -36,4 +36,5 @@ jobs:
           script: |
             cat ${{ secrets.VULTR_REGISTRY_PASS }} | docker login -u 0004d5b6-241c-4a83-b639-d5e45949bb2d --password-stdin sjc.vultrcr.com
             docker pull sjc.vultrcr.com/dknathalageregistry/test:latest
+            docker stop $(docker ps -q)
             docker run -d -p 80:80 sjc.vultrcr.com/dknathalageregistry/test:latest
