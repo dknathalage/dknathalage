@@ -34,5 +34,6 @@ jobs:
           username: root
           key: ${{ secrets.VULTR_SSH_KEY }}
           script: |
+            docker login -u 0004d5b6-241c-4a83-b639-d5e45949bb2d -p ${{ secrets.VULTR_REGISTRY_PASS }} sjc.vultrcr.com
             docker pull sjc.vultrcr.com/dknathalageregistry/test:latest
             docker run -d -p 80:80 sjc.vultrcr.com/dknathalageregistry/test:latest
