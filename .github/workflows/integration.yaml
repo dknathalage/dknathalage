@@ -16,3 +16,13 @@ jobs:
           registry: https://sjc.vultrcr.com/dknathalageregistry
           username: 0004d5b6-241c-4a83-b639-d5e45949bb2d
           password: ${{ secrets.VULTR_REGISTRY_PASS }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: |
+            sjc.vultrcr.com/dknathalageregistry/test:latest
+            sjc.vultrcr.com/dknathalageregistry/test:${{ github.sha }}
+          file: ./cmd/data/Dockerfile
+          context: .
