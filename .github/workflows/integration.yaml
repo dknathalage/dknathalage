@@ -26,3 +26,13 @@ jobs:
             sjc.vultrcr.com/dknathalageregistry/test:${{ github.sha }}
           file: ./cmd/data/Dockerfile
           context: .
+
+      - name: SSH to Vultr and deploy docker container
+        uses: appleboy/ssh-action@master
+        with:
+          host: 67.219.109.47
+          username: root
+          key: ${{ secrets.VULTR_SSH_KEY }}
+          script: |
+            docker pull sjc.vultrcr.com/dknathalageregistry/test:latest
+            docker run -d -p 80:80 sjc.vultrcr.com/dknathalageregistry/test:latest
