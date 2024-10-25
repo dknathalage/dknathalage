@@ -3,6 +3,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: "read"
+  id-token: "write"
+
 jobs:
   push-images:
     runs-on: ubuntu-latest
@@ -10,20 +14,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Login to GitHub Container Registry
+      - id: auth
+        name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v0
+        with:
+          token_format: access_token
+          workload_identity_provider: 719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
+          service_account: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+          access_token_lifetime: 300s
+
+      - name: Login to Artifact Registry
         uses: docker/login-action@v2
         with:
-          registry: https://sjc.vultrcr.com/dknathalageregistry
-          username: 0004d5b6-241c-4a83-b639-d5e45949bb2d
-          password: ${{ secrets.VULTR_REGISTRY_PASS }}
+          registry: australia-southeast2-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
           tags: |
-            sjc.vultrcr.com/dknathalageregistry/test:latest
-            sjc.vultrcr.com/dknathalageregistry/test:${{ github.sha }}
+            australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/test:${{ github.sha }}
+            australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/test:latest
           file: ./cmd/data/Dockerfile
           context: .
 
@@ -34,7 +47,6 @@ jobs:
           username: root
           key: ${{ secrets.VULTR_SSH_KEY }}
           script: |
-            cat ${{ secrets.VULTR_REGISTRY_PASS }} | docker login -u 0004d5b6-241c-4a83-b639-d5e45949bb2d --password-stdin sjc.vultrcr.com
-            docker pull sjc.vultrcr.com/dknathalageregistry/test:latest
+            docker pull australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/test:latest
             docker stop $(docker ps -q)
-            docker run -d -p 80:80 sjc.vultrcr.com/dknathalageregistry/test:latest
+            docker run -d -p 80:80 australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/test:latest
