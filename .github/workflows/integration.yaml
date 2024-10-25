@@ -3,6 +3,13 @@ on:
     branches:
       - main
 
+    paths:
+      - "cmd/**"
+      - "pkg/**"
+      - "go.mod"
+      - "go.sum"
+      - ".github/workflows/*.yaml"
+
 permissions:
   contents: "read"
   id-token: "write"
