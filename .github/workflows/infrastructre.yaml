@@ -34,6 +34,5 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -var "VULTR_API_KEY=${{ secrets.VULTR_API_TOKEN }}"
 
-
       - name: Terraform Apply
         run: terraform apply -auto-approve -var "VULTR_API_KEY=${{ secrets.VULTR_API_TOKEN }}"
