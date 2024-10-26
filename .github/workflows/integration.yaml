@@ -8,7 +8,7 @@ on:
       - "pkg/**"
       - "go.mod"
       - "go.sum"
-      - ".github/workflows/*.yaml"
+      - ".github/workflows/integration.yaml"
 
 env:
   GCP_CTX_SERVICE_ACCOUNT: gha-ci-sa@dknathalage.iam.gserviceaccount.com
@@ -30,31 +30,22 @@ jobs:
             dockerfile: ./cmd/data/Dockerfile
             server_ip: 67.219.109.47
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - id: auth
-        name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
           token_format: access_token
           workload_identity_provider: ${{ env.GCP_CTX_ID_PROVIDER }}
           service_account: ${{ env.GCP_CTX_SERVICE_ACCOUNT }}
           access_token_lifetime: 300s
-
-      - name: Login to Artifact Registry
-        uses: docker/login-action@v2
+      - uses: docker/login-action@v2
         with:
           registry: ${{ env.GCP_CTX_GAR_REGISTRY }}
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
-
-      - name: Image base
-        id: image_base
+      - id: image_base
         run: echo IMAGE_BASE=${{ env.GCP_CTX_GAR_REGISTRY }}/${{ env.GCP_CTX_GAR_REPOSITORY }}${{ matrix.services.name }} >> $GITHUB_OUTPUT
-
-      - name: Build and push
-        uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@v6
         with:
           push: true
           tags: |
@@ -62,9 +53,7 @@ jobs:
             ${{ steps.image_base.outputs.IMAGE_BASE }}:${{ github.sha }}
           file: ${{ matrix.services.dockerfile }}
           context: .
-
-      - name: SSH to Vultr and deploy docker container
-        uses: appleboy/ssh-action@master
+      - uses: appleboy/ssh-action@master
         with:
           host: ${{ matrix.services.server_ip }}
           username: root
