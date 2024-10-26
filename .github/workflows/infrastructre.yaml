@@ -19,7 +19,9 @@ jobs:
         working-directory: ./terraform
     steps:
       - uses: actions/checkout@v4
+
       - uses: hashicorp/setup-terraform@v1
+
       - id: auth
         uses: google-github-actions/auth@v2
         with:
@@ -27,6 +29,9 @@ jobs:
           workload_identity_provider: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
           service_account: gha-ci-sa@dknathalage.iam.gserviceaccount.com
           access_token_lifetime: 300s
+
       - run: terraform init
+
       - run: terraform plan -var "VULTR_API_KEY=${{ secrets.VULTR_API_TOKEN }}"
+
       - run: terraform apply -auto-approve -var "VULTR_API_KEY=${{ secrets.VULTR_API_TOKEN }}"
