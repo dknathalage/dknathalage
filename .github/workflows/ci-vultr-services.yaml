@@ -1,0 +1,41 @@
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  quality-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: .github/workflows/ci-quality.yaml@main
+        with:
+          service: test
+
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: .github/workflows/cd-terraform.yaml@main
+
+  docker-build:
+    needs: quality-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: .github/workflows/ci-docker.yaml@main
+        with:
+          service: test
+          dockerfile: ./cmd/data/Dockerfile
+
+  vultr-services:
+    needs: [terraform, docker-build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: .github/workflows/ci-vultr-services.yaml@main
+        with:
+          service: test
+          server_ip: 67.219.103.200
+
+  

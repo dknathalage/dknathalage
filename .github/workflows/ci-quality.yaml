@@ -1,14 +1,6 @@
 on:
-  push:
-    branches:
-      - main
-
-    paths:
-      - "**/*.go"
-      - "go.mod"
-      - "go.sum"
-      - ".github/workflows/quality.yaml"
-
+  workflow_call:
+    
 jobs:
   go-lint:
     runs-on: ubuntu-latest

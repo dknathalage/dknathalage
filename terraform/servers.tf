@@ -4,4 +4,5 @@ resource "vultr_instance" "test_instance" {
   image_id    = "docker"
   label       = "test-instance"
   ssh_key_ids = [vultr_ssh_key.dkn-ssh-key.id]
+  tags        = ["test"]
 }
