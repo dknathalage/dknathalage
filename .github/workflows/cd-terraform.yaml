@@ -1,6 +1,8 @@
 on:
   workflow_call:
-
+    secrets:
+      VULTR_API_TOKEN:
+        required: true
 env:
   GCP_CTX_SERVICE_ACCOUNT: gha-ci-sa@dknathalage.iam.gserviceaccount.com
   GCP_CTX_ID_PROVIDER: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
