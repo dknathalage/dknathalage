@@ -30,7 +30,7 @@ jobs:
           access_token_lifetime: 300s
 
       - id: image_base
-        run: echo IMAGE_BASE=${{ env.GCP_CTX_GAR_REGISTRY }}/${{ env.GCP_CTX_GAR_REPOSITORY }}/${{ inputs.service }} >> $GITHUB_ENV
+        run: echo IMAGE_BASE=${{ env.GCP_CTX_GAR_REGISTRY }}/${{ env.GCP_CTX_GAR_REPOSITORY }}/${{ inputs.service }} >> $GITHUB_OUTPUT
 
       - uses: appleboy/ssh-action@master
         with:
