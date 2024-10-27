@@ -26,7 +26,6 @@ jobs:
   vultr-services:
     needs: [terraform, docker-build]
     uses: dknathalage/dknathalage/.github/workflows/cd-vultr.yaml@main
-    environment: production
     with:
       service: test
       server_ip: 67.219.103.200
