@@ -29,3 +29,5 @@ jobs:
     with:
       service: test
       server_ip: 67.219.103.200
+    secrets:
+      VULTR_SSH_KEY: ${{ secrets.VULTR_SSH_KEY }}

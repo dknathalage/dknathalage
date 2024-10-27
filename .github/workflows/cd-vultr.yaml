@@ -7,6 +7,9 @@ on:
       server_ip:
         type: string
         required: true
+    secrets:
+      VULTR_SSH_KEY:
+        required: true
 
 env:
   GCP_CTX_SERVICE_ACCOUNT: gha-ci-sa@dknathalage.iam.gserviceaccount.com
