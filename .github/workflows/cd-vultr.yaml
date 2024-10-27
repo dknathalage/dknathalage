@@ -40,6 +40,5 @@ jobs:
           script: |
             echo ${{ steps.auth.outputs.access_token }} | docker login -u oauth2accesstoken --password-stdin ${{ env.GCP_CTX_GAR_REGISTRY }}
             docker pull ${{ steps.image_base.outputs.IMAGE_BASE }}:latest
-            docker stop ${{ inputs.service }} || true
-            docker rm ${{ inputs.service }} || true
-            docker run -d --name ${{ inputs.service }} -p 80:80 ${{ steps.image_base.outputs.IMAGE_BASE }}:latest
+            docker ps -q | xargs -r docker stop
+            docker run -d -p 80:80 ${{ steps.image_base.outputs.IMAGE_BASE }}:latest
