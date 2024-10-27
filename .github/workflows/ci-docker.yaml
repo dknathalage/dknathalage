@@ -36,7 +36,7 @@ jobs:
           password: ${{ steps.auth.outputs.access_token }}
 
       - id: image_base
-        run: echo IMAGE_BASE=${{ env.GCP_CTX_GAR_REGISTRY }}/${{ env.GCP_CTX_GAR_REPOSITORY }}/${{ inputs.service }} >> $GITHUB_ENV
+        run: echo IMAGE_BASE=${{ env.GCP_CTX_GAR_REGISTRY }}/${{ env.GCP_CTX_GAR_REPOSITORY }}/${{ inputs.service }} >> $GITHUB_OUTPUT
 
       - uses: docker/build-push-action@v6
         with:
