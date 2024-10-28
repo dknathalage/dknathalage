@@ -1,18 +1,23 @@
 inputs:
   service:
-    description: "The name of the service"
     required: true
   dockerfile:
-    description: "Path to the Dockerfile"
     required: true
+  GCP_CTX_SERVICE_ACCOUNT:
+    required: true
+    default: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+  GCP_CTX_ID_PROVIDER:
+    required: true
+    default: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
+  GCP_CTX_GAR_REGISTRY:
+    required: true
+    default: "australia-southeast2-docker.pkg.dev"
+  GCP_CTX_GAR_REPOSITORY:
+    required: true
+    default: "dknathalage/dknathalage"
 
 runs:
   using: "composite"
-  env:
-    GCP_CTX_SERVICE_ACCOUNT: gha-ci-sa@dknathalage.iam.gserviceaccount.com
-    GCP_CTX_ID_PROVIDER: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
-    GCP_CTX_GAR_REGISTRY: australia-southeast2-docker.pkg.dev
-    GCP_CTX_GAR_REPOSITORY: dknathalage/dknathalage
   steps:
     - uses: actions/checkout@v4
     - uses: docker/setup-buildx-action@v3
@@ -20,16 +25,16 @@ runs:
       uses: google-github-actions/auth@v1
       with:
         token_format: "access_token"
-        workload_identity_provider: ${{ env.GCP_CTX_ID_PROVIDER }}
-        service_account: ${{ env.GCP_CTX_SERVICE_ACCOUNT }}
+        workload_identity_provider: ${{ inputs.GCP_CTX_ID_PROVIDER }}
+        service_account: ${{ inputs.GCP_CTX_SERVICE_ACCOUNT }}
         access_token_lifetime: "300s"
     - uses: docker/login-action@v2
       with:
-        registry: ${{ env.GCP_CTX_GAR_REGISTRY }}
+        registry: ${{ inputs.GCP_CTX_GAR_REGISTRY }}
         username: "oauth2accesstoken"
         password: ${{ steps.auth.outputs.access_token }}
     - id: image_base
-      run: echo "IMAGE_BASE=${{ env.GCP_CTX_GAR_REGISTRY }}/${{ env.GCP_CTX_GAR_REPOSITORY }}/${{ inputs.service }}" >> $GITHUB_OUTPUT
+      run: echo "IMAGE_BASE=${{ inputs.GCP_CTX_GAR_REGISTRY }}/${{ inputs.GCP_CTX_GAR_REPOSITORY }}/${{ inputs.service }}" >> $GITHUB_OUTPUT
     - uses: docker/build-push-action@v6
       with:
         push: true
