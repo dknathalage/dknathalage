@@ -11,7 +11,7 @@ jobs:
   quality-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: dknathalage/dknathalage/.github/workflows/actions/go-quality@main
+      - uses: ./.github/actions/go-quality
 
   terraform:
     uses: dknathalage/dknathalage/.github/workflows/cd-terraform.yaml@main
