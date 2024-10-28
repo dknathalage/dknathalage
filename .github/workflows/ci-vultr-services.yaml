@@ -15,16 +15,21 @@ jobs:
       - uses: ./.github/actions/go-quality
 
   terraform:
-    uses: dknathalage/dknathalage/.github/workflows/cd-terraform.yaml@main
-    secrets:
-      VULTR_API_TOKEN: ${{ secrets.VULTR_API_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/tf-deploy
+        with:
+          VULTR_API_TOKEN: ${{ secrets.VULTR_API_TOKEN }}
 
   docker-build:
-    needs: quality-check
-    uses: dknathalage/dknathalage/.github/workflows/ci-docker.yaml@main
-    with:
-      service: test
-      dockerfile: ./cmd/data/Dockerfile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/docker-build
+        with:
+          service: test
+          dockerfile: ./cmd/test/Dockerfile
 
   vultr-services:
     needs: [terraform, docker-build]
