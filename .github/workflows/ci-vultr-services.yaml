@@ -30,7 +30,7 @@ jobs:
       - uses: ./.github/actions/docker-build
         with:
           SERVICE_NAME: test
-          DOCKERFILE: ./Dockerfile
+          DOCKERFILE: ./cmd/data/Dockerfile
 
   vultr-services:
     needs: [terraform, docker-build]
