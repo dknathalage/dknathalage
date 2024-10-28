@@ -1,7 +1,7 @@
 inputs:
-  service:
+  SERVICE_NAME:
     required: true
-  dockerfile:
+  DOCKERFILE:
     required: true
   GCP_CTX_SERVICE_ACCOUNT:
     required: true
@@ -34,14 +34,14 @@ runs:
         username: "oauth2accesstoken"
         password: ${{ steps.auth.outputs.access_token }}
     - id: image_base
-      run: echo "IMAGE_BASE=${{ inputs.GCP_CTX_GAR_REGISTRY }}/${{ inputs.GCP_CTX_GAR_REPOSITORY }}/${{ inputs.service }}" >> $GITHUB_OUTPUT
+      run: echo "IMAGE_BASE=${{ inputs.GCP_CTX_GAR_REGISTRY }}/${{ inputs.GCP_CTX_GAR_REPOSITORY }}/${{ inputs.SERVICE_NAME }} >> $GITHUB_OUTPUT
     - uses: docker/build-push-action@v6
       with:
         push: true
         tags: |
           ${{ steps.image_base.outputs.IMAGE_BASE }}:latest
           ${{ steps.image_base.outputs.IMAGE_BASE }}:${{ github.sha }}
-        file: ${{ inputs.dockerfile }}
+        file: ${{ inputs.DOCKERFILE }}
         context: .
         cache-from: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache
         cache-to: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache

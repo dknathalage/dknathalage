@@ -28,8 +28,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/docker-build
         with:
-          service: test
-          dockerfile: ./cmd/test/Dockerfile
+          SERVICE_NAME: test
+          DOCKERFILE: ./Dockerfile
 
   vultr-services:
     needs: [terraform, docker-build]
