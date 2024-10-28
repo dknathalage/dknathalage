@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   quality-check:
-    uses: dknathalage/dknathalage/.github/workflows/ci-quality.yaml@main
+    uses: dknathalage/dknathalage/.github/actions/go-quality@main
 
   terraform:
     uses: dknathalage/dknathalage/.github/workflows/cd-terraform.yaml@main
