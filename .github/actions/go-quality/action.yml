@@ -1,9 +1,5 @@
-name: "Go Lint and Coverage"
-description: "Runs golangci-lint and calculates coverage for Go projects"
-
 inputs:
   go-version:
-    description: "The Go version to set up."
     required: true
     default: "1.23"
 
