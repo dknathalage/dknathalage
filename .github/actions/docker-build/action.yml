@@ -34,6 +34,7 @@ runs:
         username: "oauth2accesstoken"
         password: ${{ steps.auth.outputs.access_token }}
     - id: image_base
+      shell: bash
       run: echo "IMAGE_BASE=${{ inputs.GCP_CTX_GAR_REGISTRY }}/${{ inputs.GCP_CTX_GAR_REPOSITORY }}/${{ inputs.SERVICE_NAME }} >> $GITHUB_OUTPUT
     - uses: docker/build-push-action@v6
       with:
