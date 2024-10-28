@@ -9,7 +9,9 @@ permissions:
 
 jobs:
   quality-check:
-    uses: dknathalage/dknathalage/.github/actions/go-quality@main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dknathalage/dknathalage/.github/workflows/actions/go-quality@main
 
   terraform:
     uses: dknathalage/dknathalage/.github/workflows/cd-terraform.yaml@main
