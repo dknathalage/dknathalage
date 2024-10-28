@@ -23,6 +23,7 @@ jobs:
           VULTR_API_TOKEN: ${{ secrets.VULTR_API_TOKEN }}
 
   docker-build:
+    needs: [quality-check]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,9 +34,10 @@ jobs:
 
   vultr-services:
     needs: [terraform, docker-build]
-    uses: dknathalage/dknathalage/.github/workflows/cd-vultr.yaml@main
-    with:
-      service: test
-      server_ip: 67.219.103.200
-    secrets:
-      VULTR_SSH_KEY: ${{ secrets.VULTR_SSH_KEY }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/vultr-deploy
+        with:
+          SERVICE: test
+          SERVER_IP: 67.219.103.200
+          VULTR_SSH_KEY: ${{ secrets.VULTR_SSH_KEY }}

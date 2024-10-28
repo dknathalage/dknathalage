@@ -1,0 +1,52 @@
+# .github/actions/deploy/action.yml
+
+name: "Deploy Service"
+description: "Authenticates with GCP and deploys a Docker image to a server via SSH"
+
+inputs:
+  SERVICE:
+    description: "The name of the service to deploy"
+    required: true
+  SERVER_IP:
+    description: "The IP address of the server to deploy to"
+    required: true
+  VULTR_SSH_KEY:
+    description: "SSH private key for connecting to the server"
+    required: true
+  GCP_CTX_SERVICE_ACCOUNT:
+    required: true
+    default: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+  GCP_CTX_ID_PROVIDER:
+    required: true
+    default: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
+  GCP_CTX_GAR_REGISTRY:
+    required: true
+    default: australia-southeast2-docker.pkg.dev
+  GCP_CTX_GAR_REPOSITORY:
+    required: true
+    default: dknathalage/dknathalage
+
+runs:
+  using: "composite"
+  steps:
+    - id: auth
+      uses: google-github-actions/auth@v1
+      with:
+        token_format: "access_token"
+        workload_identity_provider: ${{ inputs.GCP_CTX_ID_PROVIDER }}
+        service_account: ${{ inputs.GCP_CTX_SERVICE_ACCOUNT }}
+        access_token_lifetime: "300s"
+    - id: image_base
+      shell: bash
+      run: |
+        echo "IMAGE_BASE=${{ inputs.GCP_CTX_GAR_REGISTRY }}/${{ inputs.GCP_CTX_GAR_REPOSITORY }}/${{ inputs.service }}" >> $GITHUB_OUTPUT
+    - uses: appleboy/ssh-action@master
+      with:
+        host: ${{ inputs.server_ip }}
+        username: "root"
+        key: ${{ inputs.VULTR_SSH_KEY }}
+        script: |
+          echo "${{ steps.auth.outputs.access_token }}" | docker login -u oauth2accesstoken --password-stdin ${{ inputs.GCP_CTX_GAR_REGISTRY }}
+          docker pull ${{ steps.image_base.outputs.IMAGE_BASE }}:latest
+          docker ps -q | xargs -r docker stop
+          docker run -d -p 80:80 ${{ steps.image_base.outputs.IMAGE_BASE }}:latest
