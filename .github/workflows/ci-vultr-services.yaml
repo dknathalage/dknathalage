@@ -36,6 +36,7 @@ jobs:
     needs: [terraform, docker-build]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/vultr-deploy
         with:
           SERVICE: test
