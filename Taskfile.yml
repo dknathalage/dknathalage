@@ -1,0 +1,19 @@
+version: "3"
+
+tasks:
+  setup:
+    cmds:
+      - echo "Setting up the environment"
+
+  go-lint.install:
+    cmds:
+      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
+
+  go-lint.run:
+    cmds:
+      - golangci-lint run
+
+  go-lint:
+    cmds:
+      - task: go-lint.install
+      - task: go-lint.run
