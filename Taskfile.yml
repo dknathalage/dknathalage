@@ -21,3 +21,7 @@ tasks:
     cmds:
       - task: go-lint
       - task: go-test
+
+  gcloud:
+    cmds:
+
