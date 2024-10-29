@@ -1,19 +1,23 @@
 version: "3"
 
 tasks:
-  setup:
-    cmds:
-      - echo "Setting up the environment"
-
-  go-lint.install:
-    cmds:
-      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
-
-  go-lint.run:
-    cmds:
-      - golangci-lint run
-
   go-lint:
     cmds:
-      - task: go-lint.install
-      - task: go-lint.run
+      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
+      - golangci-lint run
+
+  go-test:
+    cmds:
+      - go test -coverprofile=coverage.out ./...
+      - go tool cover -func=coverage.out
+      - |
+        coverage=$(go tool cover -func=coverage.out | grep "total:" | awk '{print $3}' | sed 's/%//')
+        if [ "$coverage" -lt 80 ]; then
+          echo "Code coverage is below 80%!"
+          exit 1
+        fi
+
+  quality:
+    cmds:
+      - task: go-lint
+      - task: go-test

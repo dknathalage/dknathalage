@@ -15,8 +15,7 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: 1.23
-      - name: Setup go-task
-        uses: pnorton5432/setup-task@v1
+      - uses: pnorton5432/setup-task@v1
         with:
           task-version: 3.29.1
       - run: task go-lint
@@ -28,10 +27,10 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: 1.23
-      - shell: bash
-        run: go test -coverprofile=coverage.out ./...
-      - shell: bash
-        run: go tool cover -func=coverage.out
+      - uses: pnorton5432/setup-task@v1
+        with:
+          task-version: 3.29.1
+      - run: task go-test
 
   terraform:
     runs-on: ubuntu-latest
