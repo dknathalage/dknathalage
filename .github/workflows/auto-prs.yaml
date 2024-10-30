@@ -29,7 +29,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: main # The branch you want to merge into
-          branch: ${{ github.ref_name }} # The branch that triggered the workflow
           title: "Auto PR: ${{ github.ref_name }}"
           body: |
             This PR was automatically created by a GitHub Action to merge changes from `${{ github.ref_name }}` into `main`.
