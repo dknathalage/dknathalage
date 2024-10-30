@@ -3,6 +3,12 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "cmd/**"
+      - "pkg/**"
+      - "go.mod"
+      - "go.sum"
+      - ".github/workflows/ci-vultr-services.yaml"
 
 permissions:
   contents: write
