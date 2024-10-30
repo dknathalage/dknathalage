@@ -1,0 +1,23 @@
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  check-and-open-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - id: get_branch
+        run: echo "CURRENT_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
+      - id: compare
+        run: |
+          TARGET_BRANCH="${{ steps.get_branch.outputs.branch }}"
+          git fetch origin main $TARGET_BRANCH
+          COMMITS_AHEAD=$(git rev-list --count $TARGET_BRANCH ^main)
+          echo "COMMITS_AHEAD=$COMMITS_AHEAD" >> $GITHUB_OUTPUT
+      - id: pr
+        if: steps.compare.outputs.COMMITS_AHEAD > 0
+        run: |
+          gh pr create --base main --head $TARGET_BRANCH --title "Auto PR: $TARGET_BRANCH" --body "This PR was automatically created by a GitHub Action."
