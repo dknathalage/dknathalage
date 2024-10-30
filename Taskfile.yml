@@ -9,10 +9,12 @@ tasks:
 
   lint:
     cmds:
+      - echo "RUNNING GOLANGCI-LINT"
       - golangci-lint run
 
   test:
     cmds:
+      - echo "RUNNING TESTS"
       - go test -coverprofile=coverage.out -coverpkg=./pkg ./...
       - go tool cover -func=coverage.out
       # check if the coverage is less than 80%
@@ -20,6 +22,7 @@ tasks:
 
   sec:
     cmds:
+      - echo "RUNNING GOSEC"
       - export PATH=$PATH:$(go env GOPATH)/bin
       - $(go env GOPATH)/bin/gosec ./...
 
