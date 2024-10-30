@@ -1,3 +1,5 @@
+name: Auto Create PR
+
 on:
   push:
     branches-ignore:
@@ -8,14 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - id: compare
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine target branch
+        id: vars
         run: |
           TARGET_BRANCH="${{ github.head_ref || github.ref_name }}"
-          git fetch origin main $TARGET_BRANCH
-          COMMITS_AHEAD=$(git rev-list --count main..test)
-          echo "COMMITS_AHEAD=$COMMITS_AHEAD" >> $GITHUB_OUTPUT
-      - id: pr
-        if: steps.compare.outputs.COMMITS_AHEAD > 0
+          echo "TARGET_BRANCH=${TARGET_BRANCH}" >> $GITHUB_ENV
+
+      - name: Fetch branches
         run: |
-          gh pr create --base main --head $TARGET_BRANCH --title "Auto PR: $TARGET_BRANCH" --body "This PR was automatically created by a GitHub Action."
+          git fetch origin main ${{ env.TARGET_BRANCH }}
+
+      - name: Compare branches
+        id: compare
+        run: |
+          COMMITS_AHEAD=$(git rev-list --count origin/main..origin/${{ env.TARGET_BRANCH }})
+          echo "COMMITS_AHEAD=${COMMITS_AHEAD}" >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        if: ${{ steps.compare.outputs.COMMITS_AHEAD != '0' }}
+        run: |
+          gh pr create \
+            --base main \
+            --head ${{ env.TARGET_BRANCH }} \
+            --title "Auto PR: ${{ env.TARGET_BRANCH }}" \
+            --body "This PR was automatically created by a GitHub Action."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
