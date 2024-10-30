@@ -17,7 +17,18 @@ tasks:
           exit 1
         fi
 
+  go-sec:
+    cmds:
+      - go install github.com/securego/gosec/v2/cmd/gosec@latest
+      - export PATH=$PATH:$(go env GOPATH)/bin
+      - $(go env GOPATH)/bin/gosec ./...
+
   go-quality:
     cmds:
+      - task: go-sec
       - task: go-lint
       - task: go-test
+
+  default:
+    cmds:
+      - task: go-quality
