@@ -1,0 +1,30 @@
+name: Auto PR
+
+permissions:
+  contents: write
+  id-token: write
+  pull-requests: write
+
+on:
+  push:
+    branches-ignore:
+      - main
+jobs:
+  auto-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: main
+      - name: Reset destination branch
+        run: |
+          git fetch origin ${{ github.ref_name }}:${{ github.ref_name }}
+          git reset --hard ${{ github.ref_name }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7.0.5
+        with:
+          base: main
+          branch: ${{ github.ref_name }}
+          title: "Auto PR: ${{ github.ref_name }}"
+          delete-branch: true
+          labels: auto-pr
