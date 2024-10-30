@@ -28,4 +28,3 @@ jobs:
           title: "Auto PR: ${{ github.ref_name }}"
           delete-branch: true
           labels: auto-pr
-          reviewers: dknathalage
