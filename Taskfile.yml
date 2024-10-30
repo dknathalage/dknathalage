@@ -1,34 +1,70 @@
 version: "3"
 
 tasks:
-  go-lint:
+  setup:
+    cmds:
+      - go mod download
+      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
+      - go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+  setup.lint:
     cmds:
       - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
-      - golangci-lint run
 
-  go-test:
-    cmds:
-      - go test -coverprofile=coverage.out ./...
-      - go tool cover -func=coverage.out
-      - |
-        coverage=$(go tool cover -func=coverage.out | grep "total:" | awk '{print $3}' | sed 's/%//')
-        if [ "$coverage" -lt 80 ]; then
-          echo "Code coverage is below 80%!"
-          exit 1
-        fi
-
-  go-sec:
+  setup.sec:
     cmds:
       - go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+  setup.test:
+    cmds:
+      - go mod download
+
+  run.lint:
+    aliases: ["lint"]
+    cmds:
+      - echo "RUNNING GOLANGCI-LINT"
+      - golangci-lint run
+
+  run.test:
+    aliases: ["test"]
+    cmds:
+      - echo "RUNNING TESTS"
+      - go test -coverprofile=coverage.out -coverpkg=./pkg ./...
+      - go tool cover -func=coverage.out
+      # check if the coverage is less than 80%
+      - go tool cover -func=coverage.out | grep total | awk '{print $3}' | awk -F. '{print $1}' | awk '{if ($1 < 80) {exit 1}}'
+
+  run.sec:
+    aliases: ["sec"]
+    cmds:
+      - echo "RUNNING GOSEC"
       - export PATH=$PATH:$(go env GOPATH)/bin
       - $(go env GOPATH)/bin/gosec ./...
 
-  go-quality:
+  run.fmt:
+    aliases: ["fmt"]
     cmds:
-      - task: go-sec
-      - task: go-lint
-      - task: go-test
+      - gofmt -s -w .
+
+  run.vet:
+    aliases: ["vet"]
+    cmds:
+      - go vet ./...
+
+  setup:
+    cmds:
+      - task setup.lint
+      - task setup.sec
+      - task setup.test
+
+  quality:
+    cmds:
+      - task run.lint
+      - task run.test
+      - task run.sec
+      - task run.fmt
+      - task run.vet
 
   default:
     cmds:
-      - task: go-quality
+      - task: quality
