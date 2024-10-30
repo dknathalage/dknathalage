@@ -6,6 +6,7 @@ on:
       - main # Ignore pushes to main to prevent self-triggering
 
 permissions:
+  id-token: write # Allows setting up the token for the action
   contents: write # Allows pushing commits
   pull-requests: write # Allows creating and managing PRs
 
