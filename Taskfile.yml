@@ -16,7 +16,6 @@ tasks:
       - go install github.com/securego/gosec/v2/cmd/gosec@latest
 
   setup.test:
-    aliases: ["test"]
     cmds:
       - go mod download
 
