@@ -29,7 +29,7 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          base: main # The branch you want to merge into
+          base: ${{ github.head_ref }}
           title: "Auto PR: ${{ github.ref_name }}"
           body: |
             This PR was automatically created by a GitHub Action to merge changes from `${{ github.ref_name }}` into `main`.
@@ -38,7 +38,7 @@ jobs:
             - **Branch Name:** `${{ github.ref_name }}`
             - **Commit:** `${{ github.sha }}`
           labels: automated-pr # Optional: Add labels to the PR
-          branch: ${{ github.ref_name }}
+          branch: main
           delete-branch: true # Keep the branch after PR creation
           # Additional optional configurations:
           # draft: false
