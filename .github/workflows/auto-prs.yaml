@@ -1,29 +1,45 @@
-name: Auto Create PR
+name: Auto Create PR to Main
 
 on:
   push:
     branches-ignore:
-      - main
+      - main # Ignore pushes to main to prevent self-triggering
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: write # Allows pushing commits
+  pull-requests: write # Allows creating and managing PRs
 
 jobs:
   create-pr:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Ensure full history is fetched for accurate diffs
 
-      - name: Create Pull Request
+      - name: Set Up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create or Update Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          base: main
-          branch: ${{ github.head_ref || github.ref_name }}
-          title: "Auto PR: ${{ github.head_ref || github.ref_name }}"
-          body: "This PR was automatically created by a GitHub Action."
-          delete-branch: true
-          labels: auto-pr
+          base: main # The branch you want to merge into
+          branch: ${{ github.ref_name }} # The branch that triggered the workflow
+          title: "Auto PR: ${{ github.ref_name }}"
+          body: |
+            This PR was automatically created by a GitHub Action to merge changes from `${{ github.ref_name }}` into `main`.
+
+            **Branch Details:**
+            - **Branch Name:** `${{ github.ref_name }}`
+            - **Commit:** `${{ github.sha }}`
+          labels: automated-pr # Optional: Add labels to the PR
+          delete-branch: false # Keep the branch after PR creation
+          # Additional optional configurations:
+          # draft: false
+          reviewers: "dknathalage"
+          # assignees: 'assignee1,assignee2'
