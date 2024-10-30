@@ -22,7 +22,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: main
+          branch: ${{ github.head_ref || github.ref_name }}
           title: "Auto PR: ${{ github.head_ref || github.ref_name }}"
           body: "This PR was automatically created by a GitHub Action."
-          delete-branch: false
+          delete-branch: true
           labels: auto-pr
