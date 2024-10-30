@@ -1,12 +1,12 @@
 version: "3"
 
 tasks:
-  go-lint:
+  lint:
     cmds:
       - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
       - golangci-lint run
 
-  go-test:
+  test:
     cmds:
       - go test -coverprofile=coverage.out ./...
       - go tool cover -func=coverage.out
@@ -17,18 +17,28 @@ tasks:
           exit 1
         fi
 
-  go-sec:
+  sec:
     cmds:
       - go install github.com/securego/gosec/v2/cmd/gosec@latest
       - export PATH=$PATH:$(go env GOPATH)/bin
       - $(go env GOPATH)/bin/gosec ./...
 
-  go-quality:
+  fmt:
+    cmds:
+      - gofmt -s -w .
+
+  vet:
+    cmds:
+      - go vet ./...
+
+  quality:
     cmds:
       - task: go-sec
       - task: go-lint
       - task: go-test
+      - task: go-vet
+      - task: go-fmt
 
   default:
     cmds:
-      - task: go-quality
+      - task: quality

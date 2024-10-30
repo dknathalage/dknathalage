@@ -23,7 +23,7 @@ jobs:
         with:
           go-version: 1.23
       - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-      - run: task go-lint
+      - run: task lint
 
   quality-test:
     runs-on: ubuntu-latest
@@ -33,7 +33,7 @@ jobs:
         with:
           go-version: 1.23
       - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-      - run: task go-test
+      - run: task test
 
   quality-sec:
     runs-on: ubuntu-latest
@@ -43,7 +43,7 @@ jobs:
         with:
           go-version: 1.23
       - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-      - run: task go-sec
+      - run: task sec
 
   terraform:
     runs-on: ubuntu-latest
