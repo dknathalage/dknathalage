@@ -1,7 +1,8 @@
 name: PR Quality
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   quality-lint:
