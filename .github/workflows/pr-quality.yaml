@@ -5,8 +5,19 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  quality-lint:
+  setup:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.23
+      - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+      - run: task setup
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: setup
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -15,7 +26,8 @@ jobs:
       - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
       - run: task lint
 
-  quality-test:
+  test:
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -25,7 +37,8 @@ jobs:
       - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
       - run: task test
 
-  quality-sec:
+  sec:
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
