@@ -13,7 +13,7 @@ jobs:
         run: |
           TARGET_BRANCH="${{ github.head_ref || github.ref_name }}"
           git fetch origin main $TARGET_BRANCH
-          COMMITS_AHEAD=$(git rev-list --count $TARGET_BRANCH ^main)
+          COMMITS_AHEAD=$(git rev-list --count $TARGET_BRANCH main)
           echo "COMMITS_AHEAD=$COMMITS_AHEAD" >> $GITHUB_OUTPUT
       - id: pr
         if: steps.compare.outputs.COMMITS_AHEAD > 0
