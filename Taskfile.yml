@@ -7,12 +7,27 @@ tasks:
       - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
       - go install github.com/securego/gosec/v2/cmd/gosec@latest
 
-  lint:
+  setup.lint:
+    cmds:
+      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
+
+  setup.sec:
+    cmds:
+      - go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+  setup.test:
+    aliases: ["test"]
+    cmds:
+      - go mod download
+
+  run.lint:
+    aliases: ["lint"]
     cmds:
       - echo "RUNNING GOLANGCI-LINT"
       - golangci-lint run
 
-  test:
+  run.test:
+    aliases: ["test"]
     cmds:
       - echo "RUNNING TESTS"
       - go test -coverprofile=coverage.out -coverpkg=./pkg ./...
@@ -20,27 +35,36 @@ tasks:
       # check if the coverage is less than 80%
       - go tool cover -func=coverage.out | grep total | awk '{print $3}' | awk -F. '{print $1}' | awk '{if ($1 < 80) {exit 1}}'
 
-  sec:
+  run.sec:
+    aliases: ["sec"]
     cmds:
       - echo "RUNNING GOSEC"
       - export PATH=$PATH:$(go env GOPATH)/bin
       - $(go env GOPATH)/bin/gosec ./...
 
-  fmt:
+  run.fmt:
+    aliases: ["fmt"]
     cmds:
       - gofmt -s -w .
 
-  vet:
+  run.vet:
+    aliases: ["vet"]
     cmds:
       - go vet ./...
 
+  setup:
+    cmds:
+      - task setup.lint
+      - task setup.sec
+      - task setup.test
+
   quality:
     cmds:
-      - task: sec
-      - task: lint
-      - task: test
-      - task: vet
-      - task: fmt
+      - task run.lint
+      - task run.test
+      - task run.sec
+      - task run.fmt
+      - task run.vet
 
   default:
     cmds:
