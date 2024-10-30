@@ -37,7 +37,8 @@ jobs:
             - **Branch Name:** `${{ github.ref_name }}`
             - **Commit:** `${{ github.sha }}`
           labels: automated-pr # Optional: Add labels to the PR
-          delete-branch: false # Keep the branch after PR creation
+          branch: ${{ github.ref_name }}
+          delete-branch: true # Keep the branch after PR creation
           # Additional optional configurations:
           # draft: false
           reviewers: "dknathalage"
