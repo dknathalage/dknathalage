@@ -1,9 +1,14 @@
 version: "3"
 
 tasks:
+  setup:
+    cmds:
+      - go mod download
+      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
+      - go install github.com/securego/gosec/v2/cmd/gosec@latest
+
   lint:
     cmds:
-      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
       - golangci-lint run
 
   test:
@@ -15,7 +20,6 @@ tasks:
 
   sec:
     cmds:
-      - go install github.com/securego/gosec/v2/cmd/gosec@latest
       - export PATH=$PATH:$(go env GOPATH)/bin
       - $(go env GOPATH)/bin/gosec ./...
 
@@ -29,11 +33,11 @@ tasks:
 
   quality:
     cmds:
-      - task: go-sec
-      - task: go-lint
-      - task: go-test
-      - task: go-vet
-      - task: go-fmt
+      - task: sec
+      - task: lint
+      - task: test
+      - task: vet
+      - task: fmt
 
   default:
     cmds:
