@@ -17,11 +17,7 @@ tasks:
           exit 1
         fi
 
-  quality:
+  go-quality:
     cmds:
       - task: go-lint
       - task: go-test
-
-  gcloud:
-    cmds:
-
