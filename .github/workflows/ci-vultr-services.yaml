@@ -50,6 +50,7 @@ jobs:
     needs:
       - quality-lint
       - quality-test
+      - quality-sec
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
