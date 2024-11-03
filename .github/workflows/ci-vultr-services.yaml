@@ -66,8 +66,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/docker-build
         with:
-          SERVICE_NAME: test
-          DOCKERFILE: ./cmd/data/Dockerfile
+          SERVICE_NAME: invoice
+          DOCKERFILE: ./cmd/invoice/Dockerfile
 
   vultr-services:
     needs: [terraform, docker-build]
@@ -76,6 +76,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/vultr-deploy
         with:
-          SERVICE: test
+          SERVICE: invoice
           SERVER_IP: 67.219.103.200
           VULTR_SSH_KEY: ${{ secrets.VULTR_SSH_KEY }}
