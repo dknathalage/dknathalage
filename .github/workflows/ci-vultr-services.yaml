@@ -10,6 +10,8 @@ on:
       - "go.sum"
       - ".github/workflows/ci-vultr-services.yaml"
 
+  workflow_dispatch:
+
 permissions:
   contents: write
   id-token: write
