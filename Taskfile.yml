@@ -10,6 +10,7 @@ tasks:
   setup.lint:
     cmds:
       - go mod download
+      - go mod tidy
       - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
 
   setup.sec:
