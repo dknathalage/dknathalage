@@ -9,10 +9,13 @@ tasks:
 
   setup.lint:
     cmds:
+      - go mod download
+      - go mod tidy
       - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
 
   setup.sec:
     cmds:
+      - go mod download
       - go install github.com/securego/gosec/v2/cmd/gosec@latest
 
   setup.test:
@@ -23,7 +26,7 @@ tasks:
     aliases: ["lint"]
     cmds:
       - echo "RUNNING GOLANGCI-LINT"
-      - golangci-lint run
+      - golangci-lint run --timeout 2m
 
   run.test:
     aliases: ["test"]
