@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # Step 5: Build the application binary
-RUN go build -o main ./cmd/data/main.go
+RUN go build -o main ./cmd/invoice/main.go
 
 # Step 6: Use a minimal image to run the binary
 FROM alpine:latest
