@@ -27,4 +27,4 @@ COPY --from=builder /app/main .
 EXPOSE 8080
 
 # Step 10: Run the application
-CMD ["./main"]
+CMD ["./main", "serve", "--http=0.0.0.0:80"]
