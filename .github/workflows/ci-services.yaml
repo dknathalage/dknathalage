@@ -132,4 +132,4 @@ jobs:
 
       - name: "Fix Tags"
         run: |
-          gcloud run services update-traffics hello-cloud-run --platform managed --region australia-southeast2 --to-latest --clear-tags --set-tags=green=100
+          gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --to-latest --clear-tags --set-tags=green=100
