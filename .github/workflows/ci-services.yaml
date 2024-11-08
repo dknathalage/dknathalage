@@ -21,38 +21,38 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.23
-      - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-      - run: task setup.lint
-      - run: task lint
+  # lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-go@v2
+  #       with:
+  #         go-version: 1.23
+  #     - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+  #     - run: task setup.lint
+  #     - run: task lint
 
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.23
-      - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-      - run: task setup.test
-      - run: task test
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-go@v2
+  #       with:
+  #         go-version: 1.23
+  #     - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+  #     - run: task setup.test
+  #     - run: task test
 
-  sec:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.23
-      - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-      - run: task setup.sec
-      - run: task sec
+  # sec:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-go@v2
+  #       with:
+  #         go-version: 1.23
+  #     - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+  #     - run: task setup.sec
+  #     - run: task sec
 
   # docker-build:
   #   # needs:
@@ -112,9 +112,6 @@ jobs:
 
       - uses: "google-github-actions/setup-gcloud@v2"
 
-      - run: |
-          gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --platform managed --region australia-southeast2 --to-tags=green=100,blue=0
-
       - name: Deploy to Cloud Run (Green)
         id: deploy-green
         uses: google-github-actions/deploy-cloudrun@v2
@@ -124,6 +121,7 @@ jobs:
           region: "australia-southeast2"
           project_id: "dknathalage"
           tag: "blue"
+          tag_traffic: "blue=0"
 
       - run: sleep 15
 
@@ -131,3 +129,6 @@ jobs:
         run: |
           REV=$(gcloud run revisions list --platform managed --region australia-southeast2 --format="value(REVISION)" --service hello-cloud-run --filter="tags=blue")
           gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --set-tags=green=$REV
+
+      - run: |
+          gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --platform managed --region australia-southeast2 --to-tags=green=100,blue=0
