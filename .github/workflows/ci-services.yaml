@@ -121,7 +121,7 @@ jobs:
           region: "australia-southeast2"
           project_id: "dknathalage"
           tag: "blue"
-          tag_traffic: "blue=0,green=100"
+          tag_traffic: "blue=0"
 
       - run: echo "E2E Tests"
 
