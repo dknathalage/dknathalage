@@ -50,34 +50,54 @@ jobs:
       - run: task setup.sec
       - run: task sec
 
-  terraform:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/tf-deploy
-        with:
-          VULTR_API_TOKEN: ${{ secrets.VULTR_API_TOKEN }}
-
   docker-build:
     needs:
       - lint
       - test
       - sec
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        SERVICE_NAME:
+          - "invoice"
+        DOCKERFILE:
+          - "./cmd/invoice/Dockerfile"
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/docker-build
+      - uses: docker/setup-buildx-action@v3
+      - id: auth
+        uses: google-github-actions/auth@v1
         with:
-          SERVICE_NAME: invoice
-          DOCKERFILE: ./cmd/invoice/Dockerfile
+          token_format: "access_token"
+          workload_identity_provider: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
+          service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+          access_token_lifetime: "300s"
+      - uses: docker/login-action@v2
+        with:
+          registry: "australia-southeast2-docker.pkg.dev"
+          username: "oauth2accesstoken"
+          password: ${{ steps.auth.outputs.access_token }}
+      - id: image_base
+        shell: bash
+        run: echo IMAGE_BASE="australia-southeast2-docker.pkg.dev"/"dknathalage/dknathalage"/${{ matrix.SERVICE_NAME }} >> $GITHUB_OUTPUT
+      - uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: |
+            ${{ steps.image_base.outputs.IMAGE_BASE }}:latest
+            ${{ steps.image_base.outputs.IMAGE_BASE }}:${{ github.sha }}
+          file: ${{ matrix.DOCKERFILE }}
+          context: .
+          cache-from: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache
+          cache-to: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache
 
-  vultr-services:
-    needs: [terraform, docker-build]
+  cloudrun-deploy:
+    needs:
+      - docker-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/vultr-deploy
+      - uses: "google-github-actions/deploy-cloudrun@v2"
         with:
-          SERVICE: invoice
-          SERVER_IP: 67.219.103.200
-          VULTR_SSH_KEY: ${{ secrets.VULTR_SSH_KEY }}
+          service: "hello-cloud-run"
+          image: "gcr.io/cloudrun/hello"
