@@ -1,14 +1,14 @@
 name: Auto PR
 
-permissions:
-  contents: write
-  id-token: write
-  pull-requests: write
+# permissions:
+#   contents: write
+#   id-token: write
+#   pull-requests: write
 
-on:
-  push:
-    branches-ignore:
-      - main
+# on:
+#   push:
+#     branches-ignore:
+#       - main
 jobs:
   auto-pr:
     runs-on: ubuntu-latest

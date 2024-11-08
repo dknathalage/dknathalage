@@ -9,8 +9,3 @@ spec:
     spec:
       containers:
         - image: "gcr.io/cloudrun/hello"
-  traffic:
-    - latestRevision: true
-      percent: 0
-    - revisionName: blue
-      percent: 100

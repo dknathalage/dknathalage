@@ -54,46 +54,46 @@ jobs:
       - run: task setup.sec
       - run: task sec
 
-  docker-build:
-    # needs:
-    #   - lint
-    #   - test
-    #   - sec
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        SERVICE_NAME:
-          - "invoice"
-        DOCKERFILE:
-          - "./cmd/invoice/Dockerfile"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - id: auth
-        uses: google-github-actions/auth@v1
-        with:
-          token_format: "access_token"
-          workload_identity_provider: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
-          service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
-          access_token_lifetime: "300s"
-      - uses: docker/login-action@v2
-        with:
-          registry: "australia-southeast2-docker.pkg.dev"
-          username: "oauth2accesstoken"
-          password: ${{ steps.auth.outputs.access_token }}
-      - id: image_base
-        shell: bash
-        run: echo IMAGE_BASE="australia-southeast2-docker.pkg.dev"/"dknathalage/dknathalage"/${{ matrix.SERVICE_NAME }} >> $GITHUB_OUTPUT
-      - uses: docker/build-push-action@v6
-        with:
-          push: true
-          tags: |
-            ${{ steps.image_base.outputs.IMAGE_BASE }}:latest
-            ${{ steps.image_base.outputs.IMAGE_BASE }}:${{ github.sha }}
-          file: ${{ matrix.DOCKERFILE }}
-          context: .
-          cache-from: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache
-          cache-to: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache,mode=max
+  # docker-build:
+  #   # needs:
+  #   #   - lint
+  #   #   - test
+  #   #   - sec
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       SERVICE_NAME:
+  #         - "invoice"
+  #       DOCKERFILE:
+  #         - "./cmd/invoice/Dockerfile"
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: docker/setup-buildx-action@v3
+  #     - id: auth
+  #       uses: google-github-actions/auth@v1
+  #       with:
+  #         token_format: "access_token"
+  #         workload_identity_provider: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
+  #         service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+  #         access_token_lifetime: "300s"
+  #     - uses: docker/login-action@v2
+  #       with:
+  #         registry: "australia-southeast2-docker.pkg.dev"
+  #         username: "oauth2accesstoken"
+  #         password: ${{ steps.auth.outputs.access_token }}
+  #     - id: image_base
+  #       shell: bash
+  #       run: echo IMAGE_BASE="australia-southeast2-docker.pkg.dev"/"dknathalage/dknathalage"/${{ matrix.SERVICE_NAME }} >> $GITHUB_OUTPUT
+  #     - uses: docker/build-push-action@v6
+  #       with:
+  #         push: true
+  #         tags: |
+  #           ${{ steps.image_base.outputs.IMAGE_BASE }}:latest
+  #           ${{ steps.image_base.outputs.IMAGE_BASE }}:${{ github.sha }}
+  #         file: ${{ matrix.DOCKERFILE }}
+  #         context: .
+  #         cache-from: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache
+  #         cache-to: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache,mode=max
 
   cloudrun-deploy:
     # needs:
@@ -111,11 +111,21 @@ jobs:
           access_token_lifetime: "300s"
 
       - uses: "google-github-actions/setup-gcloud@v2"
-      - run: gcloud config set project dknathalage
-      - run: gcloud run services replace ./cmd/invoice/service.yaml
 
-      - name: Run Tests on Green Service
-        run: echo "Run tests on green service"
+      - uses: "google-github-actions/deploy-cloudrun@v2"
+        with:
+          service: "hello-cloud-run"
+          image: "gcr.io/cloudrun/hello"
+          region: "australia-southeast2"
+          project_id: "dknathalage"
+          tag_traffic: "blue=0"
 
-      - name: Promote Green Service to Blue
-        run: gcloud run services update-traffic hello-cloud-run --to-latest
+      - run: echo "tests on blue"
+
+      - name: Gradually shift traffic to "blue"
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: "hello-cloud-run"
+          region: "australia-southeast2"
+          project_id: "dknathalage"
+          tag_traffic: "blue=100,green=0"
