@@ -112,6 +112,9 @@ jobs:
 
       - uses: "google-github-actions/setup-gcloud@v2"
 
+      - run: |
+          gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --platform managed --region australia-southeast2 --to-tags=green=100,blue=0
+
       - name: Deploy to Cloud Run (Green)
         id: deploy-green
         uses: google-github-actions/deploy-cloudrun@v2
@@ -121,9 +124,8 @@ jobs:
           region: "australia-southeast2"
           project_id: "dknathalage"
           tag: "blue"
-          tag_traffic: "blue=0"
 
-      - run: sleep 30
+      - run: sleep 15
 
       - name: "Fix Tags"
         run: |
