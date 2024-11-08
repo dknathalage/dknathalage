@@ -121,7 +121,7 @@ jobs:
           region: "australia-southeast2"
           project_id: "dknathalage"
           tag: "blue"
-          tag_traffic: "blue=0"
+          tag_traffic: "blue=0,green=100"
 
       - run: echo "E2E Tests"
 
@@ -131,5 +131,4 @@ jobs:
       # if tests pass, tag the revision as green with 100% traffic
 
       - name: "Fix Tags"
-        run: |
-          gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --to-latest --clear-tags --set-tags=green=100
+        run: gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --to-latest --set-tags=green=LATEST
