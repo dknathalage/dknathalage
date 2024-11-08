@@ -122,9 +122,6 @@ jobs:
           project_id: "dknathalage"
           tag: "blue"
 
-      - run: |
-          gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --platform managed --region australia-southeast2 --to-tags=blue=0
-
       - run: sleep 15
 
       - name: "Fix Tags"
