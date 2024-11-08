@@ -122,3 +122,16 @@ jobs:
           project_id: "dknathalage"
           tag: "blue"
           tag_traffic: "blue=0,green=100"
+
+      - run: echo "E2E Tests"
+
+      - name: "Promote Green to Blue"
+        id: promote-green-to-blue
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: "hello-cloud-run"
+          image: "gcr.io/cloudrun/hello"
+          region: "australia-southeast2"
+          project_id: "dknathalage"
+          tag: "green"
+          tag_traffic: "blue=0,green=100"
