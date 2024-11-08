@@ -110,6 +110,5 @@ jobs:
           access_token_lifetime: "300s"
       - uses: "google-github-actions/deploy-cloudrun@v2"
         with:
-          service: "hello-cloud-run"
-          image: "gcr.io/cloudrun/hello"
+          metadata: "cmd/invoice/service.yaml"
           project_id: "dknathalage"
