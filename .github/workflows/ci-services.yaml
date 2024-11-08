@@ -93,7 +93,7 @@ jobs:
           file: ${{ matrix.DOCKERFILE }}
           context: .
           cache-from: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache
-          cache-to: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache
+          cache-to: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache,mode=max
 
   cloudrun-deploy:
     needs:
