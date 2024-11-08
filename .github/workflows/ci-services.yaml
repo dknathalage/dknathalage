@@ -128,4 +128,4 @@ jobs:
       - name: "Fix Tags"
         run: |
           REV=$(gcloud run revisions list --platform managed --region australia-southeast2 --format="value(REVISION)" --service hello-cloud-run --filter="tags=blue")
-          gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --to-latest --set-tags=green=$REV
+          gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --set-tags=green=$REV
