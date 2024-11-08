@@ -101,6 +101,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - id: auth
         uses: google-github-actions/auth@v1
         with:
@@ -108,7 +109,8 @@ jobs:
           workload_identity_provider: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
           service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
           access_token_lifetime: "300s"
-      - uses: "google-github-actions/deploy-cloudrun@v2"
-        with:
-          metadata: "cmd/invoice/service.yaml"
-          project_id: "dknathalage"
+
+      - uses: "google-github-actions/setup-gcloud@v2"
+      - run: gcloud config set project dknathalage
+
+      - run: gcloud run services replace ./cmd/invoice/service.yaml
