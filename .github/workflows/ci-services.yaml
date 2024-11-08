@@ -121,17 +121,20 @@ jobs:
           region: "australia-southeast2"
           project_id: "dknathalage"
           tag: "blue"
-          tag_traffic: "blue=0,green=100"
+          tag_traffic: "blue=0"
 
       - run: echo "E2E Tests"
 
-      - name: "Promote Green to Blue"
-        id: promote-green-to-blue
-        uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          service: "hello-cloud-run"
-          image: "gcr.io/cloudrun/hello"
-          region: "australia-southeast2"
-          project_id: "dknathalage"
-          tag: "green"
-          tag_traffic: "blue=0,green=100"
+      # start
+      # create a revision and tag it as blue with 0% traffic
+      # run e2e tests
+      # if tests pass, tag the revision as green with 100% traffic
+
+      - name: "Fix Tags"
+        run: |
+          echo "Fixing Tags"
+          echo "Tagging Green"
+          gcloud run services update-traffic hello-cloud-run --to-latest green=100 --platform managed --region australia-southeast2 --project dknathalage
+          echo "Tagging Blue"
+          gcloud run services update-traffic hello-cloud-run --to-latest blue=0 --platform managed --region australia-southeast2 --project dknathalage
+          echo "Done"
