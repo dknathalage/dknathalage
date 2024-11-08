@@ -2,6 +2,8 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: hello-cloud-run
+  labels:
+    cloud.googleapis.com/location: australia-southeast2
 spec:
   template:
     spec:
