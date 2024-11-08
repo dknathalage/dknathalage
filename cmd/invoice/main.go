@@ -13,8 +13,8 @@ func main() {
 	app := pocketbase.New()
 
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
-		e.Router.GET("/hello/:name", func(c echo.Context) error {
-			name := c.PathParam("name")
+		e.Router.GET("/:type?", func(c echo.Context) error {
+			name := c.PathParam("type")
 
 			return c.JSON(http.StatusOK, map[string]string{"message": "Hello " + name})
 		})
