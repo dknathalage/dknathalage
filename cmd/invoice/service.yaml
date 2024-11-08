@@ -10,5 +10,7 @@ spec:
       containers:
         - image: "gcr.io/cloudrun/hello"
   traffic:
-    - latestRevision: false
+    - latestRevision: true
       percent: 0
+    - revisionName: blue
+      percent: 100
