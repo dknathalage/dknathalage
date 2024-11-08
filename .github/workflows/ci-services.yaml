@@ -121,7 +121,6 @@ jobs:
           region: "australia-southeast2"
           project_id: "dknathalage"
           tag: "blue"
-          tag_traffic: "blue=0"
 
       - run: sleep 15
 
