@@ -8,13 +8,17 @@ on:
       - "pkg/**"
       - "go.mod"
       - "go.sum"
-      - ".github/workflows/ci-vultr-services.yaml"
+      - ".github/workflows/ci-services.yaml"
 
   workflow_dispatch:
 
 permissions:
   contents: write
   id-token: write
+
+concurrency:
+  group: ci-services
+  cancel-in-progress: true
 
 jobs:
   lint:
@@ -89,7 +93,7 @@ jobs:
           file: ${{ matrix.DOCKERFILE }}
           context: .
           cache-from: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache
-          cache-to: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache
+          cache-to: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache,mode=max
 
   cloudrun-deploy:
     needs:
@@ -97,7 +101,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: "access_token"
+          workload_identity_provider: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
+          service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+          access_token_lifetime: "300s"
       - uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           service: "hello-cloud-run"
           image: "gcr.io/cloudrun/hello"
+          project_id: "dknathalage"
