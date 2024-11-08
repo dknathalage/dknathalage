@@ -132,9 +132,4 @@ jobs:
 
       - name: "Fix Tags"
         run: |
-          echo "Fixing Tags"
-          echo "Tagging Green"
-          gcloud run services update-traffic hello-cloud-run --to-latest green=100 --platform managed --region australia-southeast2 --project dknathalage
-          echo "Tagging Blue"
-          gcloud run services update-traffic hello-cloud-run --to-latest blue=0 --platform managed --region australia-southeast2 --project dknathalage
-          echo "Done"
+          gcloud run services update-traffics hello-cloud-run --platform managed --region australia-southeast2 --to-latest --clear-tags --set-tags=green=100
