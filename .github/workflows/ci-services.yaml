@@ -125,11 +125,6 @@ jobs:
 
       - run: sleep 30
 
-      # start
-      # create a revision and tag it as blue with 0% traffic
-      # run e2e tests
-      # if tests pass, tag the revision as green with 100% traffic
-
       - name: "Fix Tags"
         run: |
           REV=$(gcloud run revisions list --platform managed --region australia-southeast2 --format="value(REVISION)" --service hello-cloud-run --filter="tags=blue")
