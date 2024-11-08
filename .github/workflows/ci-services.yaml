@@ -122,7 +122,6 @@ jobs:
           project_id: "dknathalage"
           tag: "blue"
           tag_traffic: "blue=0"
-          no_traffic: true
 
       - run: sleep 30
 
@@ -132,4 +131,6 @@ jobs:
       # if tests pass, tag the revision as green with 100% traffic
 
       - name: "Fix Tags"
-        run: gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --to-latest --set-tags=green=LATEST
+        run: |
+          REV=$(gcloud run revisions list --platform managed --region australia-southeast2 --format="value(REVISION)" --service hello-cloud-run --filter="tags=blue")
+          gcloud run services update-traffic hello-cloud-run --platform managed --region australia-southeast2 --to-latest --set-tags=green=$REV
