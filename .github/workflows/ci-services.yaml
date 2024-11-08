@@ -96,8 +96,8 @@ jobs:
           cache-to: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache,mode=max
 
   cloudrun-deploy:
-    needs:
-      - docker-build
+    # needs:
+    #   - docker-build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
