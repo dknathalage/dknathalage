@@ -1,8 +1,8 @@
 name: PR Quality
 
-# on:
-#   pull_request:
-#     types: [opened, synchronize]
+on:
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   lint:
