@@ -122,8 +122,9 @@ jobs:
           project_id: "dknathalage"
           tag: "blue"
           tag_traffic: "blue=0"
+          no_traffic: true
 
-      - run: echo "E2E Tests"
+      - run: sleep 30
 
       # start
       # create a revision and tag it as blue with 0% traffic
