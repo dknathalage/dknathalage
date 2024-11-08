@@ -55,10 +55,10 @@ jobs:
       - run: task sec
 
   docker-build:
-    needs:
-      - lint
-      - test
-      - sec
+    # needs:
+    #   - lint
+    #   - test
+    #   - sec
     runs-on: ubuntu-latest
     strategy:
       matrix:
