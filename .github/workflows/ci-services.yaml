@@ -112,7 +112,7 @@ jobs:
 
       - uses: "google-github-actions/setup-gcloud@v2"
       - run: gcloud config set project dknathalage
-      - run: gcloud run services replace ./cmd/invoice/service.yaml --name hello-cloud-run
+      - run: gcloud run services replace ./cmd/invoice/service.yaml
 
       - name: Run Tests on Green Service
         run: echo "Run tests on green service"
