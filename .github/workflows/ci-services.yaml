@@ -8,13 +8,17 @@ on:
       - "pkg/**"
       - "go.mod"
       - "go.sum"
-      - ".github/workflows/ci-vultr-services.yaml"
+      - ".github/workflows/ci-services.yaml"
 
   workflow_dispatch:
 
 permissions:
   contents: write
   id-token: write
+
+concurrency:
+  group: ci-services
+  cancel-in-progress: true
 
 jobs:
   lint:
