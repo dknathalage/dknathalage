@@ -101,7 +101,6 @@ jobs:
           - name: "invoice"
             allow_unauthenticated: true
             concurrency: 1
-            config: "./cmd/invoice/service.yaml"
 
     runs-on: ubuntu-latest
     steps:
