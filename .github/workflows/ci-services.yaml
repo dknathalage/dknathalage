@@ -83,6 +83,8 @@ jobs:
           --region australia-southeast1 \
           --allow-unauthenticated \
           --concurrency ${{ matrix.service.concurrency }} \
-          --port 80
+          --port 80 \
+          --cpu 0.25 \
+          --memory 256Mi \
         env:
           IMAGE_BASE: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service.name }}"
