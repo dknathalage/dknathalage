@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # Step 5: Build the application binary
-RUN go build -o main ./cmd/invoice/main.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o main ./cmd/invoice
 
 # Step 6: Use a minimal image to run the binary
 FROM alpine:latest

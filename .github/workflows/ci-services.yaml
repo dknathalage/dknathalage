@@ -10,7 +10,11 @@ on:
       - "go.sum"
       - ".github/workflows/ci-services.yaml"
 
-  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 permissions:
   contents: write
@@ -23,6 +27,7 @@ concurrency:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -34,6 +39,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -45,6 +51,7 @@ jobs:
 
   sec:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -55,20 +62,17 @@ jobs:
       - run: task sec
 
   docker-build:
-    # needs:
-    #   - lint
-    #   - test
-    #   - sec
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        SERVICE_NAME:
-          - "invoice"
-        DOCKERFILE:
-          - "./cmd/invoice/Dockerfile"
+        service:
+          - name: "invoice"
+            dockerfile: "./cmd/invoice/Dockerfile"
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
+
       - id: auth
         uses: google-github-actions/auth@v1
         with:
@@ -76,26 +80,28 @@ jobs:
           workload_identity_provider: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
           service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
           access_token_lifetime: "300s"
+
       - uses: docker/login-action@v2
         with:
           registry: "australia-southeast2-docker.pkg.dev"
           username: "oauth2accesstoken"
           password: ${{ steps.auth.outputs.access_token }}
-      - id: image_base
-        shell: bash
-        run: echo IMAGE_BASE="australia-southeast2-docker.pkg.dev"/"dknathalage/dknathalage"/${{ matrix.SERVICE_NAME }} >> $GITHUB_OUTPUT
+
       - uses: docker/build-push-action@v6
         with:
           push: true
           tags: |
-            ${{ steps.image_base.outputs.IMAGE_BASE }}:latest
-            ${{ steps.image_base.outputs.IMAGE_BASE }}:${{ github.sha }}
-          file: ${{ matrix.DOCKERFILE }}
+            ${{ env.IMAGE_BASE }}:latest
+            ${{ env.IMAGE_BASE }}:${{ github.sha }}
+          file: ${{ matrix.service.dockerfile }}
           context: .
-          cache-from: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache
-          cache-to: type=registry,ref=${{ steps.image_base.outputs.IMAGE_BASE }}:buildcache,mode=max
+          cache-from: type=registry,ref=${{ env.IMAGE_BASE }}:buildcache
+          cache-to: type=registry,ref=${{ env.IMAGE_BASE }}:buildcache,mode=max
+        env:
+          IMAGE_BASE: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service.name }}"
 
   cloudrun-deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - docker-build
     strategy:
@@ -117,8 +123,7 @@ jobs:
 
       - uses: "google-github-actions/setup-gcloud@v2"
 
-      - name: Deploy to Cloud Run (Green)
-        id: deploy-green
+      - id: deploy-green
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           metadata: ${{ matrix.service.config }}
