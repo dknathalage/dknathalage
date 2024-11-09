@@ -1,20 +1,11 @@
 name: CI/CD Pipeline
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "cmd/**"
-      - "pkg/**"
-      - "go.mod"
-      - "go.sum"
-      - ".github/workflows/ci-services.yaml"
-
   pull_request:
     types:
       - opened
       - synchronize
       - reopened
+      - closed
 
 permissions:
   contents: write
@@ -27,7 +18,8 @@ concurrency:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    # run only when a PR is opened, synchronized or reopened
+    if: github.event.action != 'closed'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -39,7 +31,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event.action != 'closed'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -51,7 +43,7 @@ jobs:
 
   sec:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event.action != 'closed'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -62,7 +54,7 @@ jobs:
       - run: task sec
 
   docker-build:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'build')
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -101,9 +93,8 @@ jobs:
           IMAGE_BASE: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service.name }}"
 
   cloudrun-deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs:
-      - docker-build
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy')
+
     strategy:
       matrix:
         service:
