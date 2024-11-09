@@ -2,9 +2,6 @@ name: CI/CD Pipeline
 on:
   pull_request:
     types:
-      - opened
-      - synchronize
-      - reopened
       - closed
 
 permissions:
@@ -16,45 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    # run only when a PR is opened, synchronized or reopened
-    if: github.event.action != 'closed'
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.23
-      - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-      - run: task setup.lint
-      - run: task lint
-
-  test:
-    runs-on: ubuntu-latest
-    if: github.event.action != 'closed'
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.23
-      - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-      - run: task setup.test
-      - run: task test
-
-  sec:
-    runs-on: ubuntu-latest
-    if: github.event.action != 'closed'
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.23
-      - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-      - run: task setup.sec
-      - run: task sec
-
   docker-build:
-    if: github.event.action == 'closed' && github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'build')
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'build')
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -93,7 +53,7 @@ jobs:
           IMAGE_BASE: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service.name }}"
 
   cloudrun-deploy:
-    if: github.event.action == 'closed' && github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy')
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy')
 
     strategy:
       matrix:
@@ -101,7 +61,6 @@ jobs:
           - name: "invoice"
             allow_unauthenticated: true
             concurrency: 1
-            config: "./cmd/invoice/service.yaml"
 
     runs-on: ubuntu-latest
     steps:

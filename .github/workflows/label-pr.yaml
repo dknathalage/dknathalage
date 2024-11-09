@@ -24,9 +24,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           conventional-commits: |
             conventional-commits:
-              - type: 'config changes'
-                nouns: ['config', 'cfg', 'configure']
-                labels: ['deploy']
               - type: 'feature changes'
                 nouns: ['feature', 'feat', 'enhancement']
                 labels: ['build', 'deploy']
