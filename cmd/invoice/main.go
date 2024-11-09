@@ -1,28 +1,28 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
-	"github.com/labstack/echo/v5"
-	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/core"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
-	app := pocketbase.New()
+	// Echo instance
+	e := echo.New()
 
-	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
-		e.Router.GET("/:type?", func(c echo.Context) error {
-			name := c.PathParam("type")
+	// Middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
-			return c.JSON(http.StatusOK, map[string]string{"message": "Hello " + name})
-		})
+	// Routes
+	e.GET("/", hello)
 
-		return nil
-	})
+	// Start server
+	e.Logger.Fatal(e.Start(":1323"))
+}
 
-	if err := app.Start(); err != nil {
-		log.Fatal(err)
-	}
+// Handler
+func hello(c echo.Context) error {
+	return c.String(http.StatusOK, "Hello, World!")
 }
