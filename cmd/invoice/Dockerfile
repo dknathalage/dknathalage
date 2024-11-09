@@ -8,5 +8,5 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o main ./cm
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/main .
-EXPOSE 8080
+EXPOSE 80
 CMD ["./main", "serve", "--http=0.0.0.0:80"]

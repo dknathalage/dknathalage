@@ -11,7 +11,6 @@ on:
       - opened
       - synchronize
       - reopened
-      - closed
 
 jobs:
   asign-pr-labels:
@@ -26,6 +25,9 @@ jobs:
             conventional-commits:
               - type: 'feature changes'
                 nouns: ['feature', 'feat', 'enhancement']
+                labels: ['build', 'deploy']
+              - type: 'bug fixes'
+                nouns: ['fix', 'bug']
                 labels: ['build', 'deploy']
           maintain-labels-not-matched: false
           apply-changes: true
