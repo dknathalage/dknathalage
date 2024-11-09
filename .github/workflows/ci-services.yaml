@@ -60,7 +60,10 @@ jobs:
         service:
           - name: "invoice"
             allow_unauthenticated: true
-            concurrency: 1
+            concurrency: 1000
+            max_instances: 1
+            cpu: 0.25
+            memory: 256Mi
 
     runs-on: ubuntu-latest
     steps:
@@ -80,11 +83,12 @@ jobs:
           gcloud run deploy ${{ matrix.service.name }} \
           --image ${{ env.IMAGE_BASE }}:${{ github.sha }} \
           --platform managed \
-          --region australia-southeast1 \
+          --region australia-southeast2 \
           --allow-unauthenticated \
           --concurrency ${{ matrix.service.concurrency }} \
           --port 80 \
-          --cpu 0.25 \
-          --memory 256Mi \
+          --cpu ${{ matrix.service.cpu }} \
+          --memory ${{ matrix.service.memory }} \
+          --max-instances ${{ matrix.service.max_instances }}
         env:
           IMAGE_BASE: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service.name }}"
