@@ -107,7 +107,10 @@ jobs:
     strategy:
       matrix:
         service:
-          - config: "./cmd/invoice/service.yaml"
+          - name: "invoice"
+            allow_unauthenticated: true
+            concurrency: 1
+            config: "./cmd/invoice/service.yaml"
 
     runs-on: ubuntu-latest
     steps:
@@ -123,10 +126,12 @@ jobs:
 
       - uses: "google-github-actions/setup-gcloud@v2"
 
-      - id: deploy-green
-        uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          metadata: ${{ matrix.service.config }}
-          region: "australia-southeast2"
-          project_id: "dknathalage"
-          # TODO Blue Green Deployment
+      - run: |
+          gcloud run deploy ${{ matrix.service.name }} \
+          --image ${{ env.IMAGE_BASE }}:${{ github.sha }} \
+          --platform managed \
+          --region australia-southeast1 \
+          --allow-unauthenticated \
+          --concurrency ${{ matrix.service.concurrency }}
+        env:
+          IMAGE_BASE: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service.name }}"
