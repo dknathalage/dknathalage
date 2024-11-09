@@ -1,4 +1,4 @@
-name: Auto PR
+name: Assign PR Labels
 
 permissions:
   contents: write
