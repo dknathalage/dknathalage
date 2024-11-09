@@ -54,7 +54,7 @@ jobs:
 
   cloudrun-deploy:
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy')
-
+    needs: docker-build
     strategy:
       matrix:
         service:
