@@ -62,8 +62,8 @@ jobs:
             allow_unauthenticated: true
             concurrency: 1000
             max_instances: 1
-            cpu: 0.25
-            memory: 256Mi
+            cpu: 1
+            memory: 512Mi
 
     runs-on: ubuntu-latest
     steps:
