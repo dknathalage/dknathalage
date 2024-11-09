@@ -24,11 +24,11 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           conventional-commits: |
             conventional-commits:
-              - type: 'go changes'
-                nouns: ['go', 'GO', 'Golang']
-                labels: ['go', 'build', 'deploy']
-              - type: 'image changes'
-                nouns: ['image', 'images', 'img', 'imgs']
-                labels: ['image', 'deploy']
+              - type: 'config changes'
+                nouns: ['config', 'cfg', 'configure']
+                labels: ['deploy']
+              - type: 'feature changes'
+                nouns: ['feature', 'feat', 'enhancement']
+                labels: ['build', 'deploy']
           maintain-labels-not-matched: false
           apply-changes: true
