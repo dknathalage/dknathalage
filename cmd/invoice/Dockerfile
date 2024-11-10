@@ -10,4 +10,4 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/main .
 EXPOSE 80
-CMD ["./main", "serve", "--http=0.0.0.0:80"]
+CMD ["./main"]
