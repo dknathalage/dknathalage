@@ -60,7 +60,6 @@ jobs:
         service:
           - name: "invoice"
             concurrency: 1
-            max_instances: 1
             cpu: 0.25
             memory: 256Mi
 
@@ -84,9 +83,6 @@ jobs:
           --platform managed \
           --region australia-southeast2 \
           --allow-unauthenticated \
-          --concurrency ${{ matrix.service.concurrency }} \
-          --port 80 \
-          --cpu ${{ matrix.service.cpu }} \
-          --memory ${{ matrix.service.memory }}
+          --port 80
         env:
           IMAGE_BASE: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service.name }}"
