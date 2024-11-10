@@ -63,7 +63,7 @@ jobs:
             concurrency: 10
             max_instances: 1
             cpu: 1
-            memory: 512Mi
+            memory: 1Gi
 
     runs-on: ubuntu-latest
     steps:
