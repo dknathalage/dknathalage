@@ -59,11 +59,10 @@ jobs:
       matrix:
         service:
           - name: "invoice"
-            allow_unauthenticated: true
             concurrency: 1
             max_instances: 1
-            cpu: 1
-            memory: 1Gi
+            cpu: 0.25
+            memory: 256Mi
 
     runs-on: ubuntu-latest
     steps:
