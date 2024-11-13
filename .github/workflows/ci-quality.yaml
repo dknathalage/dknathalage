@@ -12,7 +12,6 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    if: github.event.action != 'closed'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -20,28 +19,7 @@ jobs:
           go-version: 1.23
       - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
       - run: task setup.lint
-      - run: task lint
-
-  test:
-    runs-on: ubuntu-latest
-    if: github.event.action != 'closed'
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.23
-      - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
       - run: task setup.test
       - run: task test
-
-  sec:
-    runs-on: ubuntu-latest
-    if: github.event.action != 'closed'
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.23
-      - run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
       - run: task setup.sec
       - run: task sec
