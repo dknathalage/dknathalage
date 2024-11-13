@@ -19,25 +19,33 @@ runs:
         go-version: ${{ inputs.go-version }}
 
     - name: Module tidy
+      type: shell
       run: go mod tidy
 
     - name: Module download
+      type: shell
       run: go mod download
 
     - name: Install gosec
+      type: shell
       run: go install github.com/securego/gosec/v2/cmd/gosec@latest
 
     - name: Run gosec
+      type: shell
       run: gosec ./...
 
     - name: Install golangci-lint
+      type: shell
       run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin ${{ inputs.golint-version }}
 
     - name: Run golangci-lint
+      type: shell
       run: golangci-lint run --timeout 2m
 
     - name: Run tests
+      type: shell
       run: go test -coverprofile=coverage.out -coverpkg=./pkg ./...
 
     - name: Coverage
+      type: shell
       run: go tool cover -func=coverage.out
