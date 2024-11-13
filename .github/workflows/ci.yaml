@@ -1,5 +1,11 @@
+name: CI Workflow 🛠️
+
 on:
   pull_request:
+    types: 
+      - opened
+      - synchronize
+      - closed
 
 permissions:
   contents: write
