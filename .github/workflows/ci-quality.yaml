@@ -4,10 +4,6 @@ on:
       - opened
       - synchronize
       - reopened
-    paths:
-      - "go.mod"
-      - "go.sum"
-      - "**/*.go"
 
 jobs:
   lint:
