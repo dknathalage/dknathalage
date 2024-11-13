@@ -26,3 +26,4 @@ jobs:
           tags: |
             "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice:latest"
             "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice:${{ github.sha }}"
+          push: github.event.action == 'closed' && github.event.pull_request.merged == true
