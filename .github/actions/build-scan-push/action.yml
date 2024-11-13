@@ -29,9 +29,6 @@ inputs:
     required: true
     description: "Docker image name"
 
-env:
-  IMAGE_NAME: ${{ inputs.image_registry }}/${{ inputs.image_name }}
-
 runs:
   using: "composite"
   steps:
@@ -60,6 +57,9 @@ runs:
         context: .
         cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:build-cache
         cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:build-cache,mode=max
+      env:
+        IMAGE_NAME: ${{ inputs.image_registry }}/${{ inputs.image_name }}
+
 # cloudrun-deploy:
 #   if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy')
 #   needs: docker-build
