@@ -1,0 +1,6 @@
+on:
+  pull_request:
+
+jobs:
+  quality:
+    uses: ./.github/workflows/go-quality.yaml
