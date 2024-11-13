@@ -9,6 +9,7 @@ inputs:
     default: v1.61.0
 
 runs:
+  using: "composite"
   steps:
     - name: Checkout
       uses: actions/checkout@v2
