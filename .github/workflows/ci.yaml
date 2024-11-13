@@ -3,4 +3,17 @@ on:
 
 jobs:
   quality:
-    uses: ./.github/workflows/go-quality.yaml
+    uses: ./.github/workflows/ci-quality.yaml
+
+  build:
+    needs: quality
+    uses: ./.github/workflows/docker-build.yaml
+    with:
+      dockerfile: ./cmd/invoice/Dockerfile
+      workload_idp: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
+      service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+      image_registry: "australia-southeast2-docker.pkg.dev"
+      image_name: "dknathalage/dknathalage/invoice"
+      tags: |
+        "australia-southeast2-docker.pkg.dev/dknathalage/invoice/invoice:latest"
+        "australia-southeast2-docker.pkg.dev/dknathalage/invoice/invoice:${{ github.sha }}"
