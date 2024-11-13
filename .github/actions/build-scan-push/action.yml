@@ -1,0 +1,97 @@
+name: CI/CD Pipeline
+on:
+  workflow_call:
+    inputs:
+      dockerfile:
+        type: string
+        required: true
+        description: "Dockerfile path for the service"
+      workload_idp:
+        type: string
+        required: true
+        description: "Workload Identity Provider for docker login"
+      service_account:
+        type: string
+        required: true
+        description: "Service Account for docker login"
+      tags:
+        type: string
+        required: true
+        description: "Docker image tags"
+      push:
+        type: boolean
+        description: "Push the docker image to the registry"
+      image_registry:
+        type: string
+        required: true
+        description: "Docker image registry"
+      image_name:
+        type: string
+        required: true
+        description: "Docker image name"
+
+env:
+  IMAGE_NAME: ${{ inputs.image_registry }}/${{ inputs.image_name }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+    - uses: docker/setup-buildx-action@v3
+
+    - id: auth
+      uses: google-github-actions/auth@v1
+      with:
+        token_format: "access_token"
+        workload_identity_provider: ${{ inputs.workload_idp }}
+        service_account: ${{ inputs.service_account }}
+        access_token_lifetime: "300s"
+
+    - uses: docker/login-action@v2
+      with:
+        registry: ${{ inputs.image_registry }}
+        username: "oauth2accesstoken"
+        password: ${{ steps.auth.outputs.access_token }}
+
+    - uses: docker/build-push-action@v6
+      with:
+        push: ${{ inputs.push }}
+        tags: ${{ inputs.tags }}
+        file: ${{ inputs.dockerfile }}
+        context: .
+        cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:build-cache
+        cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:build-cache,mode=max
+# cloudrun-deploy:
+#   if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy')
+#   needs: docker-build
+#   strategy:
+#     matrix:
+#       service:
+#         - name: "invoice"
+#           concurrency: 1
+#           cpu: 0.25
+#           memory: 256Mi
+
+#   runs-on: ubuntu-latest
+#   steps:
+#     - uses: actions/checkout@v4
+
+#     - id: auth
+#       uses: google-github-actions/auth@v1
+#       with:
+#         token_format: "access_token"
+#         workload_identity_provider: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
+#         service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+#         access_token_lifetime: "300s"
+
+#     - uses: "google-github-actions/setup-gcloud@v2"
+
+#     - run: |
+#         gcloud run deploy ${{ matrix.service.name }} \
+#         --image ${{ env.IMAGE_BASE }}:${{ github.sha }} \
+#         --platform managed \
+#         --region australia-southeast2 \
+#         --allow-unauthenticated \
+#         --port 80
+#       env:
+#         IMAGE_BASE: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service.name }}"
