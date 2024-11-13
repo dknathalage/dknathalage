@@ -1,34 +1,33 @@
-name: CI/CD Pipeline
-on:
-  workflow_call:
-    inputs:
-      dockerfile:
-        type: string
-        required: true
-        description: "Dockerfile path for the service"
-      workload_idp:
-        type: string
-        required: true
-        description: "Workload Identity Provider for docker login"
-      service_account:
-        type: string
-        required: true
-        description: "Service Account for docker login"
-      tags:
-        type: string
-        required: true
-        description: "Docker image tags"
-      push:
-        type: boolean
-        description: "Push the docker image to the registry"
-      image_registry:
-        type: string
-        required: true
-        description: "Docker image registry"
-      image_name:
-        type: string
-        required: true
-        description: "Docker image name"
+name: Build Scan Push 🚀
+
+inputs:
+  dockerfile:
+    type: string
+    required: true
+    description: "Dockerfile path for the service"
+  workload_idp:
+    type: string
+    required: true
+    description: "Workload Identity Provider for docker login"
+  service_account:
+    type: string
+    required: true
+    description: "Service Account for docker login"
+  tags:
+    type: string
+    required: true
+    description: "Docker image tags"
+  push:
+    type: boolean
+    description: "Push the docker image to the registry"
+  image_registry:
+    type: string
+    required: true
+    description: "Docker image registry"
+  image_name:
+    type: string
+    required: true
+    description: "Docker image name"
 
 env:
   IMAGE_NAME: ${{ inputs.image_registry }}/${{ inputs.image_name }}

@@ -7,7 +7,10 @@ permissions:
 
 jobs:
   quality:
-    uses: ./.github/workflows/go-quality.yaml
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/go-quality.yaml
 
   build:
     needs: quality
