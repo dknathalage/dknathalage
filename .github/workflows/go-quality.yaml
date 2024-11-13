@@ -14,6 +14,7 @@ on:
 jobs:
   quality-checks:
     runs-on: ubuntu-latest
+    environment: nonproduction
     steps:
       - name: Checkout
         uses: actions/checkout@v2
