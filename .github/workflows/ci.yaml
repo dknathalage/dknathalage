@@ -3,7 +3,7 @@ on:
 
 jobs:
   quality:
-    uses: ./.github/workflows/ci-quality.yaml
+    uses: ./.github/workflows/go-quality.yaml
 
   build:
     needs: quality
