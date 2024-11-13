@@ -19,6 +19,7 @@ inputs:
     description: "Docker image tags"
   push:
     type: boolean
+    default: true
     description: "Push the docker image to the registry"
   image_registry:
     type: string
@@ -59,7 +60,6 @@ runs:
         cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:build-cache,mode=max
       env:
         IMAGE_NAME: ${{ inputs.image_registry }}/${{ inputs.image_name }}
-
 # cloudrun-deploy:
 #   if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy')
 #   needs: docker-build
