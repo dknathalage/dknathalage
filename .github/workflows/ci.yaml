@@ -1,0 +1,29 @@
+on:
+  pull_request:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/go-quality
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/build-scan-push
+        with:
+          dockerfile: ./cmd/invoice/Dockerfile
+          workload_idp: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
+          service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+          image_registry: "australia-southeast2-docker.pkg.dev"
+          image_name: "dknathalage/dknathalage/invoice"
+          tags: |
+            "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice:latest"
+            "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice:${{ github.sha }}"
+          push: ${{ github.event.action == 'closed' && github.event.pull_request.merged == true }}
