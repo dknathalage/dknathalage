@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16" # Adjust to your Node.js version
+          node-version: '18'  # Updated Node.js version
 
       # Step 3: Install release-it globally
       - name: Install release-it
@@ -37,8 +37,9 @@ jobs:
           COMMIT_MSG=$(git log -1 --pretty=%B)
           echo "Commit message: $COMMIT_MSG"
 
-          # Default bump type is 'prerelease'
-          BUMP_TYPE="prerelease"
+          # Default bump type is 'patch'
+          BUMP_TYPE="patch"
+          PRE_RELEASE_ID=""
 
           # Check for keywords in the commit message to determine the bump type
           if [[ "$COMMIT_MSG" == *"[major]"* ]]; then
@@ -71,7 +72,7 @@ jobs:
             if [ "${{ steps.version_bump.outputs.bump_type }}" == "prerelease" ]; then
               release-it ${{ steps.version_bump.outputs.bump_type }} --preReleaseId=${{ steps.version_bump.outputs.pre_release_id }} --ci --git.tagName='v${version}' --github.release --github.preRelease --github.token=${GITHUB_TOKEN}
             else
-              # For regular commits without [rc], no release is made
-              echo "No release created as the commit does not contain [rc]"
+              # For regular commits, create a release
+              release-it ${{ steps.version_bump.outputs.bump_type }} --ci --git.tagName='v${version}' --github.release --github.token=${GITHUB_TOKEN}
             fi
           fi
