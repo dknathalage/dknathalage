@@ -37,8 +37,8 @@ jobs:
           COMMIT_MSG=$(git log -1 --pretty=%B)
           echo "Commit message: $COMMIT_MSG"
 
-          # Default bump type is 'patch'
-          BUMP_TYPE="patch"
+          # Default bump type is 'prerelease'
+          BUMP_TYPE="prerelease"
 
           # Check for keywords in the commit message to determine the bump type
           if [[ "$COMMIT_MSG" == *"[major]"* ]]; then
