@@ -21,7 +21,8 @@ jobs:
 
       - name: Create new tag
         run: |
-          gh api -X POST /repos/$GITHUB_REPOSITORY/git/refs -F ref=refs/tags/${{ steps.repo-semver.outputs.next-prerelease }} -F sha=$GITHUB_SHA
+          git tag -a ${{ steps.repo-semver.outputs.next-prerelease }} -m "Release ${{ steps.repo-semver.outputs.bump }}"
+          git push origin ${{ steps.repo-semver.outputs.next-prerelease }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -40,6 +41,8 @@ jobs:
 
       - name: Create new tag
         run: |
-          gh api -X POST /repos/$GITHUB_REPOSITORY/git/refs -F ref=refs/tags/${{ steps.repo-semver.outputs.bump }} -F sha=$GITHUB_SHA
+          git tag -a ${{ steps.repo-semver.outputs.next-release }} -m "Release ${{ steps.repo-semver.outputs.bump }}"
+          git push origin ${{ steps.repo-semver.outputs.next-release }}
+
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
