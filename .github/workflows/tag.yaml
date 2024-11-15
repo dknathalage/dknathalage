@@ -6,15 +6,6 @@ on:
       - main
 
   workflow_dispatch:
-    inputs:
-      bump:
-        description: "Bump type"
-        default: minor
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
 
 permissions:
   contents: write
