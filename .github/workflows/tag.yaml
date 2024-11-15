@@ -12,7 +12,6 @@ on:
       - opened
       - synchronize
       - reopened
-      - closed
       - labeled
 
 permissions:
