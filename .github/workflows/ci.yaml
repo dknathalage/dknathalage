@@ -6,6 +6,7 @@ on:
       - opened
       - synchronize
       - closed
+      - labeled
 
 permissions:
   contents: write
@@ -13,12 +14,14 @@ permissions:
 
 jobs:
   quality:
+    if: ${{ !contains(github.event.pull_request.labels.*.name , 'skip-ci')}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/go-quality
 
   build:
+    if: ${{ !contains(github.event.pull_request.labels.*.name , 'skip-ci')}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,3 +33,4 @@ jobs:
           image_registry: "australia-southeast2-docker.pkg.dev"
           image_name: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice"
           tag: ${{ github.sha }}
+          push: ${{ contains(github.event.pull_request.labels.*.name , 'deploy') }}
