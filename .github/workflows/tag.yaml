@@ -16,6 +16,10 @@ on:
           - minor
           - patch
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   prerelease:
     if: ${{ github.event_name == 'push' }}
@@ -39,6 +43,8 @@ jobs:
         run: |
           git tag -a -m "Pre-release v${{ steps.current-repo-semver.outputs.next-release }}" v${{ steps.current-repo-semver.outputs.next-prerelease }}
           git push origin v${{ steps.current-repo-semver.outputs.next-prerelease }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -62,3 +68,5 @@ jobs:
         run: |
           git tag -a -m "Release v${{ steps.repo-semver.outputs.next-release }}" v${{ steps.repo-semver.outputs.next-release }}
           git push origin v${{ steps.repo-semver.outputs.next-release }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
