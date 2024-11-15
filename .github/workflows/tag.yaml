@@ -3,9 +3,16 @@ name: Tagging 🏷️
 on:
   push:
     branches:
-      - minor-fix
+      - main
 
   workflow_dispatch:
+
+  workflow_call:
+    inputs:
+      sha:
+        type: string
+        required: true
+        description: "SHA of the commit to tag"
 
 permissions:
   contents: write
@@ -67,3 +74,25 @@ jobs:
           git push origin $new_tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    if: ${{ github.event_name == 'workflow_call' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Repo SemVer
+        uses: lhstrh/action-repo-semver@v1.1.2
+        id: repo-semver
+
+      - name: Create Tag
+        run: |
+          new_tag="v${{ steps.repo-semver.outputs.next-build }}"
+          git tag -a -m "Release $new_tag" $new_tag
+          git push origin $new_tag
