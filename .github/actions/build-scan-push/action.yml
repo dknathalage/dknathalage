@@ -29,6 +29,10 @@ inputs:
     type: string
     required: true
     description: "Docker image name"
+  trivy_severity:
+    type: string
+    default: "MEDIUM,HIGH,CRITICAL"
+    description: "Trivy severity levels to scan for"
 
 runs:
   using: "composite"
@@ -79,5 +83,5 @@ runs:
         format: table
         ignore-unfixed: false
         image-ref: ${{ inputs.image_name }}:${{ inputs.tag }}
-        severity: LOW,MEDIUM,HIGH,CRITICAL
+        severity: ${{ inputs.trivy_severity }}
         vuln-type: os,library

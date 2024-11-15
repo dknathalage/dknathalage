@@ -30,4 +30,3 @@ jobs:
           image_registry: "australia-southeast2-docker.pkg.dev"
           image_name: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice"
           tag: ${{ github.sha }}
-          push: true
