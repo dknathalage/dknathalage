@@ -1,13 +1,14 @@
+name: Tag
+
 on:
   push:
     branches:
       - minor-fix
 
   workflow_dispatch:
-    inputs: {}
 
 jobs:
-  prerelease-bumps:
+  prerelease:
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/minor-fix' }}
     runs-on: ubuntu-latest
     steps:
@@ -17,8 +18,6 @@ jobs:
       - name: Repo SemVer
         uses: lhstrh/action-repo-semver@v1.1.2
         id: repo-semver
-        with:
-          bump: minor
 
   release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
