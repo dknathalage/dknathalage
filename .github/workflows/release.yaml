@@ -28,6 +28,8 @@ jobs:
             --title "Pre-release ${{ github.event.ref }}" \
             --notes "Pre-release ${{ github.event.ref }}" \
             --prerelease
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
   releases: # runs on tags like v1.0.0
     if: ${{ !contains(github.event.ref, '-') }}
@@ -50,3 +52,5 @@ jobs:
           gh release create ${{ github.event.ref }} \
             --title "Release ${{ github.event.ref }}" \
             --notes "Release ${{ github.event.ref }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
