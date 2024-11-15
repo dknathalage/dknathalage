@@ -1,11 +1,13 @@
 on:
   push:
+    branches:
+      - minor-fix
 
   workflow_dispatch:
 
 jobs:
   prerelease-bumps:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/minor-fix' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
