@@ -7,13 +7,6 @@ on:
 
   workflow_dispatch:
 
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - labeled
-
 permissions:
   contents: write
   pull-requests: write
@@ -74,30 +67,3 @@ jobs:
           git push origin $new_tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build:
-    if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'build') }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Set up Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Repo SemVer
-        uses: lhstrh/action-repo-semver@v1.1.2
-        id: repo-semver
-        with:
-          build: "build.0"
-
-      - name: Create Tag
-        if: ${{ steps.repo-semver.outputs.next-build != '' }}
-        run: |
-          new_tag="v${{ steps.repo-semver.outputs.next-build }}"
-          git tag -a -m "Release $new_tag" $new_tag
-          git push origin $new_tag
