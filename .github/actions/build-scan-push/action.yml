@@ -65,14 +65,23 @@ runs:
         fi
       shell: bash
 
-    - uses: docker/build-push-action@v6
-      with:
-        push: false
-        tags: ${{ inputs.image_name }}:${{ inputs.tag }}
-        file: ${{ inputs.dockerfile }}
-        context: .
-        cache-from: type=registry,ref=${{ inputs.image_name }}:build-cache
-        cache-to: type=registry,ref=${{ inputs.image_name }}:build-cache,mode=max
+    # - uses: docker/build-push-action@v6
+    #   with:
+    #     push: ${{ inputs.push == 'true' && steps.check-image.outputs.exists != 'true' }}
+    #     tags: ${{ inputs.image_name }}:${{ inputs.tag }}
+    #     file: ${{ inputs.dockerfile }}
+    #     context: .
+    #     cache-from: type=registry,ref=${{ inputs.image_name }}:build-cache
+    #     cache-to: type=registry,ref=${{ inputs.image_name }}:build-cache,mode=max
+
+    - run: |
+        docker buildx build \
+          --tag ${{ inputs.image_name }}:${{ inputs.tag }} \
+          --file ${{ inputs.dockerfile }} \
+          --cache-from type=registry,ref=${{ inputs.image_name }}:build-cache \
+          --cache-to type=registry,ref=${{ inputs.image_name }}:build-cache,mode=max \
+          .
+      shell: bash
 
     - env:
         TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
@@ -86,6 +95,4 @@ runs:
         severity: ${{ inputs.trivy_severity }}
         vuln-type: os,library
 
-    - if: ${{ inputs.push == 'true' && steps.check-image.outputs.exists != 'true' }}
-      shell: bash
-      run: docker push ${{ inputs.image_name }}:${{ inputs.tag }}
+    -
