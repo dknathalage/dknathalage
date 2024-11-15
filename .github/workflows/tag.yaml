@@ -24,7 +24,7 @@ jobs:
           git tag -a ${{ steps.repo-semver.outputs.next-prerelease }} -m "Release ${{ steps.repo-semver.outputs.bump }}"
           git push origin ${{ steps.repo-semver.outputs.next-prerelease }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -43,6 +43,5 @@ jobs:
         run: |
           git tag -a ${{ steps.repo-semver.outputs.next-release }} -m "Release ${{ steps.repo-semver.outputs.bump }}"
           git push origin ${{ steps.repo-semver.outputs.next-release }}
-
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
