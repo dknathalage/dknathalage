@@ -1,4 +1,5 @@
 name: Tagging 🏷️
+# TODO: explore https://github.com/marketplace/actions/update-semantic-version
 
 on:
   push:
