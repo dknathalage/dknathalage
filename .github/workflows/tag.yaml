@@ -7,12 +7,12 @@ on:
 
   workflow_dispatch:
 
-  workflow_call:
-    inputs:
-      sha:
-        type: string
-        required: true
-        description: "SHA of the commit to tag"
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
 
 permissions:
   contents: write
@@ -76,7 +76,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build:
-    if: ${{ github.event_name == 'workflow_call' }}
+    if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'build') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
