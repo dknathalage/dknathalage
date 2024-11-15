@@ -57,7 +57,7 @@ runs:
     - id: check-image
       name: Check if image exists and save to GITHUB_OUTPUT
       run: |
-        if docker manifest inspect ${{ inputs.image_name }}:${{ inputs.tag }}
+        if docker pull ${{ inputs.image_name }}:${{ inputs.tag }}
         then
           echo "exists=true">> $GITHUB_OUTPUT
         else
@@ -67,7 +67,7 @@ runs:
 
     - uses: docker/build-push-action@v6
       with:
-        push: ${{ inputs.push == 'true' && steps.check-image.outputs.exists != 'true' }}
+        push: false
         tags: ${{ inputs.image_name }}:${{ inputs.tag }}
         file: ${{ inputs.dockerfile }}
         context: .
@@ -85,3 +85,7 @@ runs:
         image-ref: ${{ inputs.image_name }}:${{ inputs.tag }}
         severity: ${{ inputs.trivy_severity }}
         vuln-type: os,library
+
+    - if: ${{ inputs.push == 'true' && steps.check-image.outputs.exists != 'true' }}
+      shell: bash
+      run: docker push ${{ inputs.image_name }}:${{ inputs.tag }}
