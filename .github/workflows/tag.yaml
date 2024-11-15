@@ -94,7 +94,7 @@ jobs:
         uses: lhstrh/action-repo-semver@v1.1.2
         id: repo-semver
         with:
-          build: "build"
+          build: "build.0"
 
       - name: Create Tag
         if: ${{ steps.repo-semver.outputs.next-build != '' }}
