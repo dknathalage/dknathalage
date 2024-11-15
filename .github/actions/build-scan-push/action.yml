@@ -13,10 +13,10 @@ inputs:
     type: string
     required: true
     description: "Service Account for docker login"
-  tags:
+  tag:
     type: string
     required: true
-    description: "Docker image tags"
+    description: "Docker image tag"
   push:
     type: boolean
     default: true
@@ -29,6 +29,14 @@ inputs:
     type: string
     required: true
     description: "Docker image name"
+  trivy_severity:
+    type: string
+    default: "MEDIUM,HIGH,CRITICAL"
+    description: "Trivy severity levels to scan for"
+  docker_context:
+    type: string
+    default: "."
+    description: "Docker build context"
 
 runs:
   using: "composite"
@@ -50,47 +58,42 @@ runs:
         username: "oauth2accesstoken"
         password: ${{ steps.auth.outputs.access_token }}
 
-    - uses: docker/build-push-action@v6
+    - id: check-image
+      name: Check if image exists and save to GITHUB_OUTPUT
+      run: |
+        if docker manifest inspect ${{ inputs.image_name }}:${{ inputs.tag }}
+        then
+          echo "exists=true">> $GITHUB_OUTPUT
+        else
+          echo "exists=false">> $GITHUB_OUTPUT
+        fi
+      shell: bash
+
+    - if: ${{ steps.check-image.outputs.exists == 'false' }}
+      run: |
+        docker build \
+          -t ${{ inputs.image_name }}:${{ inputs.tag }} \
+          -f ${{ inputs.dockerfile }} \
+          ${{ inputs.docker_context }}
+      shell: bash
+
+    - if: ${{ steps.check-image.outputs.exists == 'true' }}
+      run: |
+        docker pull ${{ inputs.image_name }}:${{ inputs.tag }}
+      shell: bash
+
+    - env:
+        TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+      id: trivy
+      uses: aquasecurity/trivy-action@0.20.0
       with:
-        push: ${{ inputs.push }}
-        tags: ${{ inputs.tags }}
-        file: ${{ inputs.dockerfile }}
-        context: .
-        cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:build-cache
-        cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:build-cache,mode=max
-      env:
-        IMAGE_NAME: ${{ inputs.image_registry }}/${{ inputs.image_name }}
-# cloudrun-deploy:
-#   if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy')
-#   needs: docker-build
-#   strategy:
-#     matrix:
-#       service:
-#         - name: "invoice"
-#           concurrency: 1
-#           cpu: 0.25
-#           memory: 256Mi
+        exit-code: 1
+        format: table
+        ignore-unfixed: false
+        image-ref: ${{ inputs.image_name }}:${{ inputs.tag }}
+        severity: ${{ inputs.trivy_severity }}
+        vuln-type: os,library
 
-#   runs-on: ubuntu-latest
-#   steps:
-#     - uses: actions/checkout@v4
-
-#     - id: auth
-#       uses: google-github-actions/auth@v1
-#       with:
-#         token_format: "access_token"
-#         workload_identity_provider: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
-#         service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
-#         access_token_lifetime: "300s"
-
-#     - uses: "google-github-actions/setup-gcloud@v2"
-
-#     - run: |
-#         gcloud run deploy ${{ matrix.service.name }} \
-#         --image ${{ env.IMAGE_BASE }}:${{ github.sha }} \
-#         --platform managed \
-#         --region australia-southeast2 \
-#         --allow-unauthenticated \
-#         --port 80
-#       env:
-#         IMAGE_BASE: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service.name }}"
+    - if: ${{ inputs.push == 'true' && steps.check-image.outputs.exists == 'false' }}
+      run: docker push ${{ inputs.image_name }}:${{ inputs.tag }}
+      shell: bash

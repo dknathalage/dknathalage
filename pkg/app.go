@@ -8,7 +8,7 @@ import (
 
 type App struct{}
 
-func (a *App) HelloHandler(w http.ResponseWriter, r *http.Request) {
+func (a *App) HelloHandler(w http.ResponseWriter, _ *http.Request) {
 	fmt.Fprintf(w, "Hello, Docker!")
 }
 

@@ -1,0 +1,31 @@
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - gosimple
+    - unused
+    - gofmt
+    - goimports
+    - revive
+    - ineffassign
+    # https://golangci-lint.run/usage/linters/
+    - gocritic # gocritic is a linter that checks for common mistakes and coding conventions
+    - cyclop # cyclomatic complexity
+    - dupl # code duplication
+    - funlen # function length
+    - gocognit # cognitive complexity
+    - godox # FIXME, TODO, BUG, etc. comments
+    - gofmt # gofmt checks
+    - gosec # gosec checks
+    - lll # line length
+    - nilerr # nil error checks
+
+max-issues: 0
+max-same-issues: 0
+
+output:
+  formats:
+    - format: html
+      path: report-golang-ci.html
+    - format: colored-line-number

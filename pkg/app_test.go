@@ -49,7 +49,7 @@ func TestHelloHandler(t *testing.T) {
 // Note: This is a basic test and doesn't fully test server behavior.
 func TestNewServer(t *testing.T) {
 	// Create a dummy handler.
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
