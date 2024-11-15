@@ -3,7 +3,7 @@ name: Tagging 🏷️
 on:
   push:
     branches:
-      - main
+      - minor-fix
 
   workflow_dispatch:
 
@@ -28,14 +28,21 @@ jobs:
         uses: lhstrh/action-repo-semver@v1.2.1
         id: current-repo-semver
         with:
-          bump: patch
+          bump: minor
 
-      - name: Create Tag
+      - name: Create Tag (Pre-release)
+        if: ${{ steps.current-repo-semver.outputs.next-release != steps.current-repo-semver.outputs.current }}
         run: |
-          git tag -a -m "Pre-release v${{ steps.current-repo-semver.outputs.next-release }}" v${{ steps.current-repo-semver.outputs.next-prerelease }}
-          git push origin v${{ steps.current-repo-semver.outputs.next-prerelease }}
+          new_tag="v${{ steps.current-repo-semver.outputs.next-prerelease }}"
+          git tag -a -m "Pre-release $new_tag" $new_tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Tag (Minor)
+        if: ${{ steps.current-repo-semver.outputs.next-release == steps.current-repo-semver.outputs.current }}
+        run: |
+          new_tag="v${{ steps.current-repo-semver.outputs.next-minor }}-0"
+          git tag -a -m "Release $new_tag" $new_tag
 
   release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
