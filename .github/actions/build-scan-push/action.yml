@@ -13,10 +13,10 @@ inputs:
     type: string
     required: true
     description: "Service Account for docker login"
-  tags:
+  tag:
     type: string
     required: true
-    description: "Docker image tags"
+    description: "Docker image tag"
   push:
     type: boolean
     default: true
