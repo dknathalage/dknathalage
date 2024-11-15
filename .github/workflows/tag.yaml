@@ -19,13 +19,6 @@ jobs:
         with:
           bump: minor
 
-      - name: Create new tag
-        run: |
-          git tag -a ${{ steps.repo-semver.outputs.next-prerelease }} -m "Release ${{ steps.repo-semver.outputs.bump }}"
-          git push origin ${{ steps.repo-semver.outputs.next-prerelease }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
@@ -38,10 +31,3 @@ jobs:
         id: repo-semver
         with:
           bump: release
-
-      - name: Create new tag
-        run: |
-          git tag -a ${{ steps.repo-semver.outputs.next-release }} -m "Release ${{ steps.repo-semver.outputs.bump }}"
-          git push origin ${{ steps.repo-semver.outputs.next-release }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
