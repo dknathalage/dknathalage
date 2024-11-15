@@ -12,6 +12,9 @@ permissions:
   contents: write
   pull-requests: write
 
+env:
+  GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
 jobs:
   prerelease:
     if: ${{ github.event_name == 'push' }}
@@ -35,8 +38,6 @@ jobs:
           new_tag="v${{ steps.current-repo-semver.outputs.next-prerelease }}"
           git tag -a -m "Pre-release $new_tag" $new_tag
           git push origin $new_tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
       - name: Create Tag (Minor)
         if: ${{ steps.current-repo-semver.outputs.next-release == steps.current-repo-semver.outputs.current }}
@@ -44,8 +45,6 @@ jobs:
           new_tag="v${{ steps.current-repo-semver.outputs.next-minor }}-0"
           git tag -a -m "Release $new_tag" $new_tag
           git push origin $new_tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
   release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -68,5 +67,3 @@ jobs:
           new_tag="v${{ steps.repo-semver.outputs.next-release }}"
           git tag -a -m "Release $new_tag" $new_tag
           git push origin $new_tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
