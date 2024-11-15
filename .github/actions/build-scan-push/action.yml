@@ -33,6 +33,10 @@ inputs:
     type: string
     default: "MEDIUM,HIGH,CRITICAL"
     description: "Trivy severity levels to scan for"
+  docker_context:
+    type: string
+    default: "."
+    description: "Docker build context"
 
 runs:
   using: "composite"
@@ -57,7 +61,7 @@ runs:
     - id: check-image
       name: Check if image exists and save to GITHUB_OUTPUT
       run: |
-        if docker pull ${{ inputs.image_name }}:${{ inputs.tag }}
+        if docker manifest inspect ${{ inputs.image_name }}:${{ inputs.tag }}
         then
           echo "exists=true">> $GITHUB_OUTPUT
         else
@@ -65,23 +69,14 @@ runs:
         fi
       shell: bash
 
-    # - uses: docker/build-push-action@v6
-    #   with:
-    #     push: ${{ inputs.push == 'true' && steps.check-image.outputs.exists != 'true' }}
-    #     tags: ${{ inputs.image_name }}:${{ inputs.tag }}
-    #     file: ${{ inputs.dockerfile }}
-    #     context: .
-    #     cache-from: type=registry,ref=${{ inputs.image_name }}:build-cache
-    #     cache-to: type=registry,ref=${{ inputs.image_name }}:build-cache,mode=max
-
-    - run: |
-        docker buildx build \
-          --tag ${{ inputs.image_name }}:${{ inputs.tag }} \
-          --file ${{ inputs.dockerfile }} \
-          --cache-from type=registry,ref=${{ inputs.image_name }}:build-cache \
-          --cache-to type=registry,ref=${{ inputs.image_name }}:build-cache,mode=max \
-          .
-      shell: bash
+    - if: ${{ steps.check-image.outputs.exists == 'false' }}
+      run: |
+        docker build \
+          -t ${{ inputs.image_name }}:${{ inputs.tag }} \
+          -f ${{ inputs.dockerfile }} \
+          --cache-from ${{ inputs.image_name }}:build-cache \
+          --cache-to ${{ inputs.image_name }}:build-cache,mode=max \
+          ${{ inputs.docker_context }}
 
     - env:
         TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
@@ -95,4 +90,6 @@ runs:
         severity: ${{ inputs.trivy_severity }}
         vuln-type: os,library
 
-    -
+    - if: ${{ inputs.push == true }}
+      run: |
+        docker push ${{ inputs.image_name }}:${{ inputs.tag }}
