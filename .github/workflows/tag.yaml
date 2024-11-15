@@ -3,13 +3,13 @@ name: Tag
 on:
   push:
     branches:
-      - minor-fix
+      - main
 
   workflow_dispatch:
 
 jobs:
   prerelease:
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/minor-fix' }}
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
