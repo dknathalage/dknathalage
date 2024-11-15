@@ -1,0 +1,33 @@
+name: Tagging 🏷️
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  prerelease:
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Repo SemVer
+        uses: lhstrh/action-repo-semver@v1.1.2
+        id: repo-semver
+
+  release:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Repo SemVer
+        uses: lhstrh/action-repo-semver@v1.1.2
+        id: repo-semver
+        with:
+          bump: release
