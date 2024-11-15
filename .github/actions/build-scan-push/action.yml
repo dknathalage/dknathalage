@@ -63,7 +63,7 @@ runs:
 
     - uses: docker/build-push-action@v6
       with:
-        push: ${{ inputs.push }} && steps.check-image.outputs.exists != 'true'
+        push: ${{ inputs.push == 'true' && steps.check-image.outputs.exists != 'true' }}
         tags: ${{ inputs.tag }}
         file: ${{ inputs.dockerfile }}
         context: .
