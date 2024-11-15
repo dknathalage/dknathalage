@@ -50,55 +50,33 @@ runs:
         username: "oauth2accesstoken"
         password: ${{ steps.auth.outputs.access_token }}
 
-    # check if the image is already exists in the registry
     - id: check-image
-      run: |
-        docker pull ${{ inputs.image_registry }}/${{ inputs.image_name }}:${{ github.sha }}
+      run: docker pull ${{ inputs.image_name }}:${{ inputs.tag }}
       continue-on-error: true
       shell: bash
 
     - uses: docker/build-push-action@v6
-      if: steps.check-image.outcome != 'success' 
+      if: steps.check-image.outcome != 'success'
       with:
-        push: ${{ inputs.push }}
-        tags: ${{ inputs.tags }}
+        push: false
+        tags: ${{ inputs.tag }}
         file: ${{ inputs.dockerfile }}
         context: .
-        cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:build-cache
-        cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:build-cache,mode=max
-      env:
-        IMAGE_NAME: ${{ inputs.image_registry }}/${{ inputs.image_name }}
-# cloudrun-deploy:
-#   if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy')
-#   needs: docker-build
-#   strategy:
-#     matrix:
-#       service:
-#         - name: "invoice"
-#           concurrency: 1
-#           cpu: 0.25
-#           memory: 256Mi
+        cache-from: type=registry,ref=${{ inputs.image_name }}:build-cache
+        cache-to: type=registry,ref=${{ inputs.image_name }}:build-cache,mode=max
 
-#   runs-on: ubuntu-latest
-#   steps:
-#     - uses: actions/checkout@v4
+    - env:
+        TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+      id: trivy
+      uses: aquasecurity/trivy-action@0.20.0
+      with:
+        exit-code: "1"
+        format: table
+        ignore-unfixed: false
+        image-ref: ${{ inputs.image_name }}:${{ inputs.tag }}
+        severity: LOW,MEDIUM,HIGH,CRITICAL
+        vuln-type: os,library
 
-#     - id: auth
-#       uses: google-github-actions/auth@v1
-#       with:
-#         token_format: "access_token"
-#         workload_identity_provider: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
-#         service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
-#         access_token_lifetime: "300s"
-
-#     - uses: "google-github-actions/setup-gcloud@v2"
-
-#     - run: |
-#         gcloud run deploy ${{ matrix.service.name }} \
-#         --image ${{ env.IMAGE_BASE }}:${{ github.sha }} \
-#         --platform managed \
-#         --region australia-southeast2 \
-#         --allow-unauthenticated \
-#         --port 80
-#       env:
-#         IMAGE_BASE: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service.name }}"
+    - if: ${{ inputs.push }}
+      run: docker push ${{ inputs.image_name }}:${{ inputs.tag }}
+      shell: bash

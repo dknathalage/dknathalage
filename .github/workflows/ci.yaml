@@ -2,7 +2,7 @@ name: CI Workflow 🛠️
 
 on:
   pull_request:
-    types: 
+    types:
       - opened
       - synchronize
       - closed
@@ -28,8 +28,6 @@ jobs:
           workload_idp: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
           service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
           image_registry: "australia-southeast2-docker.pkg.dev"
-          image_name: "dknathalage/dknathalage/invoice"
-          tags: |
-            "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice:latest"
-            "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice:${{ github.sha }}"
-          push: ${{ github.event.action == 'closed' && github.event.pull_request.merged == true }}
+          image_name: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice"
+          tag: ${{ github.sha }}
+          push: true
