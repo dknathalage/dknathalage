@@ -1,0 +1,39 @@
+on:
+  push:
+
+  workflow_dispatch:
+
+jobs:
+  prerelease-bumps:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Repo SemVer
+        uses: lhstrh/action-repo-semver@v1.1.2
+        id: repo-semver
+        with:
+          bump: minor
+
+      - name: Create new tag
+        run: |
+          gh api -X POST /repos/$GITHUB_REPOSITORY/git/refs -F ref=refs/tags/${{ steps.repo-semver.outputs.next-prerelease }} -F sha=$GITHUB_SHA
+
+  release:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Repo SemVer
+        uses: lhstrh/action-repo-semver@v1.1.2
+        id: repo-semver
+        with:
+          bump: release
+
+      - name: Create new tag
+        run: |
+          gh api -X POST /repos/$GITHUB_REPOSITORY/git/refs -F ref=refs/tags/${{ steps.repo-semver.outputs.bump }} -F sha=$GITHUB_SHA
