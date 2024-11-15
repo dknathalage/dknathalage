@@ -22,6 +22,8 @@ jobs:
       - name: Create new tag
         run: |
           gh api -X POST /repos/$GITHUB_REPOSITORY/git/refs -F ref=refs/tags/${{ steps.repo-semver.outputs.next-prerelease }} -F sha=$GITHUB_SHA
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -39,3 +41,5 @@ jobs:
       - name: Create new tag
         run: |
           gh api -X POST /repos/$GITHUB_REPOSITORY/git/refs -F ref=refs/tags/${{ steps.repo-semver.outputs.bump }} -F sha=$GITHUB_SHA
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
