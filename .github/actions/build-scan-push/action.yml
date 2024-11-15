@@ -64,7 +64,7 @@ runs:
     - uses: docker/build-push-action@v6
       with:
         push: ${{ inputs.push == 'true' && steps.check-image.outputs.exists != 'true' }}
-        tags: ${{ inputs.tag }}
+        tags: ${{ inputs.image_name }}:${{ inputs.tag }}
         file: ${{ inputs.dockerfile }}
         context: .
         cache-from: type=registry,ref=${{ inputs.image_name }}:build-cache
