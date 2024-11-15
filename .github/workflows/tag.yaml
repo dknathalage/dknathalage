@@ -4,6 +4,7 @@ on:
       - minor-fix
 
   workflow_dispatch:
+    inputs: {}
 
 jobs:
   prerelease-bumps:
