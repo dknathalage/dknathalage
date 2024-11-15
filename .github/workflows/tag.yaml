@@ -6,6 +6,15 @@ on:
       - main
 
   workflow_dispatch:
+    inputs:
+      bump:
+        description: "Bump type"
+        default: minor
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
 
 jobs:
   prerelease:
@@ -15,9 +24,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Repo SemVer
-        uses: lhstrh/action-repo-semver@v1.1.2
-        id: repo-semver
+        uses: lhstrh/action-repo-semver@v1.2.1
+        id: current-repo-semver
+        with:
+          bump: patch
+
+      - name: Create Tag
+        run: |
+          git tag -a -m "Pre-release v${{ steps.current-repo-semver.outputs.next-release }}" v${{ steps.current-repo-semver.outputs.next-prerelease }}
+          git push origin v${{ steps.current-repo-semver.outputs.next-prerelease }}
 
   release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -26,8 +47,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Repo SemVer
         uses: lhstrh/action-repo-semver@v1.1.2
         id: repo-semver
         with:
           bump: release
+
+      - name: Create Tag
+        run: |
+          git tag -a -m "Release v${{ steps.repo-semver.outputs.next-release }}" v${{ steps.repo-semver.outputs.next-release }}
+          git push origin v${{ steps.repo-semver.outputs.next-release }}
