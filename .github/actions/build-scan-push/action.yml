@@ -94,6 +94,6 @@ runs:
         severity: ${{ inputs.trivy_severity }}
         vuln-type: os,library
 
-    - if: ${{ inputs.push == true && steps.check-image.outputs.exists == 'false' }}
+    - if: ${{ inputs.push == 'true' && steps.check-image.outputs.exists == 'false' }}
       run: docker push ${{ inputs.image_name }}:${{ inputs.tag }}
       shell: bash
