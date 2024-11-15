@@ -50,9 +50,20 @@ runs:
         username: "oauth2accesstoken"
         password: ${{ steps.auth.outputs.access_token }}
 
+    - id: check-image
+      name: Check if image exists and save to GITHUB_OUTPUT
+      run: |
+        if docker manifest inspect ${{ inputs.image_name }}:${{ inputs.tag }}
+        then
+          echo "exists=true">> $GITHUB_OUTPUT
+        else
+          echo "exists=false">> $GITHUB_OUTPUT
+        fi
+      shell: bash
+
     - uses: docker/build-push-action@v6
       with:
-        push: false
+        push: ${{ inputs.push }} && steps.check-image.outputs.exists != 'true'
         tags: ${{ inputs.tag }}
         file: ${{ inputs.dockerfile }}
         context: .
@@ -70,16 +81,3 @@ runs:
         image-ref: ${{ inputs.image_name }}:${{ inputs.tag }}
         severity: LOW,MEDIUM,HIGH,CRITICAL
         vuln-type: os,library
-
-    - id: check-image
-      name: Check if image exists and save to GITHUB_OUTPUT
-      run: |
-        if docker manifest inspect ${{ inputs.image_name }}:${{ inputs.tag }}
-        then
-          echo "exists=true">> $GITHUB_OUTPUT
-        fi
-      shell: bash
-
-    - if: steps.check-image.outputs.exists != 'true' && ${{ inputs.push }}
-      run: docker push ${{ inputs.image_name }}:${{ inputs.tag }}
-      shell: bash
