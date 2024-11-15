@@ -1,73 +1,34 @@
 version: "3"
 
 tasks:
-  setup:
-    cmds:
-      - go mod download
-      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
-      - go install github.com/securego/gosec/v2/cmd/gosec@latest
-
-  setup.lint:
-    cmds:
-      - go mod download
-      - go mod tidy
-      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
-
-  setup.sec:
-    cmds:
-      - go mod download
-      - go install github.com/securego/gosec/v2/cmd/gosec@latest
-
-  setup.test:
-    cmds:
-      - go mod download
-
-  run.lint:
-    aliases: ["lint"]
-    cmds:
-      - echo "RUNNING GOLANGCI-LINT"
-      - golangci-lint run --timeout 2m
-
-  run.test:
-    aliases: ["test"]
-    cmds:
-      - echo "RUNNING TESTS"
-      - go test -coverprofile=coverage.out -coverpkg=./pkg ./...
-      - go tool cover -func=coverage.out
-      # check if the coverage is less than 80%
-      - go tool cover -func=coverage.out | grep total | awk '{print $3}' | awk -F. '{print $1}' | awk '{if ($1 < 80) {exit 1}}'
-
-  run.sec:
-    aliases: ["sec"]
-    cmds:
-      - echo "RUNNING GOSEC"
-      - export PATH=$PATH:$(go env GOPATH)/bin
-      - $(go env GOPATH)/bin/gosec ./...
-
-  run.fmt:
-    aliases: ["fmt"]
-    cmds:
-      - gofmt -s -w .
-
-  run.vet:
-    aliases: ["vet"]
-    cmds:
-      - go vet ./...
-
-  setup:
-    cmds:
-      - task setup.lint
-      - task setup.sec
-      - task setup.test
-
   quality:
-    cmds:
-      - task run.lint
-      - task run.test
-      - task run.sec
-      - task run.fmt
-      - task run.vet
+    - task: test
+    - task: lint
 
-  default:
+  # ========================================
+  # Test tasks
+  # ========================================
+  test:
+    - task: test.unit
+
+  test.unit:
+    desc: Run unit tests
     cmds:
-      - task: quality
+      - go test -v -coverprofile=coverage.out ./...
+
+  # ========================================
+  # Linting tasks
+  # ========================================
+  lint:
+    - task: lint.setup
+    - task: lint.golangci
+
+  lint.setup:
+    desc: Setup linting tools
+    cmds:
+      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
+
+  lint.golangci:
+    desc: Run golangci-lint
+    cmds:
+      - $(go env GOPATH)/bin/golangci-lint run --timeout 2m

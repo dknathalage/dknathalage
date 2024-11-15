@@ -50,7 +50,14 @@ runs:
         username: "oauth2accesstoken"
         password: ${{ steps.auth.outputs.access_token }}
 
+    # check if the image is already exists in the registry
+    - id: check-image
+      run: |
+        docker pull ${{ inputs.image_registry }}/${{ inputs.image_name }}:${{ github.sha }} || exit 0
+      continue-on-error: true
+
     - uses: docker/build-push-action@v6
+      if: steps.check-image.outcome != 'success'
       with:
         push: ${{ inputs.push }}
         tags: ${{ inputs.tags }}
@@ -60,6 +67,8 @@ runs:
         cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:build-cache,mode=max
       env:
         IMAGE_NAME: ${{ inputs.image_registry }}/${{ inputs.image_name }}
+
+
 # cloudrun-deploy:
 #   if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy')
 #   needs: docker-build
