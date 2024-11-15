@@ -36,7 +36,7 @@ jobs:
           git tag -a -m "Pre-release $new_tag" $new_tag
           git push origin $new_tag
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
       - name: Create Tag (Minor)
         if: ${{ steps.current-repo-semver.outputs.next-release == steps.current-repo-semver.outputs.current }}
@@ -44,6 +44,8 @@ jobs:
           new_tag="v${{ steps.current-repo-semver.outputs.next-minor }}-0"
           git tag -a -m "Release $new_tag" $new_tag
           git push origin $new_tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
   release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -67,4 +69,4 @@ jobs:
           git tag -a -m "Release $new_tag" $new_tag
           git push origin $new_tag
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
