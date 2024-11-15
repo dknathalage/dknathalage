@@ -93,8 +93,11 @@ jobs:
       - name: Repo SemVer
         uses: lhstrh/action-repo-semver@v1.1.2
         id: repo-semver
+        with:
+          build: "build"
 
       - name: Create Tag
+        if: ${{ steps.repo-semver.outputs.next-build != '' }}
         run: |
           new_tag="v${{ steps.repo-semver.outputs.next-build }}"
           git tag -a -m "Release $new_tag" $new_tag
