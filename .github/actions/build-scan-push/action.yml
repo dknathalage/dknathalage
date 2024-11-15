@@ -74,8 +74,6 @@ runs:
         docker build \
           -t ${{ inputs.image_name }}:${{ inputs.tag }} \
           -f ${{ inputs.dockerfile }} \
-          --cache-from ${{ inputs.image_name }}:build-cache \
-          --cache-to ${{ inputs.image_name }}:build-cache,mode=max \
           ${{ inputs.docker_context }}
       shell: bash
 
