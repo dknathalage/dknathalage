@@ -41,7 +41,6 @@ jobs:
           gh release delete v${{ steps.current-repo-semver.outputs.current }} || exit 0
 
           title="Release ${{steps.current-repo-semver.outputs.next-release}}"
-          notes
           gh release create $new_tag --title $title --prerelease --notes "Release $new_tag"
 
       - name: Create Tag (Minor)
