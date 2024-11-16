@@ -1,26 +1,28 @@
 name: Tagging 🏷️
-# TODO: explore https://github.com/marketplace/actions/update-semantic-version
 
+# Trigger the workflow on push to main or manually via workflow_dispatch
 on:
   push:
     branches:
       - main
-
   workflow_dispatch:
 
+# Define permissions
 permissions:
   contents: write
   pull-requests: write
 
+# Set environment variables
 env:
   GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
 jobs:
   prerelease:
+    # Run this job only on push events
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Set up Git
@@ -28,39 +30,42 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Repo SemVer
-        uses: lhstrh/action-repo-semver@v1.2.1
-        id: current-repo-semver
+      - name: Get Current Version
+        id: get_current_version
+        run: echo "CURRENT_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
 
-      - name: Create Tag (Pre-release)
-        if: ${{ steps.current-repo-semver.outputs.next-release != steps.current-repo-semver.outputs.current }}
+      - id: is_tag_has_rc
         run: |
-          new_tag="v${{ steps.current-repo-semver.outputs.next-prerelease }}"
-          git tag -a -m "Pre-release $new_tag" $new_tag
-          git push origin $new_tag
-          gh release delete v${{ steps.current-repo-semver.outputs.current }} || true
+          if [[ ${{ steps.get_current_version.outputs.CURRENT_VERSION }} == *"rc"* ]]; then
+            echo "Tag has rc"
+            echo "IS_RC=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag does not have rc"
+            echo "IS_RC=false" >> $GITHUB_OUTPUT
+          fi
 
-          title="Release ${{steps.current-repo-semver.outputs.next-release}}"
-          gh release create $new_tag --title $title --prerelease --notes "Release $new_tag"
-        env:
-          GH_TOKEN: ${{ secrets.REPO_TOKEN }}
+      - name: Bump Version for Pre-release
+        id: bump_version
+        uses: cookbenjamin/update-version@v1.0.1
+        with:
+          current-version: ${{ steps.get_current_version.outputs.CURRENT_VERSION }}
+          increment-version-fragment: ${{ steps.is_tag_has_rc.outputs.IS_RC == 'true' && 'NONE' || 'MINOR' }}
+          prerelease-fragment: "RC"
 
-      - name: Create Tag (Minor)
-        if: ${{ steps.current-repo-semver.outputs.next-release == steps.current-repo-semver.outputs.current }}
+      - name: Create Pre-release Tag
         run: |
-          new_tag="v${{ steps.current-repo-semver.outputs.next-minor }}-0"
-          git tag -a -m "Release $new_tag" $new_tag
+          git tag -a -m "Release ${{ steps.bump_version.outputs.updated-version }}" ${{ steps.bump_version.outputs.updated-version }}
           git push origin $new_tag
-          echo NEW_TAG=$new_tag >> $GITHUB_OUTPUT
-          gh release create $new_tag --title "Pre-release $new_tag" --prerelease --notes "Release $new_tag"
+          gh release create ${{ steps.bump_version.outputs.updated-version }} --title "Release ${{ steps.bump_version.outputs.updated-version }}" --notes "Release ${{ steps.bump_version.outputs.updated-version }}"
         env:
           GH_TOKEN: ${{ secrets.REPO_TOKEN }}
 
   release:
+    # Run this job only when manually triggered
     if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: Set up Git
@@ -68,14 +73,24 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Repo SemVer
-        uses: lhstrh/action-repo-semver@v1.1.2
-        id: repo-semver
+      - name: Get Current Version
+        id: get_current_version
+        run: echo "CURRENT_VERSION=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
 
-      - name: Create Tag
+      - name: Bump Version for Release
+        id: bump_version
+        uses: cookbenjamin/update-version@v1.0.1
+        with:
+          current-version: ${{ steps.get_current_version.outputs.CURRENT_VERSION }}
+          increment-version-fragment: "NONE" # Adjust based on your versioning strategy
+          prerelease-fragment: "REMOVE" # Removing prerelease for production
+
+      - name: Create Release Tag
         run: |
-          new_tag="v${{ steps.repo-semver.outputs.next-release }}"
+          new_tag="v${{ steps.bump_version.outputs.updated-version }}"
           git tag -a -m "Release $new_tag" $new_tag
           git push origin $new_tag
-          gh release delete v${{ steps.repo-semver.outputs.current }}
+
           gh release create $new_tag --title "Release $new_tag" --notes "Release $new_tag"
+        env:
+          GH_TOKEN: ${{ secrets.REPO_TOKEN }}
