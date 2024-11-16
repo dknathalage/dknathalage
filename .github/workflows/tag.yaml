@@ -1,24 +1,19 @@
 name: Tagging 🏷️
-
-# Trigger the workflow on push to main or manually via workflow_dispatch
 on:
   push:
     branches:
       - main
+
   workflow_dispatch:
 
-# Define permissions
 permissions:
   contents: write
   pull-requests: write
-
-# Set environment variables
 env:
   GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
 jobs:
   prerelease:
-    # Run this job only on push events
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
@@ -69,7 +64,6 @@ jobs:
           gh release delete ${{ steps.get_current_version.outputs.CURRENT_VERSION }}
 
   release:
-    # Run this job only when manually triggered
     if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
