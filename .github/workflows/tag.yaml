@@ -90,8 +90,8 @@ jobs:
         uses: cookbenjamin/update-version@v1.0.1
         with:
           current-version: ${{ steps.get_current_version.outputs.CURRENT_VERSION }}
-          increment-version-fragment: "NONE" # Adjust based on your versioning strategy
-          prerelease-fragment: "REMOVE" # Removing prerelease for production
+          increment-version-fragment: "MINOR"
+          prerelease-fragment: "REMOVE"
 
       - name: Create Release Tag
         run: |
@@ -99,6 +99,8 @@ jobs:
           git tag -a -m "Release $new_tag" $new_tag
           git push origin $new_tag
 
-          gh release create $new_tag --title "Release $new_tag" --notes "Release $new_tag"
+      - name: Create Release
+        run: |
+          gh release create ${{ steps.bump_version.outputs.updated-version }} --title "Release ${{ steps.bump_version.outputs.updated-version }}" --notes "Release ${{ steps.bump_version.outputs.updated-version }}"
         env:
           GH_TOKEN: ${{ secrets.REPO_TOKEN }}
