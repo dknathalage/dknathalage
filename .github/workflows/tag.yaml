@@ -58,9 +58,15 @@ jobs:
         run: |
           git tag -a -m "Release ${{ steps.bump_version.outputs.updated-version }}" ${{ steps.bump_version.outputs.updated-version }}
           git push origin $new_tag
+
+      - name: Create Release
+        run: |
           gh release create ${{ steps.bump_version.outputs.updated-version }} --title "Release ${{ steps.bump_version.outputs.updated-version }}" --notes "Release ${{ steps.bump_version.outputs.updated-version }}"
-        env:
-          GH_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+      - name: Delete existing Pre-release
+        if: ${{ steps.is_tag_has_rc.outputs.IS_RC == 'true' }}
+        run: |
+          gh release delete ${{ steps.get_current_version.outputs.CURRENT_VERSION }}
 
   release:
     # Run this job only when manually triggered
