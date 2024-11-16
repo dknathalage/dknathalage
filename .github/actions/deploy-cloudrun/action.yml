@@ -49,7 +49,7 @@ runs:
         service_account: ${{ inputs.service_account }}
         access_token_lifetime: "300s"
 
-    - uses: google-github-actions/setup-gcloud@v0.2.0
+    - uses: google-github-actions/setup-gcloud@v2
       with:
         version: "latest"
 
@@ -70,4 +70,5 @@ runs:
         image: ${{ inputs.image }}
         tag: ${{ inputs.tag }}
         region: ${{ inputs.region }}
-        flags: "--platform=managed --cpu=${{ inputs.cpu }} --memory=${{ inputs.memory }} --allow-unauthenticated ${{ steps.check-service.outputs.EXISTS == 'true' && '--no-traffic' || '' }}"
+        p
+        flags: "--platform=managed --cpu=${{ inputs.cpu }} --memory=${{ inputs.memory }} --allow-unauthenticated ${{ steps.check-service.outputs.EXISTS == 'true' && '--no-traffic' || '' }} --port=80"
