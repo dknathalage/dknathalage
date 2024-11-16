@@ -92,7 +92,7 @@ jobs:
         uses: cookbenjamin/update-version@v1.0.1
         with:
           current-version: ${{ steps.get_current_version.outputs.CURRENT_VERSION }}
-          increment-version-fragment: "MINOR"
+          increment-version-fragment: "NONE"
           prerelease-fragment: "REMOVE"
 
       - name: Create Release Tag
@@ -106,3 +106,18 @@ jobs:
           gh release create ${{ steps.bump_version.outputs.updated-version }} --title "Release ${{ steps.bump_version.outputs.updated-version }}" --notes "Release ${{ steps.bump_version.outputs.updated-version }}"
         env:
           GH_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+      - id: is_tag_has_rc
+        run: |
+          if [[ ${{ steps.get_current_version.outputs.CURRENT_VERSION }} == *"rc"* ]]; then
+            echo "Tag has rc"
+            echo "IS_RC=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag does not have rc"
+            echo "IS_RC=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Delete existing Pre-release
+        if: ${{ steps.is_tag_has_rc.outputs.IS_RC == 'true' }}
+        run: |
+          gh release delete ${{ steps.get_current_version.outputs.CURRENT_VERSION }}
