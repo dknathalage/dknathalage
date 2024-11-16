@@ -57,7 +57,7 @@ jobs:
       - name: Create Pre-release Tag
         run: |
           git tag -a -m "Release ${{ steps.bump_version.outputs.updated-version }}" ${{ steps.bump_version.outputs.updated-version }}
-          git push origin $new_tag
+          git push origin ${{ steps.bump_version.outputs.updated-version }}
 
       - name: Create Release
         run: |
