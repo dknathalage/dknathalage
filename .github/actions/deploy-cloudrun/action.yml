@@ -9,6 +9,24 @@ input:
     type: string
     required: true
     description: "Service Account for deployment"
+  service_name:
+    type: string
+    required: true
+    description: "Service Name for deployment"
+  region:
+    type: string
+    required: true
+    description: "Region for deployment"
+  cpu:
+    type: string
+    required: false
+    description: "CPU for deployment"
+    default: "1000m"
+  memory:
+    type: string
+    required: false
+    description: "Memory for deployment"
+    default: "256Mi"
 
 runs:
   using: "composite"
@@ -26,4 +44,11 @@ runs:
         service_account: ${{ inputs.service_account }}
         access_token_lifetime: "300s"
 
-    
+    - run: |
+        gcloud run deploy invoice \
+          --image="${{ env.IMAGE_PREFIX }}/invoice:${{ github.sha }}" \
+          --platform=managed \
+          --region="${{ inputs.region }}" \
+          --cpu="${{ inputs.cpu }}" \
+          --memory="${{ inputs.memory }}" \
+          --allow-unauthenticated
