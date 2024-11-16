@@ -107,6 +107,6 @@ jobs:
           docker tag ${{ steps.inputs.outputs.IMAGE_WITH_SHA }} ${{ steps.inputs.outputs.IMAGE_WITH_TAG }}
           docker push ${{ steps.inputs.outputs.IMAGE_WITH_TAG }}
 
-      - if: ${{ github.event.release.prerelease == false }}
+      - if: ${{ github.event_name == 'release' && !contains(github.event.release.tag_name, 'rc') }}
         run: |
           gcloud run services update-traffic ${{ matrix.service.name }} --region ${{ matrix.service.region }} --to-tags=${{ steps.inputs.outputs.TAG }}=100 --quiet
