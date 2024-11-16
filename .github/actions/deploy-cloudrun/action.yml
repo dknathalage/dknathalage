@@ -55,11 +55,11 @@ runs:
 
     - id: check-service
       run:
-        if gcloud run services describe ${{ inputs.service_name }} --platform managed --region ${{ inputs.region }}; then
-        echo EXISTS=true >> $GITHUB_OUTPUT
+        if gcloud run services describe ${{ inputs.service_name }} --platform managed --region ${{ inputs.region }}
+        then
+          echo EXISTS=true >> $GITHUB_OUTPUT
         else
-        echo EXISTS=false >> $GITHUB_OUTPUT
-        exit 1
+          echo EXISTS=false >> $GITHUB_OUTPUT
         fi
       shell: bash
 
