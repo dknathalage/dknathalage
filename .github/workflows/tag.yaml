@@ -38,6 +38,8 @@ jobs:
           new_tag="v${{ steps.current-repo-semver.outputs.next-prerelease }}"
           git tag -a -m "Pre-release $new_tag" $new_tag
           git push origin $new_tag
+          gh release delete ${{ steps.current-repo-semver.outputs.current }}
+          gh release create $new_tag --title "Pre-release $new_tag" --notes "Pre-release $new_tag" --prerelease
 
       - name: Create Tag (Minor)
         if: ${{ steps.current-repo-semver.outputs.next-release == steps.current-repo-semver.outputs.current }}
@@ -45,6 +47,10 @@ jobs:
           new_tag="v${{ steps.current-repo-semver.outputs.next-minor }}-0"
           git tag -a -m "Release $new_tag" $new_tag
           git push origin $new_tag
+          echo NEW_TAG=$new_tag >> $GITHUB_OUTPUT
+          gh release create $new_tag --title "Pre-release $new_tag" --notes "Pre-release $new_tag" --prerelease
+        env:
+          GH_TOKEN: ${{ secrets.REPO_TOKEN }}
 
   release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -67,3 +73,5 @@ jobs:
           new_tag="v${{ steps.repo-semver.outputs.next-release }}"
           git tag -a -m "Release $new_tag" $new_tag
           git push origin $new_tag
+          gh release delete ${{ steps.repo-semver.outputs.current }}
+          gh release create $new_tag --title "Release $new_tag" --notes "Release $new_tag"
