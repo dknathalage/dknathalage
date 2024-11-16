@@ -78,7 +78,7 @@ jobs:
 
       - run: |
           if ${{ github.event_name == 'release' }}; then
-            TAG=$(echo ${{ github.ref_name }} | sed 's/\./-/g')
+            TAG=tag-$(echo ${{ github.ref_name }} | sed 's/\./-/g')
           else
             TAG=pr-${{ github.event.pull_request.number }}
           fi

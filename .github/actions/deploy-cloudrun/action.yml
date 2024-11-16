@@ -1,6 +1,6 @@
 name: Deploy Cloudrun 🚀🏃
 
-input:
+inputs:
   workload_idp:
     type: string
     required: true
