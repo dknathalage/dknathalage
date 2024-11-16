@@ -106,3 +106,10 @@ jobs:
           docker pull ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
           docker tag ${{ steps.inputs.outputs.IMAGE_WITH_SHA }} ${{ steps.inputs.outputs.IMAGE_WITH_TAG }}
           docker push ${{ steps.inputs.outputs.IMAGE_WITH_TAG }}
+
+      - name: add release type tag to cloudrun
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          gcloud run services update ${{ matrix.service.name }} --region ${{ matrix.service.region }} --tag ${{ env.RELEASE_TYPE }}
+        env:
+          RELEASE_TYPE: ${{ github.event.release.prerelease && 'prerelease' || 'release' }}
