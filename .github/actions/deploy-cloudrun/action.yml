@@ -27,6 +27,10 @@ input:
     required: false
     description: "Memory for deployment"
     default: "256Mi"
+  image:
+    type: string
+    required: true
+    description: "Image for deployment"
 
 runs:
   using: "composite"
@@ -45,8 +49,8 @@ runs:
         access_token_lifetime: "300s"
 
     - run: |
-        gcloud run deploy invoice \
-          --image="${{ env.IMAGE_PREFIX }}/invoice:${{ github.sha }}" \
+        gcloud run deploy "${{ inputs.service_name }}" \
+          --image="${{ inputs.image }}" \
           --platform=managed \
           --region="${{ inputs.region }}" \
           --cpu="${{ inputs.cpu }}" \

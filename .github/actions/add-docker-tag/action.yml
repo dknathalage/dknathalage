@@ -1,0 +1,21 @@
+name: Add tag to Docker image 🚛
+
+inputs:
+  image:
+    type: string
+    required: true
+    description: "Docker image to add tag"
+  tag:
+    type: string
+    required: true
+    description: "Tag to add to the Docker image"
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+    - run: |
+        docker pull ${{ inputs.image }}
+        docker tag ${{ inputs.image }} ${{ inputs.tag}}
+        docker push ${{ inputs.tag }}
+      shell: bash

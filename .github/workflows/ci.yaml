@@ -36,27 +36,51 @@ jobs:
   build:
     if: ${{ !contains(github.event.pull_request.labels.*.name , 'skip-ci')}}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - name: invoice
+            dockerfile: ./cmd/invoice/Dockerfile
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/build-scan-push
         with:
-          dockerfile: ./cmd/invoice/Dockerfile
+          dockerfile: ${{ matrix.service.dockerfile }}
           workload_idp: ${{ env.WORKLOAD_IDP }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
           image_registry: ${{ env.REGISTRY_URL }}
-          image_name: ${{ env.IMAGE_PREFIX }}/invoice
+          image_name: ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name}}
           tag: ${{ github.sha }}
           push: ${{ contains(github.event.pull_request.labels.*.name , 'deploy') || github.event_name == 'release' }}
 
   deploy:
     if: ${{ !contains(github.event.pull_request.labels.*.name , 'skip-ci') && (contains(github.event.pull_request.labels.*.name , 'deploy') || github.event_name == 'release') }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - name: invoice
+            region: australia-southeast2
+
     needs: build
     steps:
       - uses: actions/checkout@v4
+
       - uses: ./.github/actions/deploy-cloudrun
         with:
           workload_idp: ${{ env.WORKLOAD_IDP }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
-          service_name: invoice
-          region: australia-southeast2
+          service_name: ${{ matrix.service.name }}
+          region: ${{ matrix.service.region }}
+          image: ${{ env.IMAGE_PREFIX }}/invoice:${{ github.sha }}
+
+      - if: github.event_name == 'release'
+        run: gcloud run services update invoice --platform=managed --region=australia-southeast2 --update-labels release=${{ github.event.release.tag_name }}
+
+      - if: github.event_name == 'release'
+        run: |
+          docker pull ${{ env.IMAGE_PREFIX }}/invoice:${{ github.sha }}
+          docker tag ${{ env.IMAGE_PREFIX }}/invoice:${{ github.sha }} ${{ env.IMAGE_PREFIX }}/invoice:${{ github.event.release.tag_name }}
+          docker push ${{ env.IMAGE_PREFIX }}/invoice:${{ github.event.release.tag_name }}
