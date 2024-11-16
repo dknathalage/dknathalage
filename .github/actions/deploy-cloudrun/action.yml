@@ -40,9 +40,6 @@ runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v4
-    - uses: google-github-actions/setup-gcloud@v0.2.0
-      with:
-        version: "latest"
 
     - id: auth
       uses: google-github-actions/auth@v1
@@ -51,6 +48,10 @@ runs:
         workload_identity_provider: ${{ inputs.workload_idp }}
         service_account: ${{ inputs.service_account }}
         access_token_lifetime: "300s"
+
+    - uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        version: "latest"
 
     - id: check-service
       run:
