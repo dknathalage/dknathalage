@@ -102,7 +102,7 @@ jobs:
           password: ${{ steps.auth.outputs.access_token }}
 
       - run: |
-          gcloud run services update ${{ matrix.service.name }} --platform=managed --region=australia-southeast2 --update-labels tag=${{ steps.inputs.outputs.TAG }},sha=${{ github.sha }} --tag=${{ steps.inputs.outputs.TAG }} --no-traffic
+          gcloud run services update ${{ matrix.service.name }} --platform=managed --region=australia-southeast2 --tag=${{ steps.inputs.outputs.TAG }} --no-traffic
 
       - run: |
           docker pull ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
