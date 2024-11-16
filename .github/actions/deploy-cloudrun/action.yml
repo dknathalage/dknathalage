@@ -52,3 +52,4 @@ runs:
           --cpu="${{ inputs.cpu }}" \
           --memory="${{ inputs.memory }}" \
           --allow-unauthenticated
+      shell: bash
