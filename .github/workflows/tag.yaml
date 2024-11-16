@@ -16,9 +16,19 @@ env:
   GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
 jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    outputs:
+      changelog: ${{ steps.changelog-ci.outputs.changelog }}
+    steps:
+      - name: changelog-ci
+        uses: saadmk11/changelog-ci@v1.1.2
+        id: changelog-ci
+
   prerelease:
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
+    needs: changelog
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,7 +49,7 @@ jobs:
           git tag -a -m "Pre-release $new_tag" $new_tag
           git push origin $new_tag
           gh release delete v${{ steps.current-repo-semver.outputs.current }}
-          gh release create $new_tag --title "Pre-release $new_tag" --notes "Pre-release $new_tag" --prerelease
+          gh release create $new_tag --title "Pre-release $new_tag" --prerelease --notes "${{ needs.changelog.outputs.changelog }}"
 
       - name: Create Tag (Minor)
         if: ${{ steps.current-repo-semver.outputs.next-release == steps.current-repo-semver.outputs.current }}
@@ -48,13 +58,14 @@ jobs:
           git tag -a -m "Release $new_tag" $new_tag
           git push origin $new_tag
           echo NEW_TAG=$new_tag >> $GITHUB_OUTPUT
-          gh release create $new_tag --title "Pre-release $new_tag" --notes "Pre-release $new_tag" --prerelease
+          gh release create $new_tag --title "Pre-release $new_tag" --prerelease --notes "${{ needs.changelog.outputs.changelog }}"
         env:
           GH_TOKEN: ${{ secrets.REPO_TOKEN }}
 
   release:
     if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    needs: changelog
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -74,4 +85,4 @@ jobs:
           git tag -a -m "Release $new_tag" $new_tag
           git push origin $new_tag
           gh release delete v${{ steps.repo-semver.outputs.current }}
-          gh release create $new_tag --title "Release $new_tag" --notes "Release $new_tag"
+          gh release create $new_tag --title "Release $new_tag" --notes "${{ needs.changelog.outputs.changelog }}"
