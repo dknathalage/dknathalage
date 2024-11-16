@@ -68,19 +68,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - run: |
+          if ${{ github.event_name == 'release' }}; then
+            echo TAG=tag_${{ github.event.release.tag_name }}
+          else
+            echo TAG=pr_${{ github.event.pull_request.number }}
+          fi
+          echo $TAG >> $GITHUB_OUTPUT
+          echo IMAGE_WITH_SHA=${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ github.sha }} >> $GITHUB_OUTPUT
+          echo IMAGE_WITH_TAG=${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:$TAG >> $GITHUB_OUTPUT
+
+        id: inputs
+
       - uses: ./.github/actions/deploy-cloudrun
         with:
           workload_idp: ${{ env.WORKLOAD_IDP }}
           service_account: ${{ env.SERVICE_ACCOUNT }}
           service_name: ${{ matrix.service.name }}
           region: ${{ matrix.service.region }}
-          image: ${{ env.IMAGE_PREFIX }}/invoice:${{ github.sha }}
+          image: ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
 
-      - if: github.event_name == 'release'
-        run: gcloud run services update invoice --platform=managed --region=australia-southeast2 --update-labels release=${{ github.event.release.tag_name }}
+      - run: |
+          gcloud run services update ${{ matrix.service.name }} --platform=managed --region=australia-southeast2 --update-labels TAG=${{ steps.inputs.outputs.TAG }},SHA=${{ github.sha }}
 
-      - if: github.event_name == 'release'
-        run: |
-          docker pull ${{ env.IMAGE_PREFIX }}/invoice:${{ github.sha }}
-          docker tag ${{ env.IMAGE_PREFIX }}/invoice:${{ github.sha }} ${{ env.IMAGE_PREFIX }}/invoice:${{ github.event.release.tag_name }}
-          docker push ${{ env.IMAGE_PREFIX }}/invoice:${{ github.event.release.tag_name }}
+      - run: |
+          docker pull ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
+          docker tag ${{ steps.inputs.outputs.IMAGE_WITH_SHA }} ${{ steps.inputs.outputs.IMAGE_WITH_TAG }}
+          docker push ${{ steps.inputs.outputs.IMAGE_WITH_TAG }}
