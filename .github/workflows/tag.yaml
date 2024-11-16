@@ -97,7 +97,7 @@ jobs:
 
       - name: Create Release Tag
         run: |
-          new_tag="v${{ steps.bump_version.outputs.updated-version }}"
+          new_tag="${{ steps.bump_version.outputs.updated-version }}"
           git tag -a -m "Release $new_tag" $new_tag
           git push origin $new_tag
 
