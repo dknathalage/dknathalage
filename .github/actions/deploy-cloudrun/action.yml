@@ -52,14 +52,22 @@ runs:
         service_account: ${{ inputs.service_account }}
         access_token_lifetime: "300s"
 
-    - run: |
-        gcloud run deploy "${{ inputs.service_name }}" \
-          --image="${{ inputs.image }}" \
-          --platform=managed \
-          --region="${{ inputs.region }}" \
-          --cpu="${{ inputs.cpu }}" \
-          --memory="${{ inputs.memory }}" \
-          --tag="${{ inputs.tag }}" \
-          --no-traffic \
-          --allow-unauthenticated
-      shell: bash
+    - id: check-service
+      run: 
+        if gcloud run services describe ${{ inputs.service_name }} --platform managed --region ${{ inputs.region }}; then
+          echo EXISTS=true >> $GITHUB_OUTPUT
+        else
+          echo EXISTS=false >> $GITHUB_OUTPUT
+          exit 1
+        fi
+
+    - id: 'deploy'
+        uses: 'google-github-actions/deploy-cloudrun@v2'
+        with:
+          service: ${{ inputs.service_name }}
+          image: ${{ inputs.image }}
+          tag: ${{ inputs.tag }}
+          region: ${{ inputs.region }}
+          flags: "--platform=managed --cpu=${{ inputs.cpu }} --memory=${{ inputs.memory }} --allow-unauthenticated --no-traffic=${{ check-service.outputs.EXISTS }}"
+
+
