@@ -38,7 +38,7 @@ jobs:
           new_tag="v${{ steps.current-repo-semver.outputs.next-prerelease }}"
           git tag -a -m "Pre-release $new_tag" $new_tag
           git push origin $new_tag
-          gh release delete v${{ steps.current-repo-semver.outputs.current }} || exit 0
+          gh release delete v${{ steps.current-repo-semver.outputs.current }} || true
 
           title="Release ${{steps.current-repo-semver.outputs.next-release}}"
           gh release create $new_tag --title $title --prerelease --notes "Release $new_tag"
