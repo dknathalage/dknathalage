@@ -44,6 +44,8 @@ jobs:
         service:
           - name: invoice
             dockerfile: ./cmd/invoice/Dockerfile
+          - name: kp-wedding
+            dockerfile: ./cmd/kp-wedding/Dockerfile
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/build-scan-push
