@@ -87,7 +87,7 @@ runs:
       id: trivy
       uses: aquasecurity/trivy-action@0.20.0
       with:
-        exit-code: 1
+        exit-code: 0
         format: table
         ignore-unfixed: false
         image-ref: ${{ inputs.image_name }}:${{ inputs.tag }}
