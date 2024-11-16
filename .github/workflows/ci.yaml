@@ -67,6 +67,8 @@ jobs:
         service:
           - name: invoice
             region: australia-southeast2
+          - name: kp-wedding
+            region: australia-southeast2
 
     needs: build
     steps:
