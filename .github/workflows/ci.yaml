@@ -16,8 +16,14 @@ permissions:
   id-token: write
 
 concurrency:
-  group: ${{ github.event.pull_request.number }}
+  group: ${{ github.sha }}
   cancel-in-progress: true
+
+env:
+  WORKLOAD_IDP: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
+  SERVICE_ACCOUNT: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+  REGISTRY_URL: "australia-southeast2-docker.pkg.dev"
+  IMAGE_PREFIX: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage"
 
 jobs:
   quality:
@@ -30,14 +36,73 @@ jobs:
   build:
     if: ${{ !contains(github.event.pull_request.labels.*.name , 'skip-ci')}}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - name: invoice
+            dockerfile: ./cmd/invoice/Dockerfile
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/build-scan-push
         with:
-          dockerfile: ./cmd/invoice/Dockerfile
-          workload_idp: "projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider"
-          service_account: "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
-          image_registry: "australia-southeast2-docker.pkg.dev"
-          image_name: "australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice"
+          dockerfile: ${{ matrix.service.dockerfile }}
+          workload_idp: ${{ env.WORKLOAD_IDP }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          image_registry: ${{ env.REGISTRY_URL }}
+          image_name: ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name}}
           tag: ${{ github.sha }}
-          push: ${{ contains(github.event.pull_request.labels.*.name , 'deploy') }}
+          push: ${{ contains(github.event.pull_request.labels.*.name , 'deploy') || github.event_name == 'release' }}
+
+  deploy:
+    if: ${{ !contains(github.event.pull_request.labels.*.name , 'skip-ci') && (contains(github.event.pull_request.labels.*.name , 'deploy') || github.event_name == 'release') }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - name: invoice
+            region: australia-southeast2
+
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: "access_token"
+          workload_identity_provider: ${{ env.WORKLOAD_IDP }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          access_token_lifetime: "300s"
+
+      - run: |
+          if ${{ github.event_name == 'release' }}; then
+            TAG=tag-${{ github.ref_name }}
+          else
+            TAG=pr-${{ github.event.pull_request.number }}
+          fi
+          echo TAG=$TAG >> $GITHUB_OUTPUT
+          echo IMAGE_WITH_SHA=${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ github.sha }} >> $GITHUB_OUTPUT
+          echo IMAGE_WITH_TAG=${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:$TAG >> $GITHUB_OUTPUT
+        id: inputs
+
+      - uses: ./.github/actions/deploy-cloudrun
+        with:
+          workload_idp: ${{ env.WORKLOAD_IDP }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          service_name: ${{ matrix.service.name }}
+          region: ${{ matrix.service.region }}
+          image: ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
+          tag: ${{ steps.inputs.outputs.TAG }}
+
+      - uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY_URL }}
+          username: "oauth2accesstoken"
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - run: |
+          docker pull ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
+          docker tag ${{ steps.inputs.outputs.IMAGE_WITH_SHA }} ${{ steps.inputs.outputs.IMAGE_WITH_TAG }}
+          docker push ${{ steps.inputs.outputs.IMAGE_WITH_TAG }}

@@ -1,0 +1,65 @@
+name: Deploy Cloudrun 🚀🏃
+
+input:
+  workload_idp:
+    type: string
+    required: true
+    description: "Workload Identity Provider for GCP"
+  service_account:
+    type: string
+    required: true
+    description: "Service Account for deployment"
+  service_name:
+    type: string
+    required: true
+    description: "Service Name for deployment"
+  region:
+    type: string
+    required: true
+    description: "Region for deployment"
+  cpu:
+    type: string
+    required: false
+    description: "CPU for deployment"
+    default: "1000m"
+  memory:
+    type: string
+    required: false
+    description: "Memory for deployment"
+    default: "256Mi"
+  image:
+    type: string
+    required: true
+    description: "Image for deployment"
+  tag:
+    type: string
+    required: true
+    description: "Tag for deployment"
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+    - uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        version: "latest"
+
+    - id: auth
+      uses: google-github-actions/auth@v1
+      with:
+        token_format: "access_token"
+        workload_identity_provider: ${{ inputs.workload_idp }}
+        service_account: ${{ inputs.service_account }}
+        access_token_lifetime: "300s"
+
+    - run: |
+        gcloud run deploy "${{ inputs.service_name }}" \
+          --image="${{ inputs.image }}" \
+          --platform=managed \
+          --region="${{ inputs.region }}" \
+          --cpu="${{ inputs.cpu }}" \
+          --memory="${{ inputs.memory }}" \
+          --tag="${{ inputs.tag }}" \
+          --no-traffic \
+          --allow-unauthenticated
+      shell: bash
