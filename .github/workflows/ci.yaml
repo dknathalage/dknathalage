@@ -5,9 +5,11 @@ on:
     types:
       - opened
       - synchronize
-      - closed
+      - reopened
       - labeled
       - unlabeled
+
+  release:
 
 permissions:
   contents: write
