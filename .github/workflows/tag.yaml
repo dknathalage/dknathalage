@@ -61,7 +61,7 @@ jobs:
 
       - name: Create Release
         run: |
-          gh release create ${{ steps.bump_version.outputs.updated-version }} --title "Release ${{ steps.bump_version.outputs.updated-version }}" --notes "Release ${{ steps.bump_version.outputs.updated-version }}"
+          gh release create ${{ steps.bump_version.outputs.updated-version }} --title "Release ${{ steps.bump_version.outputs.updated-version }}" --notes "Release ${{ steps.bump_version.outputs.updated-version }}" --prerelease
 
       - name: Delete existing Pre-release
         if: ${{ steps.is_tag_has_rc.outputs.IS_RC == 'true' }}
