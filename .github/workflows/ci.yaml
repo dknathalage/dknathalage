@@ -70,9 +70,9 @@ jobs:
 
       - run: |
           if ${{ github.event_name == 'release' }}; then
-            echo TAG=tag_${{ github.event.release.tag_name }}
+            TAG=tag_${{ github.event.release.tag_name }}
           else
-            echo TAG=pr_${{ github.event.pull_request.number }}
+            TAG=pr_${{ github.event.pull_request.number }}
           fi
           echo $TAG >> $GITHUB_OUTPUT
           echo IMAGE_WITH_SHA=${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ github.sha }} >> $GITHUB_OUTPUT
@@ -102,7 +102,7 @@ jobs:
           password: ${{ steps.auth.outputs.access_token }}
 
       - run: |
-          gcloud run services update ${{ matrix.service.name }} --platform=managed --region=australia-southeast2 --update-labels tag=${{ steps.inputs.outputs.TAG }},sha=${{ github.sha }}
+          gcloud run services update ${{ matrix.service.name }} --platform=managed --region=australia-southeast2 --update-labels tag=${{ steps.inputs.outputs.TAG }},sha=${{ github.sha }} --tag=${{ steps.inputs.outputs.TAG }} --no-traffic
 
       - run: |
           docker pull ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
