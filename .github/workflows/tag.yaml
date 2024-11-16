@@ -121,3 +121,5 @@ jobs:
         if: ${{ steps.is_tag_has_rc.outputs.IS_RC == 'true' }}
         run: |
           gh release delete ${{ steps.get_current_version.outputs.CURRENT_VERSION }}
+        env:
+          GH_TOKEN: ${{ secrets.REPO_TOKEN }}
