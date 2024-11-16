@@ -77,7 +77,6 @@ jobs:
           echo $TAG >> $GITHUB_OUTPUT
           echo IMAGE_WITH_SHA=${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ github.sha }} >> $GITHUB_OUTPUT
           echo IMAGE_WITH_TAG=${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:$TAG >> $GITHUB_OUTPUT
-
         id: inputs
 
       - uses: ./.github/actions/deploy-cloudrun
@@ -88,8 +87,22 @@ jobs:
           region: ${{ matrix.service.region }}
           image: ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
 
+      - id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: "access_token"
+          workload_identity_provider: ${{ env.WORKLOAD_IDP }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          access_token_lifetime: "300s"
+
+      - uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY_URL }}
+          username: "oauth2accesstoken"
+          password: ${{ steps.auth.outputs.access_token }}
+
       - run: |
-          gcloud run services update ${{ matrix.service.name }} --platform=managed --region=australia-southeast2 --update-labels TAG=${{ steps.inputs.outputs.TAG }},SHA=${{ github.sha }}
+          gcloud run services update ${{ matrix.service.name }} --platform=managed --region=australia-southeast2 --update-labels tag=${{ steps.inputs.outputs.TAG }},sha=${{ github.sha }}
 
       - run: |
           docker pull ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
