@@ -42,6 +42,8 @@ jobs:
 
           title="Release ${{steps.current-repo-semver.outputs.next-release}}"
           gh release create $new_tag --title $title --prerelease --notes "Release $new_tag"
+        env:
+          GH_TOKEN: ${{ secrets.REPO_TOKEN }}
 
       - name: Create Tag (Minor)
         if: ${{ steps.current-repo-semver.outputs.next-release == steps.current-repo-semver.outputs.current }}
