@@ -69,4 +69,4 @@ runs:
         image: ${{ inputs.image }}
         tag: ${{ inputs.tag }}
         region: ${{ inputs.region }}
-        flags: "--platform=managed --cpu=${{ inputs.cpu }} --memory=${{ inputs.memory }} --allow-unauthenticated --no-traffic=${{ check-service.outputs.EXISTS }}"
+        flags: "--platform=managed --cpu=${{ inputs.cpu }} --memory=${{ inputs.memory }} --allow-unauthenticated --no-traffic=${{ steps.check-service.outputs.EXISTS }}"
