@@ -59,6 +59,7 @@ runs:
           --region="${{ inputs.region }}" \
           --cpu="${{ inputs.cpu }}" \
           --memory="${{ inputs.memory }}" \
+          --tag="${{ inputs.tag }}" \
           --no-traffic \
           --allow-unauthenticated
       shell: bash
