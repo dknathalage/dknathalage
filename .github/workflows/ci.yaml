@@ -70,7 +70,7 @@ jobs:
 
       - run: |
           if ${{ github.event_name == 'release' }}; then
-            TAG=tag_${{ github.event.release.tag_name }}
+            TAG=tag_${{ github.ref_name }}
           else
             TAG=pr_${{ github.event.pull_request.number }}
           fi
@@ -86,6 +86,7 @@ jobs:
           service_name: ${{ matrix.service.name }}
           region: ${{ matrix.service.region }}
           image: ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
+          tag: ${{ steps.inputs.outputs.TAG }}
 
       - id: auth
         uses: google-github-actions/auth@v1
@@ -100,9 +101,6 @@ jobs:
           registry: ${{ env.REGISTRY_URL }}
           username: "oauth2accesstoken"
           password: ${{ steps.auth.outputs.access_token }}
-
-      - run: |
-          gcloud run services update ${{ matrix.service.name }} --platform=managed --region=australia-southeast2 --tag=${{ steps.inputs.outputs.TAG }} --no-traffic
 
       - run: |
           docker pull ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
