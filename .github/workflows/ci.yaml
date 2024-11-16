@@ -68,11 +68,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: "access_token"
+          workload_identity_provider: ${{ env.WORKLOAD_IDP }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          access_token_lifetime: "300s"
+
       - run: |
           if ${{ github.event_name == 'release' }}; then
-            TAG=tag_${{ github.ref_name }}
+            TAG=tag-${{ github.ref_name }}
           else
-            TAG=pr_${{ github.event.pull_request.number }}
+            TAG=pr-${{ github.event.pull_request.number }}
           fi
           echo TAG=$TAG >> $GITHUB_OUTPUT
           echo IMAGE_WITH_SHA=${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ github.sha }} >> $GITHUB_OUTPUT
@@ -87,14 +95,6 @@ jobs:
           region: ${{ matrix.service.region }}
           image: ${{ steps.inputs.outputs.IMAGE_WITH_SHA }}
           tag: ${{ steps.inputs.outputs.TAG }}
-
-      - id: auth
-        uses: google-github-actions/auth@v1
-        with:
-          token_format: "access_token"
-          workload_identity_provider: ${{ env.WORKLOAD_IDP }}
-          service_account: ${{ env.SERVICE_ACCOUNT }}
-          access_token_lifetime: "300s"
 
       - uses: docker/login-action@v2
         with:
