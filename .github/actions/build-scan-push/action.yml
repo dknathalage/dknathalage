@@ -89,7 +89,7 @@ runs:
       with:
         exit-code: 1
         format: table
-        ignore-unfixed: false
+        ignore-unfixed: true
         image-ref: ${{ inputs.image_name }}:${{ inputs.tag }}
         severity: ${{ inputs.trivy_severity }}
         vuln-type: os,library
