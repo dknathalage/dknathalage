@@ -11,6 +11,6 @@ FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/main .
 COPY --from=builder /app/templates ./templates
-RUN ls -R /app/templates
+RUN ls -R /app/
 EXPOSE 80
 CMD ["./main"]
