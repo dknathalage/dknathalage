@@ -24,7 +24,7 @@ func main() {
 	e.Use(middleware.Recover())
 
 	t := &Template{
-		templates: template.Must(template.ParseGlob("templates/kp-wedding/*.html")),
+		templates: template.Must(template.ParseGlob("./templates/kp-wedding/*.html")),
 	}
 
 	e.Renderer = t
