@@ -42,7 +42,13 @@ func main() {
 		panic(err)
 	}
 
-	templ, err := template.New("BuildWorkflow").Parse(BuildWorkflow)
+	// read the template from the file `templates/build_workflow.tmpl`
+	BuildWorkflow, err := os.ReadFile("./templates/config-management/build-ci.yaml")
+	if err != nil {
+		panic(err)
+	}
+
+	templ, err := template.New("BuildWorkflow").Parse(string(BuildWorkflow))
 	if err != nil {
 		panic(err)
 	}
@@ -64,22 +70,3 @@ func main() {
 		panic(err)
 	}
 }
-
-const BuildWorkflow = `# Auto generated. Do not edit.
-
-name: Build {{ .Name }} 🏗️
-
-on:
-	push:
-		paths:
-			{{- range .Source.Paths }}
-			- {{ . }}
-			{{- end }}
-
-jobs:
-	build:
-		runs-on: ubuntu-latest
-		steps:
-		- name: Checkout
-			uses: actions/checkout@v4
-`

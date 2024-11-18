@@ -1,11 +1,13 @@
 # Auto generated. Do not edit.
 
-name: Build invoice 🏗️
+name: Build {{ .Name }} 🏗️
 
 on:
 	push:
 		paths:
-			- cmd/invoice
+			{{- range .Source.Paths }}
+			- {{ . }}
+			{{- end }}
 
 jobs:
 	build:
