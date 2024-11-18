@@ -11,4 +11,4 @@ images:
     registry_url: australia-southeast2-docker.pkg.dev
 source:
   paths:
-    - cmd/invoice
+    - "*"
