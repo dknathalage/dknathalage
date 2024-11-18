@@ -4,13 +4,11 @@ name: Build {{ .Name }} 🏗️
 
 on:
   push:
-		{{ if .Source.Paths }}
+{{ if .Source.Paths }}
     paths:
-      {{- range .Source.Paths }}
+{{- range .Source.Paths }}
       - {{ . }}
-      {{- end }}
-		{{- end }}
-
+{{- end }}{{- end }}
 jobs:
   build:
     runs-on: ubuntu-latest
