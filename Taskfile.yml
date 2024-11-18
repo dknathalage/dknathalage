@@ -1,35 +1,10 @@
 version: "3"
 
 tasks:
-  default:
-    - task: quality
-
-  quality:
-    - task: test
-    - task: lint
-
-  # ========================================
-  # Test tasks
-  # ========================================
-  test:
-    - task: test.unit
-
   test.unit:
     desc: Run unit tests
     cmds:
       - go test -v -coverprofile=coverage.out ./...
-
-  # ========================================
-  # Linting tasks
-  # ========================================
-  lint:
-    - task: lint.setup
-    - task: lint.golangci
-
-  lint.setup:
-    desc: Setup linting tools
-    cmds:
-      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.61.0
 
   lint.golangci:
     desc: Run golangci-lint
