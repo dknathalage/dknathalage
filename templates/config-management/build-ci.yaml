@@ -3,15 +3,15 @@
 name: Build {{ .Name }} 🏗️
 
 on:
-	push:
-		paths:
-			{{- range .Source.Paths }}
-			- {{ . }}
-			{{- end }}
+  push:
+    paths:
+      {{- range .Source.Paths }}
+      - {{ . }}
+      {{- end }}
 
 jobs:
-	build:
-		runs-on: ubuntu-latest
-		steps:
-		- name: Checkout
-			uses: actions/checkout@v4
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
