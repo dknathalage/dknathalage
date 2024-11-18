@@ -4,8 +4,7 @@ name: Build invoice 🏗️
 
 on:
   push:
-    paths:
-      - *
+		
 
 jobs:
   build:

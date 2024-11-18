@@ -4,10 +4,12 @@ name: Build {{ .Name }} 🏗️
 
 on:
   push:
+		{{ if .Source.Paths }}
     paths:
       {{- range .Source.Paths }}
       - {{ . }}
       {{- end }}
+		{{- end }}
 
 jobs:
   build:
