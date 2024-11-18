@@ -1,0 +1,14 @@
+name: invoice
+gcloud:
+  project: dknathalage
+  region: australia-southeast2
+  identity_provider: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
+images:
+  - name: invoice
+    dockerfile: ./config/docker/invoice.Dockerfile
+    context: .
+    registry_name: dknathalage
+    registry_url: australia-southeast2-docker.pkg.dev
+source:
+  paths:
+    - cmd/invoice
