@@ -5,7 +5,7 @@ name: Build invoice 🏗️
 on:
   push:
     paths:
-      - cmd/invoice
+      - *
 
 jobs:
   build:
