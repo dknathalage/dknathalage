@@ -1,0 +1,27 @@
+name: Deploy CloudRun Workflow 🚀
+
+on:
+  workflow_call:
+    inputs:
+      workload_identity_provider:
+        description: Workload Identity Pool Provider for Google Artifact Registry
+        default: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
+        type: string
+      service_account:
+        description: Service Account for Google Artifact Registry
+        default: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+        type: string
+
+jobs:
+  cloudrun-deploy:
+    name: Deploy to CloudRun 🚀
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Google Cloud 🌐
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ inputs.service_account }}
+          access_token_lifetime: 300s

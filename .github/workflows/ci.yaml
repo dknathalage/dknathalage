@@ -24,7 +24,7 @@ jobs:
         service:
           - invoice
 
-    uses: ./.github/workflows/build-image.yaml
+    uses: ./.github/workflows/image-push.yaml
     with:
       image_name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}
       dockerfile: ./config/docker/${{ matrix.service }}.Dockerfile
