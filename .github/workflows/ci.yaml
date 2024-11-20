@@ -1,8 +1,13 @@
+name: CI Workflow ⚙️
+
 on:
   push:
     branches:
       - main
 
+  release:
+    types:
+      - published
 jobs:
   quality:
     uses: ./.github/workflows/go-quality.yaml

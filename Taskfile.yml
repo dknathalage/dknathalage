@@ -4,7 +4,7 @@ tasks:
   test.unit:
     desc: Run unit tests
     cmds:
-      - go test -v -coverprofile=coverage.out ./...
+      - go test -cover -coverprofile=coverage.txt ./...
 
   lint.golangci:
     desc: Run golangci-lint
