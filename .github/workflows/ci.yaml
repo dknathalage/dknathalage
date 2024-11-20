@@ -15,3 +15,11 @@ on:
 jobs:
   quality:
     uses: ./.github/workflows/go-quality.yaml
+
+  build:
+    uses: ./.github/workflows/build-image.yaml
+    with:
+      image_name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice
+      image_tag: latest
+      dockerfile: ./config/docker/invoice.Dockerfile
+      

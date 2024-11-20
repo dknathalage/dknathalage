@@ -1,32 +1,43 @@
 name: Docker Build Workflow 🐳
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       image_name:
-        description: "Name of the Docker image"
+        description: Name of the Docker image
         required: true
+        type: string
       dockerfile:
-        description: "Path to the Dockerfile"
+        description: Path to the Dockerfile
         required: true
+        type: string
       image_tag:
-        description: "Tag of the Docker image"
+        description: Tag of the Docker image
         default: latest
+        type: string
       workload_identity_provider:
-        description: "Workload Identity Pool Provider for Google Artifact Registry"
+        description: Workload Identity Pool Provider for Google Artifact Registry
         default: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
+        type: string
       service_account:
-        description: "Service Account for Google Artifact Registry"
+        description: Service Account for Google Artifact Registry
         default: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+        type: string
       registry:
-        description: "Google Artifact Registry"
+        description: Google Artifact Registry
         default: australia-southeast2-docker.pkg.dev
+        type: string
+      push_image:
+        description: Push the Docker image
+        type: boolean
+        default: true
       scan_image:
-        description: "Scan the Docker image"
+        description: Scan the Docker image
         type: boolean
         default: true
       scan_severity:
-        description: "Trivy Severity"
-        default: "CRITICAL,HIGH,MEDIUM"
+        description: Trivy Severity
+        default: CRITICAL,HIGH,MEDIUM
+        type: string
 
 permissions:
   contents: read
@@ -46,10 +57,10 @@ jobs:
         id: auth
         uses: google-github-actions/auth@v2
         with:
-          token_format: "access_token"
+          token_format: access_token
           workload_identity_provider: ${{ github.event.inputs.workload_identity_provider }}
           service_account: ${{ github.event.inputs.service_account }}
-          access_token_lifetime: "300s"
+          access_token_lifetime: 300s
 
       - name: Login to Docker 🐳
         uses: docker/login-action@v3
@@ -67,6 +78,7 @@ jobs:
             -f ${{ github.event.inputs.dockerfile }} .
 
       - name: Push Docker Image 🚀
+        if: ${{ github.event.inputs.push_image }}
         run: |
           docker push ${{ github.event.inputs.image_name }}:${{ github.event.inputs.image_tag }}
 
