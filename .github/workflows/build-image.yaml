@@ -95,4 +95,9 @@ jobs:
           vuln-type: os,library
           output: ./reports/trivy-report.txt
 
-      - run: cat ./reports/trivy-report.txt >> $GITHUB_STEP_SUMMARY
+      - name: Output step summary
+        run: |
+          echo "**Trivy Config Scan Summary**" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          cat trivy-config-results.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
