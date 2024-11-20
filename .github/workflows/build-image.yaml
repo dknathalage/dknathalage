@@ -1,5 +1,4 @@
-# auto-generated file - do not edit
-name: invoice.invoice - Docker Build Workflow 🐳
+name: Docker Build Workflow 🐳
 on:
   workflow_dispatch:
     inputs:
