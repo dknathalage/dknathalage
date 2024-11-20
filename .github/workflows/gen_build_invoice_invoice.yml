@@ -1,0 +1,47 @@
+
+name: invoice.invoice - Docker Build Workflow 🐳
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        type: string
+        required: true
+  workflow_call:
+    inputs:
+      image_tag:
+        type: string
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 📥
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx 🏗️
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Google Artifact Registry 🛅
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: 'access_token'
+          workload_identity_provider: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
+          service_account: gha-ci-sa@dknathalage.iam.gserviceaccount.com      
+      
+      - name: Configure Docker to use Google Artifact Registry
+        run: |
+          echo ${{ secrets.GOOGLE_CREDENTIALS }} | docker login -u oauth2accesstoken --password-stdin https://australia-southeast2-docker.pkg.dev
+
+      - name: Build Docker Image 🐳  
+        shell: bash
+        run: |
+          docker build -t invoice:${{ github.event.inputs.image_tag }} \
+                       -t invoice:${{ github.sha }} \
+                       -f Dockerfile \
+                       .
+              
+      - name: Push Docker Image 🚀
+        run: |
+          docker push invoice:${{ github.event.inputs.image_tag }}
+          docker push invoice:${{ github.sha }}
