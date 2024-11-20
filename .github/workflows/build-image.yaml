@@ -66,13 +66,25 @@ jobs:
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
 
+      - name: Check If Image Exists 🖼️
+        id: check
+        run: |
+          echo image_exists=$(docker manifest inspect ${{ inputs.image_name }}:${{ github.sha }} > /dev/null 2>&1; echo $?) >> $GITHUB_OUTPUT
+
       - name: Build Docker Image 🐳
+        if: steps.check.outputs.image_exists == 1
         shell: bash
         run: |
           docker build \
-            -t ${{ inputs.image_name }}:${{ inputs.image_tag }} \
             -t ${{ inputs.image_name }}:${{ github.sha }} \
             -f ${{ inputs.dockerfile }} .
+          docker tag ${{ inputs.image_name }}:${{ github.sha }} ${{ inputs.image_name }}:${{ inputs.image_tag }}
+
+      - name: Pull Docker Image 📥
+        if: steps.check.outputs.image_exists == 0
+        run: |
+          docker pull ${{ inputs.image_name }}:${{ github.sha }}
+          docker tag ${{ inputs.image_name }}:${{ github.sha }} ${{ inputs.image_name }}:${{ inputs.image_tag }}
 
       - name: Push Docker Image 🚀
         if: ${{ inputs.push_image }}

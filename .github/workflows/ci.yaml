@@ -18,8 +18,13 @@ jobs:
     uses: ./.github/workflows/go-quality.yaml
 
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - invoice
+
     uses: ./.github/workflows/build-image.yaml
     with:
-      image_name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice
-      image_tag: latest
-      dockerfile: ./config/docker/invoice.Dockerfile
+      image_name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}
+      dockerfile: ./config/docker/${{ matrix.service }}.Dockerfile
