@@ -3,7 +3,6 @@ name: CI Workflow ⚙️
 permissions:
   contents: read
   actions: read
-  pull-requests: write
 
 on:
   push:
