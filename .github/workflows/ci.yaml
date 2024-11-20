@@ -13,6 +13,7 @@ on:
   release:
     types:
       - published
+
 jobs:
   quality:
     uses: ./.github/workflows/go-quality.yaml
@@ -28,3 +29,12 @@ jobs:
     with:
       image_name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}
       dockerfile: ./config/docker/${{ matrix.service }}.Dockerfile
+
+  finalize-ci:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - quality
+    steps:
+      - name: Finalize CI 🏁
+        run: echo "CI Completed 🎉"
