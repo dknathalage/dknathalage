@@ -10,7 +10,8 @@ tasks:
   test.unit:
     desc: Run unit tests
     cmds:
-      - go test -v 2>&1 ./... | go-junit-report -set-exit-code > report.xml
+      - mkdir -p reports
+      - go test -v 2>&1 ./... | go-junit-report -set-exit-code > reports/junit.xml
 
   lint.golangci:
     desc: Run golangci-lint

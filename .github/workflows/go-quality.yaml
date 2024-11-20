@@ -49,6 +49,10 @@ jobs:
       - name: Run Unit Tests 🧪
         run: task test.setup test.unit
 
+      - uses: test-summary/action@v2
+        with:
+          paths: reports/junit.xml
+
   lint:
     name: Lint 🧹
     runs-on: ubuntu-latest
