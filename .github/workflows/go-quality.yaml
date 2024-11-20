@@ -11,6 +11,9 @@ on:
         default: "1.23"
         type: string
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
   artifacts:
     name: Artifacts 🎨
@@ -42,7 +45,7 @@ jobs:
       - name: Run Unit Tests 🧪
         run: task test.unit
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: code-coverage
           path: coverage.txt
