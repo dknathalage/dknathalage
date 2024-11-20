@@ -1,8 +1,8 @@
 name: invoice
 build:
   docker_configs:
-    - name: invoice
-      image: invoice
+    - name: invoice-main
+      image: australia-southeast2-docker.pkg.dev/dknathalage/invoice/invoice-main:latest
       dockerfile: Dockerfile
       context: .
       google_service_account: gha-ci-sa@dknathalage.iam.gserviceaccount.com

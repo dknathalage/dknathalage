@@ -1,5 +1,5 @@
 
-name: invoice.invoice - Docker Build Workflow 🐳
+name: invoice.invoice-main - Docker Build Workflow 🐳
 on:
   workflow_dispatch:
     inputs:
@@ -11,6 +11,10 @@ on:
       image_tag:
         type: string
         required: true
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   build:
@@ -36,12 +40,12 @@ jobs:
       - name: Build Docker Image 🐳  
         shell: bash
         run: |
-          docker build -t invoice:${{ github.event.inputs.image_tag }} \
-                       -t invoice:${{ github.sha }} \
+          docker build -t australia-southeast2-docker.pkg.dev/dknathalage/invoice/invoice-main:latest:${{ github.event.inputs.image_tag }} \
+                       -t australia-southeast2-docker.pkg.dev/dknathalage/invoice/invoice-main:latest:${{ github.sha }} \
                        -f Dockerfile \
                        .
               
       - name: Push Docker Image 🚀
         run: |
-          docker push invoice:${{ github.event.inputs.image_tag }}
-          docker push invoice:${{ github.sha }}
+          docker push australia-southeast2-docker.pkg.dev/dknathalage/invoice/invoice-main:latest:${{ github.event.inputs.image_tag }}
+          docker push australia-southeast2-docker.pkg.dev/dknathalage/invoice/invoice-main:latest:${{ github.sha }}

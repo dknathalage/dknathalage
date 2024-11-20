@@ -49,6 +49,10 @@ on:
         type: string
         required: true
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
