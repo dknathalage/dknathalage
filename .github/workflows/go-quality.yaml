@@ -24,3 +24,21 @@ jobs:
 
       - name: Run Unit Tests 🧪
         run: task test.unit
+
+  lint:
+    name: Lint 🧹
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 📥
+        uses: actions/checkout@v4
+
+      - name: Set up Go 🐹
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.23
+
+      - name: Install Task 📦
+        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+
+      - name: Run GolangCI-Lint 🧹
+        run: task lint.golangci
