@@ -2,6 +2,10 @@ name: Docker Push Workflow 🐳
 on:
   workflow_call:
     inputs:
+      name:
+        description: Name of the Service
+        default: Image
+        type: string
       image_name:
         description: Name of the Docker image
         required: true
@@ -41,7 +45,7 @@ on:
 
 jobs:
   build:
-    name: ${{ inputs.image_name }} Build 🏗️
+    name: Docker ${{ inputs.name }} Push 🐳
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 📥
