@@ -72,7 +72,7 @@ func main() {
 		buildName := buildConfig.Name
 
 		// Create a unique filename using the build name.
-		outputFileName := fmt.Sprintf("gen_build_%s_%s.yml", config.Name, buildName)
+		outputFileName := fmt.Sprintf("build_%s_%s.yml", config.Name, buildName)
 		outputFilePath := filepath.Join(outputDir, outputFileName)
 
 		// Write the workflow content to the file.

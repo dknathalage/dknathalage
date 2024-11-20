@@ -1,4 +1,5 @@
 
+# auto-generated file - do not edit
 name: invoice.invoice - Docker Build Workflow 🐳
 on:
   workflow_dispatch:
@@ -11,6 +12,10 @@ on:
       image_tag:
         type: string
         required: true
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   build:

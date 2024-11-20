@@ -36,6 +36,7 @@ type WorkflowData struct {
 func (c *ServiceConfig) GetDockerBuildWorkflows() ([]string, error) {
 	// Define the workflow template with custom delimiters to avoid conflicts.
 	buildWorkflowTemplate := `
+# auto-generated file - do not edit
 name: [[ .ServiceName ]].[[ .DockerConfig.Name ]] - Docker Build Workflow 🐳
 on:
   workflow_dispatch:
@@ -48,6 +49,10 @@ on:
       image_tag:
         type: string
         required: true
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   build:
