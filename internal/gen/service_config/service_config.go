@@ -71,9 +71,12 @@ jobs:
           workload_identity_provider: [[ .DockerConfig.GoogleWorkloadIDP ]]
           service_account: [[ .DockerConfig.GoogleServiceAccount ]]      
       
-      - name: Configure Docker to use Google Artifact Registry
-        run: |
-          echo ${{ secrets.GOOGLE_CREDENTIALS }} | docker login -u oauth2accesstoken --password-stdin https://[[ .DockerConfig.GoogleArtifactRegistry ]]
+      - name: Login to Docker 🐳
+        uses: docker/login-action@v3
+        with:
+          registry: [[ .DockerConfig.GoogleArtifactRegistry ]]
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
 
       - name: Build Docker Image 🐳  
         shell: bash

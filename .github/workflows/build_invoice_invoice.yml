@@ -34,9 +34,12 @@ jobs:
           workload_identity_provider: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
           service_account: gha-ci-sa@dknathalage.iam.gserviceaccount.com      
       
-      - name: Configure Docker to use Google Artifact Registry
-        run: |
-          echo ${{ secrets.GOOGLE_CREDENTIALS }} | docker login -u oauth2accesstoken --password-stdin https://australia-southeast2-docker.pkg.dev
+      - name: Login to Docker 🐳
+        uses: docker/login-action@v3
+        with:
+          registry: australia-southeast2-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
 
       - name: Build Docker Image 🐳  
         shell: bash
