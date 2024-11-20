@@ -15,18 +15,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  artifacts:
-    name: Artifacts 🎨
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 📥
-        uses: actions/checkout@v4
-
-      - name: Setup
-        shell: bash
-        run: |
-          echo ${{ github.event_name }}
-
   unit-test:
     name: Unit Test 🧪
     runs-on: ubuntu-latest
