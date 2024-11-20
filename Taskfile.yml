@@ -5,15 +5,15 @@ tasks:
     desc: Setup
     cmds:
       - mkdir -p ./tools
-      - go install github.com/t-yuki/gocover-cobertura@latest
+      - go install github.com/mfridman/tparse@latest
+      - mv $(go env GOPATH)/bin/tparse ./tools
 
   test.unit:
     desc: Run unit tests
     cmds:
-      - go test ./... -v -race -coverpkg=./... -coverprofile cover.out
-      - go tool cover -func cover.out
-      - go tool cover -html cover.out -o coverage.html
-      - $(go env GOPATH)/bin/gocover-cobertura < cover.out > coverage.xml
+      - go test -coverprofile=coverage.txt -covermode=atomic ./... | tparse -all -notests -format markdown >> test_report.md
+    env:
+      GOFLAGS: "-v -count=1 -json"
 
   lint.golangci:
     desc: Run golangci-lint

@@ -45,9 +45,7 @@ jobs:
       - name: Run Unit Tests 🧪
         run: task test.setup test.unit
 
-      - uses: notmiguelalves/go-coverage-summary@v0.5.0
-        with:
-          coverage-file: "cover.out"
+      - run: cat test_report.md >> $GITHUB_STEP_SUMMARY
 
   lint:
     name: Lint 🧹
