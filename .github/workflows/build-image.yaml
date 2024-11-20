@@ -39,10 +39,6 @@ on:
         default: CRITICAL,HIGH,MEDIUM
         type: string
 
-permissions:
-  contents: read
-  id-token: write
-
 jobs:
   build:
     runs-on: ubuntu-latest

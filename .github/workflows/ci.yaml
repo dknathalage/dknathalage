@@ -3,6 +3,7 @@ name: CI Workflow ⚙️
 permissions:
   contents: read
   actions: read
+  id-token: write
 
 on:
   push:
@@ -22,4 +23,3 @@ jobs:
       image_name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice
       image_tag: latest
       dockerfile: ./config/docker/invoice.Dockerfile
-      
