@@ -20,6 +20,13 @@ on:
       registry:
         description: "Google Artifact Registry"
         default: australia-southeast2-docker.pkg.dev
+      scan_image:
+        description: "Scan the Docker image"
+        type: boolean
+        default: true
+      scan_severity:
+        description: "Trivy Severity"
+        default: "CRITICAL,HIGH,MEDIUM"
 
 permissions:
   contents: read
@@ -62,3 +69,17 @@ jobs:
       - name: Push Docker Image 🚀
         run: |
           docker push ${{ github.event.inputs.image_name }}:${{ github.event.inputs.image_tag }}
+
+      - name: Scan Docker Image 🕵
+        if: ${{ github.event.inputs.scan_image }}
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+        id: trivy
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          exit-code: 1
+          format: table
+          ignore-unfixed: true
+          image-ref: ${{ inputs.image_name }}:${{ github.sha }}
+          severity: ${{ inputs.scan_severity }}
+          vuln-type: os,library
