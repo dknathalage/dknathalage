@@ -4,8 +4,8 @@ tasks:
   test.setup:
     desc: Setup
     cmds:
+      - mkdir -p ./tools
       - go install github.com/t-yuki/gocover-cobertura@latest
-      - mv $(go env GOPATH)/bin/gocover-cobertura ~/.local/bin
 
   test.unit:
     desc: Run unit tests
@@ -13,7 +13,7 @@ tasks:
       - go test ./... -v -race -coverpkg=./... -coverprofile cover.out
       - go tool cover -func cover.out
       - go tool cover -html cover.out -o coverage.html
-      - gocover-cobertura < cover.out > coverage.xml
+      - $(go env GOPATH)/bin/gocover-cobertura < cover.out > coverage.xml
 
   lint.golangci:
     desc: Run golangci-lint
