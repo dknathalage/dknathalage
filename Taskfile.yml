@@ -1,10 +1,16 @@
 version: "3"
 
 tasks:
+  test.setup:
+    desc: Setup
+    cmds:
+      - go get -u github.com/jstemmer/go-junit-report
+      - mv $(go env GOPATH)/bin/go-junit-report ~/.local/bin
+
   test.unit:
     desc: Run unit tests
     cmds:
-      - go test -cover -coverprofile=coverage.txt ./...
+      - go test -v 2>&1 ./... | go-junit-report -set-exit-code > report.xml
 
   lint.golangci:
     desc: Run golangci-lint

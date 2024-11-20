@@ -47,7 +47,7 @@ jobs:
         run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
 
       - name: Run Unit Tests 🧪
-        run: task test.unit
+        run: task test.setup test.unit
 
   lint:
     name: Lint 🧹
