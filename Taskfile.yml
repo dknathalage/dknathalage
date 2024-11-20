@@ -4,7 +4,7 @@ tasks:
   test.setup:
     desc: Setup
     cmds:
-      - go get -u github.com/jstemmer/go-junit-report
+      - go install github.com/jstemmer/go-junit-report@latest
       - mv $(go env GOPATH)/bin/go-junit-report ~/.local/bin
 
   test.unit:
