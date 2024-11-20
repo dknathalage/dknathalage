@@ -11,7 +11,8 @@ tasks:
   test.unit:
     desc: Run unit tests
     cmds:
-      - go test -coverprofile=coverage.txt -covermode=atomic ./... | tparse -all -notests -format markdown >> test_report.md
+      - mkdir -p ./reports
+      - go test -coverprofile=./reports/coverage.txt -covermode=atomic ./... | ./tools/tparse -all -notests -format markdown >> ./reports/test_report.md
     env:
       GOFLAGS: "-v -count=1 -json"
 

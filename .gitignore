@@ -5,3 +5,5 @@ testing
 
 pb_data
 report*.html
+tools/** 
+reports/**
