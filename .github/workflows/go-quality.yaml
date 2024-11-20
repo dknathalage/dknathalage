@@ -49,14 +49,6 @@ jobs:
       - name: Run Unit Tests 🧪
         run: task test.unit
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: code-coverage
-          path: coverage.txt
-          retention-days: 1
-
-      - uses: fgrosse/go-coverage-report@v1.1.1
-
   lint:
     name: Lint 🧹
     runs-on: ubuntu-latest
