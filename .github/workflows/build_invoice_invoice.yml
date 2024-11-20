@@ -47,7 +47,7 @@ jobs:
         run: |
           docker build -t invoice:${{ github.event.inputs.image_tag }} \
                        -t invoice:${{ github.sha }} \
-                       -f Dockerfile \
+                       -f ./config/docker/invoice.Dockerfile \
                        .
               
       - name: Push Docker Image 🚀
