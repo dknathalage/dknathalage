@@ -54,9 +54,12 @@ jobs:
           name: junit-report
           path: junit.xml
 
-      - uses: test-summary/action@v2
+      - name: Test Report
+        uses: dorny/test-reporter@v1
         with:
-          paths: junit.xml
+          name: JEST Tests
+          path: junit.xml
+          reporter: java-junit
 
   lint:
     name: Lint 🧹
