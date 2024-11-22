@@ -45,8 +45,8 @@ jobs:
       - finalize-ci
     uses: ./.github/workflows/deploy-cloudrun.yaml
     with:
-      image: ${{ matrix.service.name }}
-      service: ${{ matrix.service.image }}:latest
+      service: ${{ matrix.service.name }}
+      image: ${{ matrix.service.image }}:latest
     strategy:
       fail-fast: false
       matrix:
