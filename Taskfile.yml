@@ -22,3 +22,8 @@ tasks:
     desc: Run golangci-lint
     cmds:
       - ./tools/golangci-lint run --timeout 2m
+
+  docker.build.invoice:
+    desc: Build Docker image for testing
+    cmds:
+      - docker build -t invoice -f ./config/docker/invoice.Dockerfile .

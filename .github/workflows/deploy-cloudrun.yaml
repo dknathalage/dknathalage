@@ -1,6 +1,17 @@
 name: Deploy CloudRun Workflow 🚀
 
 on:
+  workflow_dispatch:
+    inputs:
+      workload_identity_provider:
+        description: Workload Identity Pool Provider for Google Artifact Registry
+        default: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
+        type: string
+      service_account:
+        description: Service Account for Google Artifact Registry
+        default: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+        type: string
+
   workflow_call:
     inputs:
       workload_identity_provider:
