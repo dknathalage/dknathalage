@@ -16,7 +16,7 @@ on:
 
 jobs:
   quality:
-    uses: ./.github/workflows/go-quality.yaml
+    uses: ./.github/go-quality.yaml
 
   build:
     strategy:
@@ -25,7 +25,7 @@ jobs:
         service:
           - invoice
 
-    uses: ./.github/workflows/image-push.yaml
+    uses: ./.github/image-push.yaml
     with:
       name: Invoice Service
       image_name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}
@@ -39,3 +39,17 @@ jobs:
     steps:
       - name: Finalize CI 🏁
         run: echo "CI Completed 🎉"
+
+  deploy:
+    needs:
+      - finalize-ci
+    uses: ./.github/deploy-cloudrun.yaml
+    with:
+      image: ${{ matrix.service.name }}
+      service: ${{ matrix.service.image }}:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - name: invoice
+            image: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice

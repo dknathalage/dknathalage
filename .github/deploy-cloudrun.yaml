@@ -1,17 +1,6 @@
 name: Deploy CloudRun Workflow 🚀
 
 on:
-  workflow_dispatch:
-    inputs:
-      workload_identity_provider:
-        description: Workload Identity Pool Provider for Google Artifact Registry
-        default: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
-        type: string
-      service_account:
-        description: Service Account for Google Artifact Registry
-        default: gha-ci-sa@dknathalage.iam.gserviceaccount.com
-        type: string
-
   workflow_call:
     inputs:
       workload_identity_provider:
@@ -21,6 +10,17 @@ on:
       service_account:
         description: Service Account for Google Artifact Registry
         default: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+        type: string
+      flags:
+        description: Flags for service deployment
+        type: string
+      image:
+        description: Docker image
+        required: true
+        type: string
+      service:
+        description: Service Name
+        required: true
         type: string
 
 jobs:
@@ -36,3 +36,11 @@ jobs:
           workload_identity_provider: ${{ inputs.workload_identity_provider }}
           service_account: ${{ inputs.service_account }}
           access_token_lifetime: 300s
+
+      - name: Setup Google Cloud SDK 🛠️
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ inputs.project_id }}
+
+      - name: Deploy to CloudRun 🚀
+        run: gcloud run deploy ${{ inputs.service }} --image ${{ inputs.image }} ${{ inputs.flags }}
