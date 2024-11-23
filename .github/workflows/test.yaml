@@ -1,6 +1,11 @@
 on:
   push:
 
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+
 jobs:
   deploy:
     uses: ./.github/workflows/cloudrun.yaml

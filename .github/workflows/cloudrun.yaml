@@ -107,6 +107,7 @@ jobs:
 
   deploy:
     name: Deploy to CloudRun 🚀
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Login to Google Cloud 🌐
@@ -126,6 +127,7 @@ jobs:
 
   tag_versioning:
     name: Tagging 🏷️
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 📥
