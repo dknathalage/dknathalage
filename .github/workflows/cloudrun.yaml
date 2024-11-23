@@ -127,7 +127,7 @@ jobs:
 
   tag_versioning:
     name: Tagging 🏷️
-    needs: build
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 📥
