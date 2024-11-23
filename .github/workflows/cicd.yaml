@@ -6,6 +6,9 @@ permissions:
   actions: read
   id-token: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
   quality:
     uses: ./.github/workflows/go-quality.yaml
