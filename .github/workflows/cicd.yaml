@@ -1,5 +1,7 @@
 on:
   push:
+    paths:
+      - modules/**
 
 permissions:
   contents: read
@@ -13,16 +15,10 @@ jobs:
   quality:
     uses: ./.github/workflows/go-quality.yaml
 
-  build-deploy:
+  invoice:
     needs:
       - quality
-    strategy:
-      fail-fast: false
-      matrix:
-        service:
-          - name: invoice
-            dockerfile: ./config/docker/invoice.Dockerfile
     uses: ./.github/workflows/cloudrun.yaml
     with:
-      service: ${{ matrix.service.name }}
-      dockerfile: ${{ matrix.service.dockerfile }}
+      service: invoice
+      dockerfile: ./config/docker/invoice.Dockerfile

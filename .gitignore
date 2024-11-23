@@ -7,3 +7,5 @@ pb_data
 report*.html
 tools/** 
 reports/**
+bin/**
+tmp/**

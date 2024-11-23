@@ -7,8 +7,10 @@ tasks:
       - mkdir -p ./tools
       - go install github.com/mfridman/tparse@latest
       - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - go install github.com/air-verse/air@latest
       - mv $(go env GOPATH)/bin/tparse ./tools
       - mv $(go env GOPATH)/bin/golangci-lint ./tools
+      - mv $(go env GOPATH)/bin/air ./tools
 
   test.unit:
     desc: Run unit tests
@@ -23,7 +25,7 @@ tasks:
     cmds:
       - ./tools/golangci-lint run --timeout 2m
 
-  docker.build.invoice:
-    desc: Build Docker image for testing
+  run.invoice:
+    desc: Run invoice service
     cmds:
-      - docker build -t invoice -f ./config/docker/invoice.Dockerfile .
+      - ./tools/air --build.cmd="go build -o ./bin/invoice ./modules/invoice/cmd" --build.bin ./bin/invoice
