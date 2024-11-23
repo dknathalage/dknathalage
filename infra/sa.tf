@@ -1,5 +1,5 @@
 resource "google_service_account" "service_account" {
-  account_id = "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+  account_id = "gha-ci-sa"
 }
 
 import {
