@@ -14,6 +14,8 @@ jobs:
     uses: ./.github/workflows/go-quality.yaml
 
   build-deploy:
+    needs:
+      - quality
     strategy:
       fail-fast: false
       matrix:
