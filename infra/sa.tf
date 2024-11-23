@@ -3,6 +3,6 @@ resource "google_service_account" "service_account" {
 }
 
 import {
-  id = "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+  id = "projects/dknathalage/serviceAccounts/gha-ci-sa@dknathalage.iam.gserviceaccount.com"
   to = google_service_account.service_account
 }
