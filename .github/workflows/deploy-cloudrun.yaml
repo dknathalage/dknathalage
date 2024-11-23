@@ -22,6 +22,10 @@ on:
         description: Service Name
         required: true
         type: string
+      region:
+        description: CloudRun Region
+        default: australia-southeast2
+        type: string
 
 jobs:
   cloudrun-deploy:
@@ -43,4 +47,4 @@ jobs:
           project_id: ${{ inputs.project_id }}
 
       - name: Deploy to CloudRun 🚀
-        run: gcloud run deploy ${{ inputs.service }} --image ${{ inputs.image }} ${{ inputs.flags }}
+        run: gcloud run deploy ${{ inputs.service }} --image ${{ inputs.image }} --region ${{ inputs.region }} ${{ inputs.flags }}
