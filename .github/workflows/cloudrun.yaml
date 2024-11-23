@@ -38,9 +38,6 @@ on:
         type: string
         default: ""
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-
 env:
   IMAGE_REGISTRY: ${{ inputs.registry }}/${{ inputs.project }}/${{ inputs.registry_name }}
   IMAGE_PREFIX: ${{ inputs.registry }}/${{ inputs.project }}/${{ inputs.registry_name }}/${{ inputs.service }}

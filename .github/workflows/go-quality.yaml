@@ -11,9 +11,6 @@ on:
         default: "1.23"
         type: string
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-
 jobs:
   unit-test:
     name: Unit Test 🧪
