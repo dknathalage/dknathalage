@@ -27,6 +27,5 @@ jobs:
           workload_identity_provider: ${{ env.WORKLOAD_IDP }}
           service_account: ${{ env.CI_SA }}
           access_token_lifetime: 300s
-      - run: cd infra
-      - run: terraform init
-      - run: terraform plan
+      - run: terraform init ./infra
+      - run: terraform plan ./infra
