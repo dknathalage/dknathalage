@@ -72,7 +72,7 @@ jobs:
         run: |
           docker build \
             -t ${{ env.IMAGE_PREFIX }}:${{ github.sha }} \
-            -f ${{ inputs.dockerfile }} \
+            -f ${{ inputs.dockerfile }} .
 
       - name: Pull Docker Image 📥
         if: steps.check.outputs.image_exists == 0
