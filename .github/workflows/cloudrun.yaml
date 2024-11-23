@@ -130,8 +130,12 @@ jobs:
       - name: Setup Google Cloud SDK 🛠️
         uses: google-github-actions/setup-gcloud@v2
 
+      - id: version
+        name: Tagging Name 🏷️
+        run: echo TAG=$(echo ${{github.ref}} | sed 's/\//-/g') >> $GITHUB_OUTPUT
+
       - name: Deploy to CloudRun 🚀
-        run: gcloud run deploy ${{ inputs.service }} --image ${{ env.IMAGE_PREFIX }}:${{ github.sha }} --region ${{ inputs.region }} ${{ inputs.deploy_flags }}
+        run: gcloud run deploy ${{ inputs.service }} --image ${{ env.IMAGE_PREFIX }}:${{ github.sha }} --region ${{ inputs.region }} ${{ inputs.deploy_flags }} --tag ${{ steps.version.outputs.TAG }}
 
   update-traffic:
     name: Update Traffic 🚦
