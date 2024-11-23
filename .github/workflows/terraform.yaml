@@ -2,6 +2,7 @@ on:
   push:
     paths:
       - infra/**
+      - .github/workflows/terraform.yaml
 
 env:
   WORKLOAD_IDP: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
