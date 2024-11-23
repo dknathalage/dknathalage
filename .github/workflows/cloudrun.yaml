@@ -29,6 +29,14 @@ on:
         description: Path to the Dockerfile
         required: true
         type: string
+      region:
+        description: CloudRun Region
+        default: australia-southeast2
+        type: string
+      deploy_flags:
+        description: Flags for service deployment
+        type: string
+        default: ""
 
 env:
   IMAGE_REGISTRY: ${{ inputs.registry }}/${{ inputs.project }}/${{ inputs.registry_name }}
@@ -123,7 +131,32 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Deploy to CloudRun 🚀
-        run: gcloud run deploy ${{ inputs.service }} --image ${{ env.IMAGE_PREFIX }}:${{ github.sha }} --region australia-southeast2
+        run: gcloud run deploy ${{ inputs.service }} --image ${{ env.IMAGE_PREFIX }}:${{ github.sha }} --region ${{ inputs.region }} ${{ inputs.deploy_flags }}
+
+  update-traffic:
+    name: Update Traffic 🚦
+    if: ${{ github.event_name == 'release' && !contains(github.event.release.tag_name, 'rc') }}
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Google Cloud 🌐
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ inputs.service_account }}
+          access_token_lifetime: 300s
+
+      - name: Setup Google Cloud SDK 🛠️
+        uses: google-github-actions/setup-gcloud@v2
+
+      - id: version
+        name: Tagging Name 🏷️
+        run: echo TAG=$(echo ${{github.ref}} | sed 's/\//-/g') >> $GITHUB_OUTPUT
+
+      - name: Update Traffic 🚦
+        run: gcloud run services update-traffic ${{ inputs.service }} --platform managed --region australia-southeast2 --tag ${{ steps.version.outputs.TAG }}
 
   tag_versioning:
     name: Tagging 🏷️
@@ -136,7 +169,7 @@ jobs:
       - name: Set up Docker Buildx 🏗️
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to Google Artifact Registry 🛅
+      - name: Login to Google
         id: auth
         uses: google-github-actions/auth@v2
         with:
@@ -153,6 +186,7 @@ jobs:
           password: ${{ steps.auth.outputs.access_token }}
 
       - id: version
+        name: Tagging Name 🏷️
         run: echo TAG=$(echo ${{github.ref}} | sed 's/\//-/g') >> $GITHUB_OUTPUT
 
       - name: Pull Tag Push 🚀

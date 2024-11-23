@@ -7,8 +7,17 @@ permissions:
   id-token: write
 
 jobs:
-  deploy:
+  quality:
+    uses: ./.github/workflows/go-quality.yaml
+
+  build-deploy:
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - name: invoice
+            dockerfile: ./config/docker/invoice.Dockerfile
     uses: ./.github/workflows/cloudrun.yaml
     with:
-      service: invoice
-      dockerfile: ./config/docker/invoice.Dockerfile
+      service: ${{ matrix.service.name }}
+      dockerfile: ${{ matrix.service.dockerfile }}
