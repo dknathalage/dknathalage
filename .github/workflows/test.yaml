@@ -1,0 +1,9 @@
+on:
+  push:
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/cloudrun.yaml
+    with:
+      service: invoice
+      dockerfile: ./config/docker/invoice.Dockerfile
