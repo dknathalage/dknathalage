@@ -18,8 +18,7 @@ resource "google_artifact_registry_repository" "gar-dknathalage" {
     id     = "keep"
     condition {
       tag_prefixes = [
-        "pr-",
-        "tag-",
+        "refs-",
       ]
       tag_state = "TAGGED"
     }
