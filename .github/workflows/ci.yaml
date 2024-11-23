@@ -19,37 +19,25 @@ jobs:
     uses: ./.github/workflows/go-quality.yaml
 
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        service:
-          - invoice
-
     uses: ./.github/workflows/image-push.yaml
     with:
-      name: Invoice Service
-      image_name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.service }}
-      dockerfile: ./config/docker/${{ matrix.service }}.Dockerfile
-
-  finalize-ci:
-    runs-on: ubuntu-latest
-    needs:
-      - build
-      - quality
-    steps:
-      - name: Finalize CI 🏁
-        run: echo "CI Completed 🎉"
+      image_name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice
+      dockerfile: ./config/docker/invoice.Dockerfile
 
   deploy:
     needs:
-      - finalize-ci
+      - build
+      - quality
     uses: ./.github/workflows/deploy-cloudrun.yaml
     with:
-      service: ${{ matrix.service.name }}
-      image: ${{ matrix.service.image }}:latest
-    strategy:
-      fail-fast: false
-      matrix:
-        service:
-          - name: invoice
-            image: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice
+      service: invoice
+      image: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice:latest
+
+  tag-docker:
+    needs:
+      - deploy
+    uses: ./.github/workflows/image-tag.yaml
+    with:
+      image_name: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage/invoice
+      image_current_tag: latest
+      image_new_tag: prod

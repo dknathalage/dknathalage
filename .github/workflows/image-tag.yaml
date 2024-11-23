@@ -1,0 +1,67 @@
+name: Docker Push Workflow 🐳
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        description: Name of the Docker image
+        required: true
+        type: string
+      image_current_tag:
+        description: Current Tag of the Docker image
+        required: true
+        type: string
+      image_new_tag:
+        description: New Tag of the Docker image
+        default: latest
+        type: string
+      workload_identity_provider:
+        description: Workload Identity Pool Provider for Google Artifact Registry
+        default: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
+        type: string
+      service_account:
+        description: Service Account for Google Artifact Registry
+        default: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+        type: string
+      registry:
+        description: Google Artifact Registry
+        default: australia-southeast2-docker.pkg.dev
+        type: string
+
+jobs:
+  build:
+    name: Docker Tag and Push 🐳
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 📥
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx 🏗️
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Google Artifact Registry 🛅
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ inputs.service_account }}
+          access_token_lifetime: 300s
+
+      - name: Login to Docker 🐳
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ inputs.registry }}
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+
+      - name: Pull Docker Image 📥
+        run: |
+          docker pull ${{ inputs.image_name }}:${{ inputs.image_current_tag }}
+
+      - name: Tag Docker Image 🏷
+        run: |
+          docker tag ${{ inputs.image_name }}:${{ inputs.image_current_tag }} ${{ inputs.image_name }}:${{ inputs.image_new_tag }}
+
+      - name: Push Docker Image 🚀
+        run: |
+          docker push ${{ inputs.image_name }}:${{ inputs.image_new_tag }}

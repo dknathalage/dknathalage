@@ -2,10 +2,6 @@ name: Docker Push Workflow 🐳
 on:
   workflow_call:
     inputs:
-      name:
-        description: Name of the Service
-        default: Image
-        type: string
       image_name:
         description: Name of the Docker image
         required: true
@@ -42,6 +38,10 @@ on:
         description: Trivy Severity
         default: CRITICAL,HIGH,MEDIUM
         type: string
+      git_sha:
+        description: Git SHA
+        default: ${{ github.sha }}
+        type: string
 
 jobs:
   build:
@@ -73,22 +73,22 @@ jobs:
       - name: Check If Image Exists 🖼️
         id: check
         run: |
-          echo image_exists=$(docker manifest inspect ${{ inputs.image_name }}:${{ github.sha }} > /dev/null 2>&1; echo $?) >> $GITHUB_OUTPUT
+          echo image_exists=$(docker manifest inspect ${{ inputs.image_name }}:${{ inputs.git_sha }} > /dev/null 2>&1; echo $?) >> $GITHUB_OUTPUT
 
       - name: Build Docker Image 🐳
         if: steps.check.outputs.image_exists == 1
         shell: bash
         run: |
           docker build \
-            -t ${{ inputs.image_name }}:${{ github.sha }} \
+            -t ${{ inputs.image_name }}:${{ inputs.git_sha }} \
             -f ${{ inputs.dockerfile }} .
-          docker tag ${{ inputs.image_name }}:${{ github.sha }} ${{ inputs.image_name }}:${{ inputs.image_tag }}
+          docker tag ${{ inputs.image_name }}:${{ inputs.git_sha }} ${{ inputs.image_name }}:${{ inputs.image_tag }}
 
       - name: Pull Docker Image 📥
         if: steps.check.outputs.image_exists == 0
         run: |
-          docker pull ${{ inputs.image_name }}:${{ github.sha }}
-          docker tag ${{ inputs.image_name }}:${{ github.sha }} ${{ inputs.image_name }}:${{ inputs.image_tag }}
+          docker pull ${{ inputs.image_name }}:${{ inputs.git_sha }}
+          docker tag ${{ inputs.image_name }}:${{ inputs.git_sha }} ${{ inputs.image_name }}:${{ inputs.image_tag }}
 
       - name: Push Docker Image 🚀
         if: ${{ inputs.push_image }}
@@ -106,7 +106,7 @@ jobs:
           exit-code: 1
           format: table
           ignore-unfixed: true
-          image-ref: ${{ inputs.image_name }}:${{ github.sha }}
+          image-ref: ${{ inputs.image_name }}:${{ inputs.git_sha }}
           severity: ${{ inputs.scan_severity }}
           vuln-type: os,library
           output: ./reports/trivy-report.txt
