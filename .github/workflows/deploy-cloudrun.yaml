@@ -43,8 +43,6 @@ jobs:
 
       - name: Setup Google Cloud SDK 🛠️
         uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ inputs.project_id }}
 
       - name: Deploy to CloudRun 🚀
         run: gcloud run deploy ${{ inputs.service }} --image ${{ inputs.image }} --region ${{ inputs.region }} ${{ inputs.flags }}

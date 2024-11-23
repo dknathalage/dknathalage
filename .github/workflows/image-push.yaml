@@ -45,7 +45,7 @@ on:
 
 jobs:
   build:
-    name: Docker ${{ inputs.name }} Push 🐳
+    name: Docker Push 🐳
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 📥
