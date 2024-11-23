@@ -24,6 +24,10 @@ resource "google_artifact_registry_repository" "gar-dknathalage" {
       tag_state = "TAGGED"
     }
   }
+
+  docker_config {
+    immutable_tags = true
+  }
 }
 
 import {
