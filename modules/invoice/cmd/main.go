@@ -1,8 +1,7 @@
 package main
 
 import (
-	"net/http"
-
+	"github.com/dknathalage/modules/invoice/web"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -12,11 +11,8 @@ func main() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.GET("/", hello)
+	e.GET("/", web.Index)
+	e.HideBanner = true
 
 	e.Logger.Fatal(e.Start(":80"))
-}
-
-func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
 }
