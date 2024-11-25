@@ -31,6 +31,6 @@ import {
 }
 
 import {
-  id = "projects/dknathalage/serviceAccounts/gha-ci-sa@dknathalage.iam.gserviceaccount.com roles/iam.workloadIdentityUser"
+  id = "projects/dknathalage/serviceAccounts/gha-ci-sa@dknathalage.iam.gserviceaccount.com roles/owner"
   to = google_service_account_iam_binding.owner
 }
