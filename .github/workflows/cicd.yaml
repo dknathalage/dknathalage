@@ -128,6 +128,7 @@ jobs:
             --tag ${{ steps.vars.outputs.TAG }} ${{ env.CLOUDRUN_FLAGS }}
 
       - name: Update Traffic 🚦
+        if: github.event_name == 'release'
         run: gcloud run services update-traffic ${{ matrix.service }} --platform managed --region australia-southeast2 --to-tags ${{ steps.vars.outputs.TAG }}=100
 
       - name: Pull Tag Push 🚀
