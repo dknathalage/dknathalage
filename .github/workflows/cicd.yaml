@@ -132,6 +132,6 @@ jobs:
 
       - name: Pull Tag Push 🚀
         run: |
-          docker pull ${{ env.IMAGE_PREFIX }}:${{ github.sha }}
-          docker tag ${{ env.IMAGE_PREFIX }}:${{ github.sha }} ${{ env.IMAGE_PREFIX }}:${{ steps.vars.outputs.TAG }}
+          docker pull ${{ steps.vars.outputs.IMAGE }}
+          docker tag ${{ steps.vars.outputs.IMAGE }} ${{ env.IMAGE_PREFIX }}:${{ steps.vars.outputs.TAG }}
           docker push ${{ env.IMAGE_PREFIX }}:${{ steps.vars.outputs.TAG }}
