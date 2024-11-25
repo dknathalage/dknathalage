@@ -128,7 +128,7 @@ jobs:
             --tag ${{ steps.vars.outputs.TAG }} ${{ env.CLOUDRUN_FLAGS }}
 
       - name: Update Traffic 🚦
-        run: gcloud run services update-traffic ${{ matrix.service }} --platform managed --region australia-southeast2 --tag ${{ steps.vars.outputs.TAG }}=100
+        run: gcloud run services update-traffic ${{ matrix.service }} --platform managed --region australia-southeast2 --to-tags ${{ steps.vars.outputs.TAG }}
 
       - name: Pull Tag Push 🚀
         run: |
