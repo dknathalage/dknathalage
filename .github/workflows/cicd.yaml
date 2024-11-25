@@ -87,14 +87,14 @@ jobs:
           echo IMAGE=${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ github.sha }} >> $GITHUB_OUTPUT
           echo TAG=$(echo ${{github.ref}} | sed 's/\//-/g') >> $GITHUB_OUTPUT
 
-      - name: Build Docker Image 🐳
+      - name: Build Docker Image 🛠️
         shell: bash
         run: |
           docker build \
             -t ${{ steps.vars.outputs.IMAGE }} \
             -f ./config/docker/${{ matrix.service }}.Dockerfile .
 
-      - name: Push Docker Image 🚀
+      - name: Push Docker Image 📤
         run: |
           docker push ${{ steps.vars.outputs.IMAGE }}
           rm -rf ./reports && mkdir -p ./reports
@@ -113,7 +113,7 @@ jobs:
           vuln-type: os,library
           output: ./reports/trivy-report.txt
 
-      - name: Output step summary
+      - name: Output Scan Summary 🔎
         run: |
           echo "**Trivy Config Scan Summary**" >> $GITHUB_STEP_SUMMARY
           echo '```text' >> $GITHUB_STEP_SUMMARY
@@ -131,7 +131,7 @@ jobs:
         if: github.event_name == 'release'
         run: gcloud run services update-traffic ${{ matrix.service }} --platform managed --region australia-southeast2 --to-tags ${{ steps.vars.outputs.TAG }}=100
 
-      - name: Pull Tag Push 🚀
+      - name: Pull Tag Push 🏷️
         run: |
           docker pull ${{ steps.vars.outputs.IMAGE }}
           docker tag ${{ steps.vars.outputs.IMAGE }} ${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ steps.vars.outputs.TAG }}
