@@ -5,7 +5,7 @@ on:
       - .github/workflows/terraform.yaml
 
 env:
-  WORKLOAD_IDP: projects/719430876063/locations/global/workloadIdentityPools/dknathalage-identity-pool/providers/dknathalage-id-provider
+  WORKLOAD_IDP: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
   CI_SA: gha-ci-sa@dknathalage.iam.gserviceaccount.com
 
 permissions:
