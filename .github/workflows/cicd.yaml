@@ -125,10 +125,10 @@ jobs:
           gcloud run deploy ${{ matrix.service }} \
             --image ${{ steps.vars.outputs.IMAGE }} \
             --region ${{ env.REGION }} \
-            --tag ${{ steps.vars.outputs.TAG }} ${{ env.CLOUDRUN_FLAGS }} 
+            --tag ${{ steps.vars.outputs.TAG }} ${{ env.CLOUDRUN_FLAGS }}
 
       - name: Update Traffic 🚦
-        run: gcloud run services update-traffic ${{ matrix.service }} --platform managed --region australia-southeast2 --tag ${{ steps.vars.outputs.TAG }}
+        run: gcloud run services update-traffic ${{ matrix.service }} --platform managed --region australia-southeast2 --tag ${{ steps.vars.outputs.TAG }}=100
 
       - name: Pull Tag Push 🚀
         run: |
