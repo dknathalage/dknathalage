@@ -9,8 +9,10 @@ resource "google_service_account_iam_member" "actions_sa_member" {
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.dkn_identity_pool.name}/*"
 }
 
-resource "google_service_account_iam_member" "editor_permissions" {
-  service_account_id = "projects/dknathalage/serviceAccounts/${google_service_account.actions_sa.email}"
-  role               = "roles/editor"
-  member             = "serviceAccount:${google_service_account.actions_sa.email}"
+resource "google_project_iam_binding" "actions_sa_binding" {
+  project = "dknathalage"
+  role    = "roles/editor"
+  members = [
+    "serviceAccount:${google_service_account.actions_sa.email}"
+  ]
 }
