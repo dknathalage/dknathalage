@@ -19,18 +19,3 @@ resource "google_service_account_iam_binding" "owner" {
     "serviceAccount:gha-ci-sa@dknathalage.iam.gserviceaccount.com"
   ]
 }
-
-import {
-  id = "projects/dknathalage/serviceAccounts/gha-ci-sa@dknathalage.iam.gserviceaccount.com"
-  to = google_service_account.gha_ci_sa
-}
-
-import {
-  id = "projects/dknathalage/serviceAccounts/gha-ci-sa@dknathalage.iam.gserviceaccount.com roles/iam.workloadIdentityUser"
-  to = google_service_account_iam_binding.workload_identity_user
-}
-
-import {
-  id = "projects/dknathalage/serviceAccounts/gha-ci-sa@dknathalage.iam.gserviceaccount.com roles/owner"
-  to = google_service_account_iam_binding.owner
-}
