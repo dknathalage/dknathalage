@@ -86,7 +86,7 @@ jobs:
         run: |
           echo IMAGE=${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ github.sha }} >> $GITHUB_OUTPUT
           echo TAG=$(echo ${{github.ref}} | sed 's/\//-/g') >> $GITHUB_OUTPUT
-          echo IMAGE_EXISTS=$(docker manifest inspect ${{ env.IMAGE_PREFIX }}:${{ github.sha }} > /dev/null 2>&1; echo $?) >> $GITHUB_OUTPUT
+          echo IMAGE_EXISTS=$(docker pull ${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ github.sha }} > /dev/null 2>&1; echo $?) >> $GITHUB_OUTPUT
 
       - name: Build Docker Image 🐳
         if: steps.vars.outputs.IMAGE_EXISTS == 0
