@@ -25,7 +25,7 @@ resource "google_artifact_registry_repository" "gar-dknathalage" {
   }
 
   docker_config {
-    immutable_tags = true
+    immutable_tags = false
   }
 }
 
