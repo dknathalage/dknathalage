@@ -7,7 +7,7 @@ resource "google_service_account_iam_binding" "service_account_iam_binding" {
   role               = "roles/owner"
 
   members = [
-    "serviceAccount: ${google_service_account.service_account.email}",
+    "serviceAccount: projects/dknathalage/serviceAccounts/gha-ci-sa@dknathalage.iam.gserviceaccount.com"
   ]
 }
 
