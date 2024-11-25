@@ -1,4 +1,4 @@
-resource "google_service_account" "service_account" {
+resource "google_service_account" "gha_ci_sa" {
   account_id = "gha-ci-sa"
 }
 
