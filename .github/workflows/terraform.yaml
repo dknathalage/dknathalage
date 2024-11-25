@@ -30,3 +30,4 @@ jobs:
           access_token_lifetime: 300s
       - run: terraform -chdir=./infra init
       - run: terraform -chdir=./infra plan
+      - run: terraform -chdir=./infra apply -auto-approve
