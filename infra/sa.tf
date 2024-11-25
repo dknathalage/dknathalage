@@ -1,5 +1,5 @@
 resource "google_service_account" "gha_ci_sa" {
-  account_id = "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+  account_id = "gha-ci-sa"
 }
 
 resource "google_service_account_iam_binding" "workload_identity_user" {
