@@ -30,7 +30,7 @@ type Address struct {
 	State      string
 }
 
-type InvoiceItem struct {
+type Item struct {
 	Item        int
 	Description string
 	Date        time.Time
@@ -51,6 +51,6 @@ type Invoice struct {
 	InvoiceDate     time.Time
 	NDISParticipant NDISParticipant
 	BillTo          BillTo
-	InvoiceSummary  []InvoiceItem
+	InvoiceSummary  []Item
 	PaymentMethod   PaymentMethod
 }

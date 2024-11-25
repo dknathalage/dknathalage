@@ -20,6 +20,10 @@ tasks:
     env:
       GOFLAGS: "-v -count=1 -json"
 
+  lint:
+    cmds:
+      - task: lint.golangci
+
   lint.golangci:
     desc: Run golangci-lint
     cmds:
