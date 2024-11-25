@@ -133,5 +133,5 @@ jobs:
       - name: Pull Tag Push 🚀
         run: |
           docker pull ${{ steps.vars.outputs.IMAGE }}
-          docker tag ${{ steps.vars.outputs.IMAGE }} ${{ env.IMAGE_PREFIX }}:${{ steps.vars.outputs.TAG }}
-          docker push ${{ env.IMAGE_PREFIX }}:${{ steps.vars.outputs.TAG }}
+          docker tag ${{ steps.vars.outputs.IMAGE }} ${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ steps.vars.outputs.TAG }}
+          docker push ${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ steps.vars.outputs.TAG }}
