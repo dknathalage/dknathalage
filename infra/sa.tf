@@ -22,7 +22,7 @@ resource "google_service_account_iam_binding" "owner" {
 
 import {
   id = "projects/dknathalage/serviceAccounts/gha-ci-sa@dknathalage.iam.gserviceaccount.com"
-  to = google_service_account.service_account
+  to = google_service_account.gha_ci_sa
 }
 
 import {
