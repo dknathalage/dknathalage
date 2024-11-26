@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/google/go-github/v66/github"
@@ -40,23 +39,12 @@ func main() {
 	tc := oauth2.NewClient(ctx, ts)
 	client := github.NewClient(tc)
 
-	opt := &github.RepositoryListOptions{
-		ListOptions: github.ListOptions{PerPage: 10},
+	releases, _, err := client.Repositories.ListReleases(ctx, "dknathalage", "dknagalage", nil)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	for {
-		repos, resp, err := client.Repositories.List(ctx, "", opt)
-		if err != nil {
-			log.Fatalf("Error fetching repositories: %v", err)
-		}
-
-		for _, repo := range repos {
-			fmt.Printf("Name: %s, URL: %s\n", *repo.Name, *repo.HTMLURL)
-		}
-
-		if resp.NextPage == 0 {
-			break
-		}
-		opt.Page = resp.NextPage
+	for _, release := range releases {
+		log.Printf("Name: %s, Tag: %s", release.GetName(), release.GetTagName())
 	}
 }
