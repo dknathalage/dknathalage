@@ -21,7 +21,5 @@ func GetDefaultBranch(client *github.Client, ctx context.Context, repo string) s
 
 func IsDefaultBranch(client *github.Client, ctx *context.Context, owner, repo, ref string) bool {
 	defaultBranch := GetDefaultBranch(client, *ctx, repo)
-	log.Println("Default branch: ", defaultBranch)
-	log.Println("Ref: ", ref)
-	return ref == defaultBranch
+	return ref == "refs/heads/"+defaultBranch
 }
