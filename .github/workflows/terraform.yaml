@@ -5,6 +5,8 @@ on:
     paths:
       - infra/**
       - .github/workflows/terraform.yaml
+  release:
+    types: [published]
 
 env:
   WORKLOAD_IDP: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
@@ -32,4 +34,5 @@ jobs:
           access_token_lifetime: 300s
       - run: terraform -chdir=./infra init
       - run: terraform -chdir=./infra plan
-      - run: terraform -chdir=./infra apply -auto-approve
+      - if: ${{ !contains(github.event.release.tag_name , 'rc') }}
+        run: terraform -chdir=./infra apply -auto-approve
