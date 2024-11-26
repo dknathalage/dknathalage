@@ -33,7 +33,7 @@ func main() {
 	ctx := context.Background()
 	client := github.NewClient(nil).WithAuthToken(string(cfg.GithubToken))
 
-	user, resp, err := client.Users.Get(ctx, "")
+	user, resp, err := client.Repositories.GetBranch(ctx, "dknathalage", "dknathalage", "main", 10)
 	if err != nil {
 		log.Fatal(err)
 	}
