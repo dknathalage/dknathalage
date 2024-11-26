@@ -8,7 +8,9 @@ import (
 )
 
 func GetDefaultBranch(client *github.Client, ctx context.Context, owner, repo string) string {
-	branch, _, err := client.Repositories.Get(ctx, owner[1:], repo)
+	log.Print("Owner: ", owner)
+	log.Print("Repo: ", repo)
+	branch, _, err := client.Repositories.Get(ctx, owner, repo)
 	if err != nil {
 		log.Fatal(err)
 	}
