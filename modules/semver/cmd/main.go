@@ -21,6 +21,10 @@ func LoadConfig() Config {
 		log.Fatal(err)
 	}
 
+	if cfg.GithubToken == "" {
+		log.Fatal("GITHUB_TOKEN must be set")
+	}
+
 	return cfg
 }
 
@@ -31,8 +35,7 @@ func main() {
 
 	user, resp, err := client.Users.Get(ctx, "")
 	if err != nil {
-		fmt.Printf("\nerror: %v\n", err)
-		return
+		log.Fatal(err)
 	}
 
 	log.Printf("Rate: %#v\n", resp.Rate)
