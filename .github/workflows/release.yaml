@@ -6,6 +6,9 @@ on:
     paths:
       - .github/workflows/release.yaml
 
+permissions:
+  contents: read
+
 jobs:
   release:
     runs-on: ubuntu-latest
