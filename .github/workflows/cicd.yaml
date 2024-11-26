@@ -5,6 +5,7 @@ on:
     paths:
       - modules/**
       - .github/workflows/cicd.yaml
+      - "!modules/semver/**"
 
 permissions:
   contents: read

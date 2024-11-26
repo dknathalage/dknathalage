@@ -16,7 +16,7 @@ func GetDefaultBranch(client *github.Client, ctx context.Context, owner, repo st
 	return branch.GetDefaultBranch()
 }
 
-func IsDefaultBranch(client *github.Client, ctx context.Context, owner, repo, ref string) bool {
-	defaultBranch := GetDefaultBranch(client, ctx, owner, repo)
+func IsDefaultBranch(client *github.Client, ctx *context.Context, owner, repo, ref string) bool {
+	defaultBranch := GetDefaultBranch(client, *ctx, owner, repo)
 	return ref == defaultBranch
 }
