@@ -10,9 +10,9 @@ import (
 )
 
 type Config struct {
-	GithubToken     string `envconfig:"GITHUB_TOKEN" required:"true"`
-	GithubRepoOwner string `envconfig:"GITHUB_REPO_OWNER" required:"true"`
-	GithubRepo      string `envconfig:"GITHUB_REPO" required:"true"`
+	GithubToken      string `envconfig:"GITHUB_TOKEN" required:"true"`
+	GithubRepoOwner  string `envconfig:"GITHUB_REPO_OWNER" required:"true"`
+	GithubRepository string `envconfig:"GITHUB_REPOSITORY" required:"true"`
 }
 
 func LoadConfig() Config {
@@ -31,7 +31,7 @@ func main() {
 	ctx := context.Background()
 	client := github.NewClient(nil).WithAuthToken(string(cfg.GithubToken))
 
-	user, resp, err := client.Repositories.GetBranch(ctx, "dknathalage", "dknathalage", "main", 10)
+	user, resp, err := client.Repositories.GetBranch(ctx, cfg.GithubRepoOwner, cfg.GithubRepo, "main")
 	if err != nil {
 		log.Fatal(err)
 	}
