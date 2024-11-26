@@ -10,7 +10,9 @@ import (
 )
 
 type Config struct {
-	GithubToken string `envconfig:"GITHUB_TOKEN"`
+	GithubToken     string `envconfig:"GITHUB_TOKEN" required:"true"`
+	GithubRepoOwner string `envconfig:"GITHUB_REPO_OWNER" required:"true"`
+	GithubRepo      string `envconfig:"GITHUB_REPO" required:"true"`
 }
 
 func LoadConfig() Config {
@@ -19,10 +21,6 @@ func LoadConfig() Config {
 	err := envconfig.Process("", &cfg)
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	if cfg.GithubToken == "" {
-		log.Fatal("GITHUB_TOKEN must be set")
 	}
 
 	return cfg

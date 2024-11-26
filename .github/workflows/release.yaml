@@ -21,7 +21,8 @@ jobs:
         with:
           go-version: 1.23
 
-      - run: |
-          go run ./modules/semver/cmd/main.go
+      - run: go run ./modules/semver/cmd/main.go
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REPO_OWNER: ${{ github.repository_owner }}
