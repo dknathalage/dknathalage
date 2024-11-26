@@ -34,17 +34,15 @@ func main() {
 
 	ctx := context.Background()
 	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: cfg.GithubToken},
+		&oauth2.Token{AccessToken: "... your access token ..."},
 	)
 	tc := oauth2.NewClient(ctx, ts)
 	client := github.NewClient(tc)
 
-	releases, _, err := client.Repositories.ListReleases(ctx, "dknathalage", "dknagalage", nil)
+	repo, _, err := client.Repositories.Get(ctx, "dknathalage", "dknathalage")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for _, release := range releases {
-		log.Printf("Name: %s, Tag: %s", release.GetName(), release.GetTagName())
-	}
+	log.Printf("Repository: %s", *repo.FullName)
 }
