@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/google/go-github/v66/github"
 	"github.com/kelseyhightower/envconfig"
-	"golang.org/x/oauth2"
 )
 
 type Config struct {
@@ -25,24 +25,23 @@ func LoadConfig() Config {
 }
 
 func main() {
-	var cfg Config
-
-	err := envconfig.Process("", &cfg)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	cfg := LoadConfig()
 	ctx := context.Background()
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: "... your access token ..."},
-	)
-	tc := oauth2.NewClient(ctx, ts)
-	client := github.NewClient(tc)
+	client := github.NewClient(nil).WithAuthToken(string(cfg.GithubToken))
 
-	repo, _, err := client.Repositories.Get(ctx, "dknathalage", "dknathalage")
+	user, resp, err := client.Users.Get(ctx, "")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("\nerror: %v\n", err)
+		return
 	}
 
-	log.Printf("Repository: %s", *repo.FullName)
+	// Rate.Limit should most likely be 5000 when authorized.
+	log.Printf("Rate: %#v\n", resp.Rate)
+
+	// If a Token Expiration has been set, it will be displayed.
+	if !resp.TokenExpiration.IsZero() {
+		log.Printf("Token Expiration: %v\n", resp.TokenExpiration)
+	}
+
+	fmt.Printf("\n%v\n", github.Stringify(user))
 }
