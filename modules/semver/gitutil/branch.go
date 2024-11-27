@@ -2,6 +2,7 @@ package gitutil
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strings"
 
@@ -9,8 +10,13 @@ import (
 )
 
 func GetDefaultBranch(client *github.Client, ctx context.Context, repo string) string {
-	owner := repo[:strings.Index(repo, "/")]
-	repo = repo[strings.Index(repo, "/")+1:]
+	index := strings.Index(repo, "/")
+	if index == -1 {
+		log.Fatal(fmt.Errorf("invalid repo format: %s", repo))
+	}
+
+	owner := repo[:index]
+	repo = repo[index+1:]
 	branch, _, err := client.Repositories.Get(ctx, owner, repo)
 	if err != nil {
 		log.Fatal(err)
@@ -19,7 +25,7 @@ func GetDefaultBranch(client *github.Client, ctx context.Context, repo string) s
 	return branch.GetDefaultBranch()
 }
 
-func IsDefaultBranch(client *github.Client, ctx *context.Context, owner, repo, ref string) bool {
+func IsDefaultBranch(ctx *context.Context, client *github.Client, repo, ref string) bool {
 	defaultBranch := GetDefaultBranch(client, *ctx, repo)
 	return ref == "refs/heads/"+defaultBranch
 }

@@ -13,7 +13,7 @@ func validateCfg(cfg *gitutil.Config, client *github.Client, ctx *context.Contex
 		return errors.New("GITHUB_REF_TYPE must be branch")
 	}
 
-	if !gitutil.IsDefaultBranch(client, ctx, cfg.GithubRepoOwner, cfg.GithubRepository, cfg.GithubRef) {
+	if !gitutil.IsDefaultBranch(ctx, client, cfg.GithubRepository, cfg.GithubRef) {
 		return errors.New("GITHUB_REF must be the default branch")
 	}
 
