@@ -135,6 +135,7 @@ jobs:
           gcloud run deploy ${{ matrix.service.name }} \
             --image ${{ steps.vars.outputs.IMAGE }} \
             --region ${{ env.REGION }} \
+            --port 80 \
             --tag ${{ steps.vars.outputs.TAG }} ${{ env.CLOUDRUN_FLAGS }}
 
       - name: Update Traffic 🚦
