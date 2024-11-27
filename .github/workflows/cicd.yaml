@@ -63,6 +63,8 @@ jobs:
             deploy: true
           - name: semver
             deploy: false
+          - name: don-pabo-wedding
+            deploy: true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 📥
