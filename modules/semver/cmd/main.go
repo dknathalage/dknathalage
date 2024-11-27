@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/dknathalage/dknathalage/pkg/gitutil"
+	"github.com/dknathalage/dknathalage/modules/semver/gitutil"
 	"github.com/google/go-github/v66/github"
 )
 
