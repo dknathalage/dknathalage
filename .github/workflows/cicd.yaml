@@ -2,12 +2,6 @@ name: CI/CD Pipeline
 
 on:
   push:
-    paths:
-      - modules/**
-      - .github/workflows/cicd.yaml
-      - config/**
-      - pkg/**
-      - "!modules/semver/**"
 
 permissions:
   contents: read
