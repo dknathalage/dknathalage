@@ -57,7 +57,10 @@ jobs:
       fail-fast: false
       matrix:
         service:
-          - invoice
+          - name: invoice
+            deploy: true
+          - name: semver
+            deploy: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 📥
@@ -85,7 +88,7 @@ jobs:
       - name: Variables 🧮
         id: vars
         run: |
-          echo IMAGE=${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ github.sha }} >> $GITHUB_OUTPUT
+          echo IMAGE=${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ github.sha }} >> $GITHUB_OUTPUT
           echo TAG=$(echo ${{github.ref}} | sed 's/\//-/g') >> $GITHUB_OUTPUT
 
       - name: Build Docker Image 🛠️
@@ -93,7 +96,7 @@ jobs:
         run: |
           docker build \
             -t ${{ steps.vars.outputs.IMAGE }} \
-            -f ./config/docker/${{ matrix.service }}.Dockerfile .
+            -f ./config/docker/${{ matrix.service.name }}.Dockerfile .
 
       - name: Push Docker Image 📤
         run: |
@@ -122,18 +125,20 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Deploy to CloudRun 🚀
+        if: matrix.service.deploy == true
         run: |
-          gcloud run deploy ${{ matrix.service }} \
+          gcloud run deploy ${{ matrix.service.name }} \
             --image ${{ steps.vars.outputs.IMAGE }} \
             --region ${{ env.REGION }} \
             --tag ${{ steps.vars.outputs.TAG }} ${{ env.CLOUDRUN_FLAGS }}
 
       - name: Update Traffic 🚦
-        if: github.event_name == 'release'
-        run: gcloud run services update-traffic ${{ matrix.service }} --platform managed --region australia-southeast2 --to-tags ${{ steps.vars.outputs.TAG }}=100
+        if: github.event_name == 'release' && matrix.service.deploy == true
+        run: gcloud run services update-traffic ${{ matrix.service.name }} --platform managed --region australia-southeast2 --to-tags ${{ steps.vars.outputs.TAG }}=100
 
       - name: Pull Tag Push 🏷️
+        if: matrix.service.deploy == true
         run: |
           docker pull ${{ steps.vars.outputs.IMAGE }}
-          docker tag ${{ steps.vars.outputs.IMAGE }} ${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ steps.vars.outputs.TAG }}
-          docker push ${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ steps.vars.outputs.TAG }}
+          docker tag ${{ steps.vars.outputs.IMAGE }} ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ steps.vars.outputs.TAG }}
+          docker push ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ steps.vars.outputs.TAG }}
