@@ -9,7 +9,7 @@ import (
 	"github.com/google/go-github/v66/github"
 )
 
-func GetDefaultBranch(client *github.Client, ctx context.Context, repo string) string {
+func GetDefaultBranch(ctx context.Context, client *github.Client, repo string) string {
 	index := strings.Index(repo, "/")
 	if index == -1 {
 		log.Fatal(fmt.Errorf("invalid repo format: %s", repo))
@@ -26,6 +26,6 @@ func GetDefaultBranch(client *github.Client, ctx context.Context, repo string) s
 }
 
 func IsDefaultBranch(ctx *context.Context, client *github.Client, repo, ref string) bool {
-	defaultBranch := GetDefaultBranch(client, *ctx, repo)
+	defaultBranch := GetDefaultBranch(*ctx, client, repo)
 	return ref == "refs/heads/"+defaultBranch
 }
