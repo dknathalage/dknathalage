@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/dknathalage/modules/invoice/web"
+	"github.com/dknathalage/dknathalage/modules/invoice/web"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
