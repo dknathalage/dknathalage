@@ -9,6 +9,11 @@ resource "google_service_account_iam_member" "actions_sa_member" {
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.dkn_identity_pool.name}/*"
 }
 
+import {
+  id = "projects/dknathalage/serviceAccounts/gha-ci-sa@dknathalage.iam.gserviceaccount.com"
+  to = google_service_account.actions_sa
+}
+
 resource "google_project_iam_binding" "actions_sa_binding" {
   project = "dknathalage"
   role    = "roles/editor"

@@ -2,6 +2,11 @@ resource "google_iam_workload_identity_pool" "dkn_identity_pool" {
   workload_identity_pool_id = "id-pool"
 }
 
+import {
+  id = "projects/dknathalage/locations/australia-southeast2/workloadIdentityPools/id-pool"
+  to = google_iam_workload_identity_pool.dkn_identity_pool
+}
+
 resource "google_iam_workload_identity_pool_provider" "gha_provider" {
   project                            = "dknathalage"
   workload_identity_pool_id          = google_iam_workload_identity_pool.dkn_identity_pool.workload_identity_pool_id
@@ -18,4 +23,9 @@ resource "google_iam_workload_identity_pool_provider" "gha_provider" {
     allowed_audiences = []
     issuer_uri        = "https://token.actions.githubusercontent.com"
   }
+}
+
+import {
+  id = "projects/dknathalage/locations/australia-southeast2/workloadIdentityPools/id-pool/providers/github-actions"
+  to = google_iam_workload_identity_pool_provider.gha_provider
 }
