@@ -1,5 +1,5 @@
 resource "google_artifact_registry_repository" "gar-dknathalage" {
-  for_each               = ["australia-southeast2", "us-central1", "eu-west1"]
+  for_each               = toset(["australia-southeast2", "us-central1", "eu-west1"])
   location               = each.key
   repository_id          = "dknathalage"
   format                 = "DOCKER"
