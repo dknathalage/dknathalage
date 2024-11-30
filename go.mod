@@ -6,6 +6,7 @@ require (
 	github.com/google/go-github/v66 v66.0.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/labstack/echo/v4 v4.12.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -21,4 +22,5 @@ require (
 	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/text v0.19.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
+	gopkg.in/validator.v2 v2.0.1 // indirect
 )

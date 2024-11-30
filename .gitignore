@@ -10,3 +10,4 @@ reports/**
 bin/**
 tmp/**
 .terraform**
+*.tfstate*

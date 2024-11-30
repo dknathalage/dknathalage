@@ -1,0 +1,10 @@
+"jobs":
+  "build":
+    "runs-on": "ubuntu-latest"
+    "steps":
+    - "name": "Checkout"
+      "uses": "actions/checkout@v4"
+"name": "TF Gen invoice Build \U0001F3D7️"
+"on":
+  "workflow_call": {}
+  "workflow_dispatch": {}

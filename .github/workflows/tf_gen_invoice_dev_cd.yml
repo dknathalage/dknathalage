@@ -1,0 +1,10 @@
+"jobs":
+  "deploy":
+    "runs-on": "ubuntu-latest"
+    "steps":
+    - "name": "Checkout"
+      "uses": "actions/checkout@v4"
+"name": "TF Gen invoice Development Deployment \U0001F680"
+"on":
+  "workflow_call": {}
+  "workflow_dispatch": {}

@@ -1,22 +1,31 @@
 version: "3"
 
+env:
+  TOOLS_DIR: ./bin/tools
+  REPORTS_DIR: ./reports
+
 tasks:
   test.setup:
     desc: Setup
     cmds:
-      - mkdir -p ./tools
-      - go install github.com/mfridman/tparse@latest
-      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-      - go install github.com/air-verse/air@latest
-      - mv $(go env GOPATH)/bin/tparse ./tools
-      - mv $(go env GOPATH)/bin/golangci-lint ./tools
-      - mv $(go env GOPATH)/bin/air ./tools
+      - mkdir -p $TOOLS_DIR
+      - for:
+          - github.com/mfridman/tparse@latest
+          - github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+          - github.com/air-verse/air@latest
+        cmd: go install {{.ITEM}}
+      - for:
+          - tparse
+          - golangci-lint
+          - air
+        cmd: mv $(go env GOPATH)/bin/{{.ITEM}} $TOOLS_DIR
 
   test.unit:
     desc: Run unit tests
     cmds:
-      - rm -rf ./reports && mkdir -p ./reports
-      - go test -coverprofile=./reports/coverage.txt -covermode=atomic ./... | ./tools/tparse -all -notests -format markdown >> ./reports/test_report.md
+      - mkdir -p $REPORTS_DIR
+      - go test -coverprofile=$REPORTS_DIR/coverage.txt -json -covermode=atomic ./... > $REPORTS_DIR/test_report.json
+      - $TOOLS_DIR/tparse -all -notests -format markdown >> $REPORTS_DIR/test_report.md -file $REPORTS_DIR/test_report.json
     env:
       GOFLAGS: "-v -count=1 -json"
 
