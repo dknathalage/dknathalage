@@ -1,5 +1,6 @@
 resource "google_artifact_registry_repository" "gar-dknathalage" {
-  location               = "australia-southeast2"
+  for_each               = ["australia-southeast2", "us-central1", "eu-west1"]
+  location               = each.key
   repository_id          = "dknathalage"
   format                 = "DOCKER"
   cleanup_policy_dry_run = false
