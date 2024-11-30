@@ -3,7 +3,7 @@ resource "google_iam_workload_identity_pool" "dkn_identity_pool" {
 }
 
 import {
-  id = "projects/dknathalage/locations/australia-southeast2/workloadIdentityPools/id-pool"
+  id = "projects/dknathalage/locations/global/workloadIdentityPools/id-pool"
   to = google_iam_workload_identity_pool.dkn_identity_pool
 }
 
