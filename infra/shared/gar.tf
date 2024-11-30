@@ -28,8 +28,3 @@ resource "google_artifact_registry_repository" "gar-dknathalage" {
     immutable_tags = false
   }
 }
-
-import {
-  id = "projects/dknathalage/locations/australia-southeast2/repositories/dknathalage"
-  to = google_artifact_registry_repository.gar-dknathalage
-}
