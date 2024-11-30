@@ -31,14 +31,17 @@ jobs:
       - run: terraform -chdir=./infra/services init
       - run: terraform -chdir=./infra/services plan
       - run: terraform -chdir=./infra/services apply --auto-approve
-      - run: |
+      - continue-on-error: false
+        id: commit-tf-gen
+        run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "actions@github.com"
           git checkout -b tf-gen
           git add .github/workflows/*.yml
           git commit -m "Automated Terraform changes"
-      - run: git push -u origin terraform-changes
+          git push -u origin terraform-changes
       - uses: peter-evans/create-pull-request@v5
+        if: steps.commit-tf-gen.outcome == 'success'
         with:
           branch: terraform-changes
           title: "Automated Terraform Changes"
