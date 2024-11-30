@@ -26,6 +26,6 @@ resource "google_iam_workload_identity_pool_provider" "gha_provider" {
 }
 
 import {
-  id = "projects/dknathalage/locations/australia-southeast2/workloadIdentityPools/id-pool/providers/github-actions"
+  id = "projects/dknathalage/locations/global/workloadIdentityPools/id-pool/providers/github-actions"
   to = google_iam_workload_identity_pool_provider.gha_provider
 }
