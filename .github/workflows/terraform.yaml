@@ -31,7 +31,7 @@ jobs:
       - run: terraform -chdir=./infra/services init
       - run: terraform -chdir=./infra/services plan
       - run: terraform -chdir=./infra/services apply --auto-approve
-      - continue-on-error: false
+      - continue-on-error: true
         id: commit-tf-gen
         run: |
           git config --global user.name "GitHub Actions Bot"
