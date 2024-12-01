@@ -5,6 +5,11 @@ resource "local_file" "ci_workflow" {
       workflow_dispatch = {}
       workflow_call     = {}
     },
+    permissions = {
+      contents = "read"
+      actions  = "read"
+      id-token = "write"
+    },
     env = {
       WORKLOAD_IDP = "projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions"
       CI_SA        = "gha-ci-sa@dknathalage.iam.gserviceaccount.com"
