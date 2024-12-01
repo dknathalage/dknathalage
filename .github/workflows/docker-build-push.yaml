@@ -2,28 +2,20 @@ on:
   workflow_dispatch:
     inputs:
       dockerfile:
-        type: string
         description: "Path to the Dockerfile"
       idp:
-        type: string
         description: "Workload Identity Provider"
       sa:
-        type: string
         description: "Service Account"
       region:
-        type: string
         description: "Region"
       project:
-        type: string
         description: "Project"
       repository:
-        type: string
         description: "Repository"
       service:
-        type: string
         description: "Service"
       tag:
-        type: string
         description: "Tag"
 
 jobs:
@@ -49,3 +41,4 @@ jobs:
           docker build \
             -t ${{ inputs.region }}.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ inputs.tag }} \
             -f ${{ inputs.dockerfile }} .
+      - run: docker push ${{ inputs.region }}.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ inputs.tag }}
