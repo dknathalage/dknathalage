@@ -1,7 +1,7 @@
-resource "google_artifact_registry_repository" "gar-dknathalage" {
-  for_each               = toset(["australia-southeast2", "us-central1"])
+resource "google_artifact_registry_repository" "gar" {
+  for_each               = toset(var.features.regions)
   location               = each.key
-  repository_id          = "dknathalage"
+  repository_id          = var.features.registry_name
   format                 = "DOCKER"
   cleanup_policy_dry_run = false
 

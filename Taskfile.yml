@@ -44,25 +44,24 @@ tasks:
     cmds:
       - ./tools/air --build.cmd="go build -o ./bin/invoice ./modules/invoice/cmd" --build.bin ./bin/invoice
 
-  tf:
-    desc: Run Terraform tasks
+  tf.shared:
+    desc: Terraform shared
     cmds:
-      - task: tf.init
-      - task: tf.plan
-      - task: tf.apply
+      - task: tf.shared.init
+      - task: tf.shared.plan
+      - task: tf.shared.apply
 
-  tf.init:
+  tf.shared.init:
     desc: Initialize Terraform
     cmds:
-      - terraform -chdir=$INFRA_DIR init
+      - terraform -chdir=$INFRA_DIR/shared init
 
-  tf.plan:
+  tf.shared.plan:
     desc: Plan Terraform
     cmds:
-      - terraform -chdir=$INFRA_DIR plan -out=../reports/plan.out
-      - terraform -chdir=$INFRA_DIR show -json ../reports/plan.out > ./reports/plan.json
+      - terraform -chdir=$INFRA_DIR/shared plan -out=../../reports/plan.out
 
-  tf.apply:
+  tf.shared.apply:
     desc: Apply Terraform
     cmds:
-      - terraform -chdir=$INFRA_DIR apply -auto-approve
+      - terraform -chdir=$INFRA_DIR/shared apply -auto-approve
