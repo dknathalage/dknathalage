@@ -13,8 +13,10 @@ module "invoice" {
   ]
 
   regions = [
-    "australia-southeast-2",
+    "australia-southeast1",
   ]
+
+  dev_region = "australia-southeast1"
 
   service = null
 }

@@ -14,12 +14,28 @@
       "uses": "google-github-actions/auth@v2"
       "with":
         "access_token_lifetime": "300s"
+        "project_id": "dknathalage"
         "service_account": "$env.CI_SA"
         "token_format": "access_token"
         "workload_identity_provider": "$env.WORKLOAD_IDP"
+    - "name": "Login to Docker \U0001F433"
+      "uses": "docker/login-action@v3"
+      "with":
+        "password": "$steps.auth.outputs.access_token"
+        "registry": "australia-southeast1-docker.pkg.dev"
+        "username": "oauth2accesstoken"
+    - "name": "Build Docker Image \U0001F3D7️"
+      "run": "docker build -t australia-southeast1-docker.pkg.dev/invoice:$github.sha
+        -f config/docker/invoice.Dockerfile ."
+    - "name": "Push Docker Image \U0001F4E4"
+      "run": "docker push australia-southeast1-docker.pkg.dev/invoice:$github.sha"
 "name": "TF Gen invoice Build \U0001F3D7️"
 "on":
-  "workflow_call": {}
+  "push":
+    "paths":
+    - "config/**/invoice**"
+    - ".github/workflows/**"
+    - "modules/invoice/**"
   "workflow_dispatch": {}
 "permissions":
   "actions": "read"

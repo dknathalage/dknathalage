@@ -9,6 +9,8 @@ variable "features" {
       "australia-southeast1",
     ]
 
+    dev_region = "australia-southeast1"
+
     registry_name = "dknathalage"
   }
 

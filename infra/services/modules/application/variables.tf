@@ -39,3 +39,7 @@ variable "env" {
     error_message = "env must be either dev, np or prod"
   }
 }
+
+variable "dev_region" {
+  type = string
+}
