@@ -1,5 +1,5 @@
 module "invoice" {
-  source = "../modules/application"
+  source = "./modules/application"
 
   name                = "invoice"
   dockerfile          = "config/docker/invoice.Dockerfile"
