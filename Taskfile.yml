@@ -3,6 +3,7 @@ version: "3"
 env:
   TOOLS_DIR: ./bin/tools
   REPORTS_DIR: ./reports
+  INFRA_DIR: ./infra
 
 tasks:
   test.setup:
@@ -42,3 +43,26 @@ tasks:
     desc: Run invoice service
     cmds:
       - ./tools/air --build.cmd="go build -o ./bin/invoice ./modules/invoice/cmd" --build.bin ./bin/invoice
+
+  tf:
+    desc: Run Terraform tasks
+    cmds:
+      - task: tf.init
+      - task: tf.plan
+      - task: tf.apply
+
+  tf.init:
+    desc: Initialize Terraform
+    cmds:
+      - terraform -chdir=$INFRA_DIR init
+
+  tf.plan:
+    desc: Plan Terraform
+    cmds:
+      - terraform -chdir=$INFRA_DIR plan -out=../reports/plan.out
+      - terraform -chdir=$INFRA_DIR show -json ../reports/plan.out > ./reports/plan.json
+
+  tf.apply:
+    desc: Apply Terraform
+    cmds:
+      - terraform -chdir=$INFRA_DIR apply -auto-approve
