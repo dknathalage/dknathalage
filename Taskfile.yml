@@ -65,3 +65,25 @@ tasks:
     desc: Apply Terraform
     cmds:
       - terraform -chdir=$INFRA_DIR/shared apply -auto-approve
+
+  tf.services:
+    desc: Terraform services
+    cmds:
+      - task: tf.services.init
+      - task: tf.services.plan
+      - task: tf.services.apply
+
+  tf.services.init:
+    desc: Initialize Terraform
+    cmds:
+      - terraform -chdir=$INFRA_DIR/services init
+
+  tf.services.plan:
+    desc: Plan Terraform
+    cmds:
+      - terraform -chdir=$INFRA_DIR/services plan -out=../../reports/plan.out
+
+  tf.services.apply:
+    desc: Apply Terraform
+    cmds:
+      - terraform -chdir=$INFRA_DIR/services apply -auto-approve
