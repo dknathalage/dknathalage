@@ -9,10 +9,6 @@ on:
     types:
       - published
 
-env:
-  WORKLOAD_IDP: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
-  CI_SA: gha-ci-sa@dknathalage.iam.gserviceaccount.com
-
 permissions:
   contents: read
   actions: read
@@ -35,7 +31,7 @@ jobs:
             tfvars: prod.tfvars
     uses: ./.github/workflows/terraform-plan-apply.yaml
     with:
-      workload_idp: ${{ env.WORKLOAD_IDP }}
-      ci_sa: ${{ env.CI_SA }}
+      workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
+      ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
       folder: ${{ matrix.module.folder }}
       tfvars: ${{ matrix.module.tfvars }}
