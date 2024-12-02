@@ -5,6 +5,9 @@ on:
     paths:
       - infra/**
       - .github/workflows/terraform.yaml
+  release:
+    types:
+      - published
 
 env:
   WORKLOAD_IDP: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
@@ -16,7 +19,18 @@ permissions:
   id-token: write
 
 jobs:
-  tf-shared:
+  plan:
+    strategy:
+      matrix:
+        module:
+          - folder: shared
+            tfvars: shared.tfvars
+          - folder: environment
+            tfvars: dev.tfvars
+          - folder: environment
+            tfvars: np.tfvars
+          - folder: environment
+            tfvars: prod.tfvars
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,6 +41,8 @@ jobs:
           workload_identity_provider: ${{ env.WORKLOAD_IDP }}
           service_account: ${{ env.CI_SA }}
           access_token_lifetime: 300s
-      - run: terraform -chdir=./infra/shared init
-      - run: terraform -chdir=./infra/shared plan
-      - run: terraform -chdir=./infra/shared apply --auto-approve
+      - run: terraform -chdir=./infra/${{ matrix.module.folder }} init
+      - run: |
+          terraform -chdir=./infra/${{ matrix.module.folder }} plan \
+            -var-file=./infra/${{ matrix.module.folder }}/tfvars/${{ matrix.module.tfvars }} \
+            -var-file=./infra/${{ matrix.module.folder }}/tfvars/common.tfvars
