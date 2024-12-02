@@ -46,9 +46,8 @@ jobs:
       - run: |
           terraform -chdir=./infra/${{ matrix.module.folder }} plan \
             -var-file=./tfvars/${{ matrix.module.tfvars }} \
-            -var-file=./tfvars/common.tfvars -lock=false -out=.planfile
-      - name: Post PR comment
-        uses: borchero/terraform-plan-comment@v2
+            -var-file=./tfvars/common.tfvars -lock=false -out=plan.json -json
+      - uses: liatrio/terraform-change-pr-commenter@v1.4.0
         with:
-          token: ${{ github.token }}
-          planfile: .planfile
+          json-file: plan.json
+          expand-comment: "true"
