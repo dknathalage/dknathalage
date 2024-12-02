@@ -49,7 +49,7 @@ jobs:
           terraform plan -var-file=./tfvars/${{ matrix.module.tfvars }} -var-file=./tfvars/common.tfvars -lock=false -out=plan.out
           terraform show -json -no-color plan.out > plan.json
         working-directory: ./infra/${{ matrix.module.folder }}
-      - uses: liatrio/terraform-change-pr-commenter@v1.4.0
+      - uses: liatrio/terraform-change-pr-commenter@v1.7.0
         with:
           json-file: ./infra/${{ matrix.module.folder }}/plan.json
           include-plan-job-summary: true
