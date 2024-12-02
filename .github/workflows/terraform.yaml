@@ -19,7 +19,7 @@ permissions:
   id-token: write
 
 jobs:
-  plan:
+  plan-apply:
     strategy:
       fail-fast: false
       max-parallel: 1
