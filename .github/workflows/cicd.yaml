@@ -2,6 +2,7 @@ name: CI/CD Pipeline
 
 on:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -47,99 +48,110 @@ jobs:
         with:
           version: v1.60
 
-  build-deploy:
-    needs: unit-test
-    name: Build Deploy 🚀
-    strategy:
-      fail-fast: false
-      matrix:
-        service:
-          - name: invoice
-            deploy: true
-          - name: semver
-            deploy: false
-          - name: don-pabo-wedding
-            deploy: true
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 📥
-        uses: actions/checkout@v4
+  docker-push:
+    uses: ./.github/workflows/docker-build-push.yaml
+    with:
+      dockerfile: ./config/docker/invoice.Dockerfile
+      idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
+      sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+      region: australia-southeast1
+      project: dknathalage
+      repository: dknathalage
+      service: invoice
 
-      - name: Set up Docker Buildx 🏗️
-        uses: docker/setup-buildx-action@v3
+  # build-deploy:
+  #   needs: unit-test
+  #   name: Build Deploy 🚀
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       service:
+  #         - name: invoice
+  #           deploy: true
+  #         - name: semver
+  #           deploy: false
+  #         - name: don-pabo-wedding
+  #           deploy: true
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout 📥
+  #       uses: actions/checkout@v4
 
-      - name: Login to Google Artifact Registry 🛅
-        id: auth
-        uses: google-github-actions/auth@v2
-        with:
-          token_format: access_token
-          workload_identity_provider: ${{ env.WORKLOAD_IDP }}
-          service_account: ${{ env.CI_SA }}
-          access_token_lifetime: 300s
+  #     - name: Set up Docker Buildx 🏗️
+  #       uses: docker/setup-buildx-action@v3
 
-      - name: Login to Docker 🐳
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.GAR_REGISTRY }}
-          username: oauth2accesstoken
-          password: ${{ steps.auth.outputs.access_token }}
+  #     - name: Login to Google Artifact Registry 🛅
+  #       id: auth
+  #       uses: google-github-actions/auth@v2
+  #       with:
+  #         token_format: access_token
+  #         workload_identity_provider: ${{ env.WORKLOAD_IDP }}
+  #         service_account: ${{ env.CI_SA }}
+  #         access_token_lifetime: 300s
 
-      - name: Variables 🧮
-        id: vars
-        run: |
-          echo IMAGE=${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ github.sha }} >> $GITHUB_OUTPUT
-          echo TAG=$(echo ${{github.ref}} | sed 's/\//-/g') >> $GITHUB_OUTPUT
+  #     - name: Login to Docker 🐳
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ${{ env.GAR_REGISTRY }}
+  #         username: oauth2accesstoken
+  #         password: ${{ steps.auth.outputs.access_token }}
 
-      - name: Build Docker Image 🛠️
-        shell: bash
-        run: |
-          docker build \
-            -t ${{ steps.vars.outputs.IMAGE }} \
-            -f ./config/docker/${{ matrix.service.name }}.Dockerfile .
+  #     - name: Variables 🧮
+  #       id: vars
+  #       run: |
+  #         echo IMAGE=${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ github.sha }} >> $GITHUB_OUTPUT
+  #         echo TAG=$(echo ${{github.ref}} | sed 's/\//-/g') >> $GITHUB_OUTPUT
 
-      - name: Push Docker Image 📤
-        run: |
-          docker push ${{ steps.vars.outputs.IMAGE }}
-          rm -rf ./reports && mkdir -p ./reports
+  #     - name: Build Docker Image 🛠️
+  #       shell: bash
+  #       run: |
+  #         docker build \
+  #           -t ${{ steps.vars.outputs.IMAGE }} \
+  #           -f ./config/docker/${{ matrix.service.name }}.Dockerfile .
 
-      - name: Scan Docker Image 🕵
-        env:
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
-        id: trivy
-        uses: aquasecurity/trivy-action@0.20.0
-        with:
-          exit-code: 1
-          format: table
-          ignore-unfixed: true
-          image-ref: ${{ steps.vars.outputs.IMAGE }}
-          severity: HIGH,CRITICAL
-          vuln-type: os,library
-          output: ./reports/trivy-report.txt
+  #     - name: Push Docker Image 📤
+  #       run: |
+  #         docker push ${{ steps.vars.outputs.IMAGE }}
+  #         rm -rf ./reports && mkdir -p ./reports
 
-      - name: Output Scan Summary 🔎
-        run: |
-          echo "**Trivy Config Scan Summary**" >> $GITHUB_STEP_SUMMARY
-          echo '```text' >> $GITHUB_STEP_SUMMARY
-          cat ./reports/trivy-report.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+  #     - name: Scan Docker Image 🕵
+  #       env:
+  #         TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+  #       id: trivy
+  #       uses: aquasecurity/trivy-action@0.20.0
+  #       with:
+  #         exit-code: 1
+  #         format: table
+  #         ignore-unfixed: true
+  #         image-ref: ${{ steps.vars.outputs.IMAGE }}
+  #         severity: HIGH,CRITICAL
+  #         vuln-type: os,library
+  #         output: ./reports/trivy-report.txt
 
-      - name: Deploy to CloudRun 🚀
-        if: matrix.service.deploy == true
-        run: |
-          gcloud run deploy ${{ matrix.service.name }} \
-            --image ${{ steps.vars.outputs.IMAGE }} \
-            --region ${{ env.REGION }} \
-            --port 80 \
-            --allow-unauthenticated \
-            --tag ${{ steps.vars.outputs.TAG }} ${{ env.CLOUDRUN_FLAGS }}
+  #     - name: Output Scan Summary 🔎
+  #       run: |
+  #         echo "**Trivy Config Scan Summary**" >> $GITHUB_STEP_SUMMARY
+  #         echo '```text' >> $GITHUB_STEP_SUMMARY
+  #         cat ./reports/trivy-report.txt >> $GITHUB_STEP_SUMMARY
+  #         echo '```' >> $GITHUB_STEP_SUMMARY
 
-      - name: Update Traffic 🚦
-        if: github.event_name == 'release' && matrix.service.deploy == true
-        run: gcloud run services update-traffic ${{ matrix.service.name }} --platform managed --region australia-southeast2 --to-tags ${{ steps.vars.outputs.TAG }}=100
+  #     - name: Deploy to CloudRun 🚀
+  #       if: matrix.service.deploy == true
+  #       run: |
+  #         gcloud run deploy ${{ matrix.service.name }} \
+  #           --image ${{ steps.vars.outputs.IMAGE }} \
+  #           --region ${{ env.REGION }} \
+  #           --port 80 \
+  #           --allow-unauthenticated \
+  #           --tag ${{ steps.vars.outputs.TAG }} ${{ env.CLOUDRUN_FLAGS }}
 
-      - name: Pull Tag Push 🏷️
-        if: matrix.service.deploy == true
-        run: |
-          docker pull ${{ steps.vars.outputs.IMAGE }}
-          docker tag ${{ steps.vars.outputs.IMAGE }} ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ steps.vars.outputs.TAG }}
-          docker push ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ steps.vars.outputs.TAG }}
+  #     - name: Update Traffic 🚦
+  #       if: github.event_name == 'release' && matrix.service.deploy == true
+  #       run: gcloud run services update-traffic ${{ matrix.service.name }} --platform managed --region australia-southeast2 --to-tags ${{ steps.vars.outputs.TAG }}=100
+
+  #     - name: Pull Tag Push 🏷️
+  #       if: matrix.service.deploy == true
+  #       run: |
+  #         docker pull ${{ steps.vars.outputs.IMAGE }}
+  #         docker tag ${{ steps.vars.outputs.IMAGE }} ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ steps.vars.outputs.TAG }}
+  #         docker push ${{ env.IMAGE_PREFIX }}/${{ matrix.service.name }}:${{ steps.vars.outputs.TAG }}
