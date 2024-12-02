@@ -35,7 +35,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v1
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
       - uses: google-github-actions/auth@v2
         with:
           token_format: access_token
@@ -46,7 +48,7 @@ jobs:
         working-directory: ./infra/${{ matrix.module.folder }}
       - run: terraform plan -var-file=./tfvars/${{ matrix.module.tfvars }} -var-file=./tfvars/common.tfvars -lock=false -out=plan.out
         working-directory: ./infra/${{ matrix.module.folder }}
-      - run: terraform show -json  -no-color plan.out > plan.json
+      - run: terraform show -json -no-color plan.out > plan.json
         working-directory: ./infra/${{ matrix.module.folder }}
       - uses: liatrio/terraform-change-pr-commenter@v1.4.0
         with:
