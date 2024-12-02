@@ -51,3 +51,4 @@ jobs:
         with:
           json-file: plan.json
           expand-comment: "true"
+          include-plan-job-summary: "true"
