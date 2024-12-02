@@ -46,7 +46,7 @@ jobs:
         working-directory: ./infra/${{ matrix.module.folder }}
       - run: terraform plan -var-file=./tfvars/${{ matrix.module.tfvars }} -var-file=./tfvars/common.tfvars -lock=false -out=plan.out
         working-directory: ./infra/${{ matrix.module.folder }}
-      - run: terraform show -json plan.out > plan.json
+      - run: terraform show -json  -no-color plan.out > plan.json
         working-directory: ./infra/${{ matrix.module.folder }}
       - uses: liatrio/terraform-change-pr-commenter@v1.4.0
         with:
