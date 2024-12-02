@@ -56,5 +56,5 @@ jobs:
             -f ${{ inputs.dockerfile }} .
       - run: |
           docker tag ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.sha }} ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.ref_name }}
-          docker push ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.sha }}
+          docker push ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.ref_name }}
         if: steps.check.outputs.image_exists == 'false'
