@@ -46,7 +46,8 @@ jobs:
       - run: |
           terraform -chdir=./infra/${{ matrix.module.folder }} plan \
             -var-file=./tfvars/${{ matrix.module.tfvars }} \
-            -var-file=./tfvars/common.tfvars -lock=false -json > plan.json
+            -var-file=./tfvars/common.tfvars -lock=false -out=plan.out
+          terraform show -json plan.out > plan.json
       - uses: liatrio/terraform-change-pr-commenter@v1.4.0
         with:
           json-file: plan.json
