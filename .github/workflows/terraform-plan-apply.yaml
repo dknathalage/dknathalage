@@ -37,6 +37,7 @@ jobs:
           terraform plan -var-file=./tfvars/${{ inputs.tfvars }} -var-file=./tfvars/common.tfvars -out=tfplan.plan
           terraform show -no-color -json tfplan.plan > tfplan.json
         working-directory: ./infra/${{ inputs.folder }}
+        shell: bash
       - uses: liatrio/terraform-change-pr-commenter@v1.7.0
         with:
           json-file: ./infra/${{ inputs.folder }}/tfplan.json
@@ -44,3 +45,4 @@ jobs:
           include-workflow-link: true
       - run: terraform apply -auto-approve tfplan.plan
         working-directory: ./infra/${{ inputs.folder }}
+        shell: bash
