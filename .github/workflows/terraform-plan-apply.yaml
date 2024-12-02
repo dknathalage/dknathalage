@@ -45,3 +45,4 @@ jobs:
           include-workflow-link: true
       - run: terraform apply -auto-approve tfplan.plan
         shell: bash
+        working-directory: ./infra/${{ inputs.folder }}
