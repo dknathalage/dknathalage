@@ -15,6 +15,6 @@ terraform {
 terraform {
   backend "gcs" {
     bucket = "dknathalage-tfstate"
-    prefix = "terraform/state/shared"
+    prefix = "terraform/state/environment"
   }
 }

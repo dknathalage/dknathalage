@@ -21,6 +21,7 @@ permissions:
 jobs:
   plan:
     strategy:
+      fail-fast: false
       matrix:
         module:
           - folder: shared
@@ -45,4 +46,4 @@ jobs:
       - run: |
           terraform -chdir=./infra/${{ matrix.module.folder }} plan \
             -var-file=./tfvars/${{ matrix.module.tfvars }} \
-            -var-file=./tfvars/common.tfvars
+            -var-file=./tfvars/common.tfvars -lock=false
