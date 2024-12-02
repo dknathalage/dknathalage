@@ -50,6 +50,6 @@ jobs:
         working-directory: ./infra/${{ matrix.module.folder }}
       - uses: liatrio/terraform-change-pr-commenter@v1.4.0
         with:
-          json-file: plan.json
+          json-file: ./infra/${{ matrix.module.folder }}/plan.json
           expand-comment: "true"
           include-plan-job-summary: "true"
