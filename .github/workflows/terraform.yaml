@@ -45,12 +45,43 @@ jobs:
           service_account: ${{ env.CI_SA }}
           access_token_lifetime: 300s
       - run: |
-          terraform init -reconfigure
+          terraform init
           terraform plan -var-file=./tfvars/${{ matrix.module.tfvars }} -var-file=./tfvars/common.tfvars -lock=false -out=plan.out
-          terraform show -json -no-color plan.out > plan.json
+          terraform show -no-color -json tfplan.plan > tfplan.jso
         working-directory: ./infra/${{ matrix.module.folder }}
       - uses: liatrio/terraform-change-pr-commenter@v1.7.0
         with:
-          json-file: ./infra/${{ matrix.module.folder }}/plan.json
+          json-file: ./infra/${{ matrix.module.folder }}/tfplan.json
           include-plan-job-summary: true
-          
+          include-workflow-link: true
+  apply:
+    needs: plan
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        module:
+          - folder: shared
+            tfvars: shared.tfvars
+          - folder: environment
+            tfvars: dev.tfvars
+          - folder: environment
+            tfvars: np.tfvars
+          - folder: environment
+            tfvars: prod.tfvars
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+      - uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: ${{ env.WORKLOAD_IDP }}
+          service_account: ${{ env.CI_SA }}
+          access_token_lifetime: 300s
+      - run: |
+          terraform init
+          terraform plan -var-file=./tfvars/${{ matrix.module.tfvars }} -var-file=./tfvars/common.tfvars -lock=false -out=plan.out
+          terraform apply -auto-approve plan.out
