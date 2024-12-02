@@ -44,5 +44,5 @@ jobs:
       - run: terraform -chdir=./infra/${{ matrix.module.folder }} init
       - run: |
           terraform -chdir=./infra/${{ matrix.module.folder }} plan \
-            -var-file=./infra/${{ matrix.module.folder }}/tfvars/${{ matrix.module.tfvars }} \
-            -var-file=./infra/${{ matrix.module.folder }}/tfvars/common.tfvars
+            -var-file=./tfvars/${{ matrix.module.tfvars }} \
+            -var-file=./tfvars/common.tfvars
