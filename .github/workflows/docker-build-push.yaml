@@ -38,12 +38,12 @@ jobs:
           access_token_lifetime: 300s
       - uses: docker/login-action@v3
         with:
-          registry: ${{ inputs.region }}.pkg.dev
+          registry: ${{ inputs.region }}-docker.pkg.dev
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
       - shell: bash
         run: |
           docker build \
-            -t ${{ inputs.region }}.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.sha }} \
+            -t ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.sha }} \
             -f ${{ inputs.dockerfile }} .
-      - run: docker push ${{ inputs.region }}.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.sha }}
+      - run: docker push ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.sha }}
