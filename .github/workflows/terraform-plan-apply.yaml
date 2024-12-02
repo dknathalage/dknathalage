@@ -1,0 +1,46 @@
+on:
+  workflow_call:
+    inputs:
+      workload_idp:
+        description: "Workload Identity Pool ID"
+        required: true
+        type: string
+      ci_sa:
+        description: "Service Account for CI"
+        required: true
+        type: string
+      folder:
+        description: "Folder containing Terraform configuration"
+        required: true
+        type: string
+      tfvars:
+        description: "Terraform variables file"
+        required: true
+        type: string
+
+jobs:
+  plan-apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+      - uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: ${{ inputs.workload_idp }}
+          service_account: ${{ inputs.ci_sa }}
+          access_token_lifetime: 300s
+      - run: |
+          terraform init
+          terraform plan -var-file=./tfvars/${{ inputs.tfvars }} -var-file=./tfvars/common.tfvars -out=tfplan.plan
+          terraform show -no-color -json tfplan.plan > tfplan.json
+        working-directory: ./infra/${{ inputs.folder }}
+      - uses: liatrio/terraform-change-pr-commenter@v1.7.0
+        with:
+          json-file: ./infra/${{ inputs.folder }}/tfplan.json
+          include-plan-job-summary: true
+          include-workflow-link: true
+      - run: terraform apply -auto-approve tfplan.plan
+        working-directory: ./infra/${{ inputs.folder }}

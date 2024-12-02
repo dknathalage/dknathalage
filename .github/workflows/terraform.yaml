@@ -33,27 +33,9 @@ jobs:
             tfvars: np.tfvars
           - folder: environment
             tfvars: prod.tfvars
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_wrapper: false
-      - uses: google-github-actions/auth@v2
-        with:
-          token_format: access_token
-          workload_identity_provider: ${{ env.WORKLOAD_IDP }}
-          service_account: ${{ env.CI_SA }}
-          access_token_lifetime: 300s
-      - run: |
-          terraform init
-          terraform plan -var-file=./tfvars/${{ matrix.module.tfvars }} -var-file=./tfvars/common.tfvars -out=tfplan.plan
-          terraform show -no-color -json tfplan.plan > tfplan.json
-        working-directory: ./infra/${{ matrix.module.folder }}
-      - uses: liatrio/terraform-change-pr-commenter@v1.7.0
-        with:
-          json-file: ./infra/${{ matrix.module.folder }}/tfplan.json
-          include-plan-job-summary: true
-          include-workflow-link: true
-      - run: terraform apply -auto-approve tfplan.plan
-        working-directory: ./infra/${{ matrix.module.folder }}
+    uses: ./.github/workflows/terraform-plan-apply.yaml
+    with:
+      workload_idp: ${{ env.WORKLOAD_IDP }}
+      ci_sa: ${{ env.CI_SA }}
+      folder: ${{ matrix.module.folder }}
+      tfvars: ${{ matrix.module.tfvars }}
