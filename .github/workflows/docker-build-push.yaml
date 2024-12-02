@@ -43,6 +43,7 @@ jobs:
           password: ${{ steps.auth.outputs.access_token }}
       - id: check
         run: |
+          echo image_base=${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }} >> $GITHUB_OUTPUT
           if docker pull ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.sha }}; then
             echo image_exists=true >> $GITHUB_OUTPUT
           else
@@ -52,9 +53,10 @@ jobs:
         if: steps.check.outputs.image_exists == 'false'
         run: |
           docker build \
-            -t ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.sha }} \
+            -t ${{ steps.check.outputs.image_base }}:${{ github.sha }} \
             -f ${{ inputs.dockerfile }} .
       - run: |
-          docker tag ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.sha }} ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.ref_name }}
-          docker push ${{ inputs.region }}-docker.pkg.dev/${{ inputs.project }}/${{ inputs.repository }}/${{ inputs.service }}:${{ github.ref_name }}
+          docker tag ${{ steps.check.outputs.image_base }}:${{ github.sha }} ${{ steps.check.outputs.image_base }}:${{ github.ref_name }}
+          docker push ${{ steps.check.outputs.image_base }}:${{ github.sha }}
+          docker push ${{ steps.check.outputs.image_base }}:${{ github.ref_name }}
         if: steps.check.outputs.image_exists == 'false'
