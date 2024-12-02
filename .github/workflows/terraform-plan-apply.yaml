@@ -19,7 +19,7 @@ on:
         type: string
 
 jobs:
-  plan-apply:
+  plan:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,11 +38,23 @@ jobs:
           terraform show -no-color -json tfplan.plan > tfplan.json
         working-directory: ./infra/${{ inputs.folder }}
         shell: bash
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: ./infra/${{ inputs.folder }}/tfplan.plan
       - uses: liatrio/terraform-change-pr-commenter@v1.7.0
         with:
           json-file: ./infra/${{ inputs.folder }}/tfplan.json
           include-plan-job-summary: true
           include-workflow-link: true
+
+  apply:
+    runs-on: ubuntu-latest
+    needs: plan
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: tfplan
       - run: terraform apply -auto-approve tfplan.plan
         working-directory: ./infra/${{ inputs.folder }}
         shell: bash
