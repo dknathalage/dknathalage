@@ -43,7 +43,7 @@ jobs:
           service_account: ${{ env.CI_SA }}
           access_token_lifetime: 300s
       - run: terraform init
-      - run: terraform plan var-file=./tfvars/${{ matrix.module.tfvars }} -var-file=./tfvars/common.tfvars -lock=false -out=plan.out
+      - run: terraform plan -var-file=./tfvars/${{ matrix.module.tfvars }} -var-file=./tfvars/common.tfvars -lock=false -out=plan.out
         working-directory: ./infra/${{ matrix.module.folder }}
       - run: terraform show -json plan.out > plan.json
       - uses: liatrio/terraform-change-pr-commenter@v1.4.0
