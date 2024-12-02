@@ -19,7 +19,7 @@ on:
         type: string
 
 jobs:
-  plan:
+  plan-apply:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,14 +48,5 @@ jobs:
           json-file: ./infra/${{ inputs.folder }}/tfplan.json
           include-plan-job-summary: true
           include-workflow-link: true
-
-  apply:
-    runs-on: ubuntu-latest
-    needs: plan
-    steps:
-      - uses: hashicorp/setup-terraform@v2
-      - uses: actions/download-artifact@v4
-        with:
-          name: tfplan
       - run: terraform apply -auto-approve tfplan.plan
         shell: bash
