@@ -29,7 +29,7 @@ jobs:
       fail-fast: false
       matrix:
         service:
-          - invoice
+          - don-pabo-wedding
     uses: dknathalage/dknathalage/.github/workflows/docker-build-push.yaml@main
     with:
       dockerfile: ./config/docker/${{ matrix.service }}.Dockerfile
@@ -39,3 +39,26 @@ jobs:
       project: dknathalage
       repository: dknathalage
       service: ${{ matrix.service }}
+
+  dev-deploy:
+    needs: dev-build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - don-pabo-wedding
+    steps:
+      - name: Deploy to CloudRun 🚀
+        if: matrix.service.deploy == true
+        run: |
+          gcloud run deploy ${{ matrix.service.name }} \
+            --image ${{ needs.dev-build.outputs.image }} \
+            --region ${{ env.REGION }} \
+            --port 80 \
+            --allow-unauthenticated \
+            --tag latest ${{ env.CLOUDRUN_FLAGS }}
+
+      - name: Update Traffic 🚦
+        if: github.event_name == 'release' && matrix.service.deploy == true
+        run: gcloud run services update-traffic ${{ matrix.service.name }} --platform managed --region australia-southeast2 --to-tags latest=100

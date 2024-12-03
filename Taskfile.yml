@@ -87,3 +87,8 @@ tasks:
     desc: Apply Terraform
     cmds:
       - terraform -chdir=$INFRA_DIR/services apply -auto-approve
+
+  run.wedding:
+    desc: Run wedding service
+    cmds:
+      - $TOOLS_DIR/air --build.cmd="go build -o ./bin/wedding ./modules/don-pabo-wedding/cmd" --build.bin ./bin/wedding
