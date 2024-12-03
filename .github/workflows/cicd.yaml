@@ -50,7 +50,6 @@ jobs:
           - don-pabo-wedding
     steps:
       - name: Deploy to CloudRun 🚀
-        if: matrix.service.deploy == true
         run: |
           gcloud run deploy ${{ matrix.service.name }} \
             --image ${{ needs.dev-build.outputs.image }} \
