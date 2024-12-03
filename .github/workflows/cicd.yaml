@@ -60,4 +60,4 @@ jobs:
 
       - name: Update Traffic 🚦
         if: github.event_name == 'release' && matrix.service.deploy == true
-        run: gcloud run services update-traffic ${{ matrix.service.name }} --platform managed --region australia-southeast1 --to-tags latest=100
+        run: gcloud run services update-traffic ${{ matrix.service }} --platform managed --region australia-southeast1 --to-tags latest=100
