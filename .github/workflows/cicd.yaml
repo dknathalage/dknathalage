@@ -51,7 +51,7 @@ jobs:
     steps:
       - name: Deploy to CloudRun 🚀
         run: |
-          gcloud run deploy ${{ matrix.service.name }} \
+          gcloud run deploy ${{ matrix.service }} \
             --image ${{ needs.dev-build.outputs.image }} \
             --region ${{ env.REGION }} \
             --port 80 \
