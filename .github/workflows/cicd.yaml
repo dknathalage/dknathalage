@@ -22,7 +22,7 @@ env:
 
 jobs:
   unit-test:
-    uses: dknathalage/dknathalage/.github/reusable/go-quality.yaml@main
+    uses: dknathalage/dknathalage/.github/workflows/go-quality.yaml@main
 
   dev-build:
     strategy:
@@ -30,7 +30,7 @@ jobs:
       matrix:
         service:
           - invoice
-    uses: dknathalage/dknathalage/.github/reusable/docker-build-push.yaml@main
+    uses: dknathalage/dknathalage/.github/workflows/docker-build-push.yaml@main
     with:
       dockerfile: ./config/docker/${{ matrix.service }}.Dockerfile
       idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions

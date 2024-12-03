@@ -30,7 +30,7 @@ jobs:
             tfvars: np.tfvars
           - folder: environment
             tfvars: prod.tfvars
-    uses: dknathalage/dknathalage/.github/reusable/terraform-plan-apply.yaml@main
+    uses: dknathalage/dknathalage/.github/workflows/terraform-plan-apply.yaml@main
     with:
       workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
       ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
