@@ -57,8 +57,9 @@ jobs:
             --image ${{ needs.dev-build.outputs.image }} \
             --region ${{ matrix.service.region }} \
             --port 80 \
+            --project ${{ matrix.service.project }} \
             --allow-unauthenticated \
             --tag latest
 
       - name: Update Traffic 🚦
-        run: gcloud run services update-traffic ${{ matrix.service.name }} --platform managed --region ${{ matrix.service.region }} --to-tags latest=100
+        run: gcloud run services update-traffic ${{ matrix.service.name }} --platform managed --region ${{ matrix.service.region }} --to-tags latest=100 --project ${{ matrix.service.project }}
