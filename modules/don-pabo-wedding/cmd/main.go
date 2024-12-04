@@ -36,17 +36,17 @@ const home = `
 			}
 		</style>
 </head>
-<body class="bg-white min-h-screen flex items-center justify-center mx-10">
-    <div class="text-center">
-			<img src="https://thumbs.dreamstime.com/b/wedding-rings-line-icon-engagement-rings-vector-illustration-isolated-white-jewelery-outline-style-design-designed-wedding-123936888.jpg" alt="Don Pabo & Kushan" class="mx-auto w-12 mb-5">
-			<h1 class="tracking-[1em] roboto-mono mb-5 uppercase">Pabo & Kushan</h1>
+<body class="bg-stone-300 min-h-screen flex items-center justify-center bg-cover">
+    <div class="text-center backdrop-blur-sm bg-white/30 p-10">
+			<img src="https://cdn-icons-png.flaticon.com/512/620/620812.png" alt="Don Pabo & Kushan" class="mx-auto w-12 mb-5">
+			<h1 class="tracking-[.9em] roboto-mono mb-5 uppercase">Pabo & Kushan</h1>
 			<hr class="border-1 border-black w-1/4 mx-auto">
 			<div class="my-5 roboto-mono">
 				<h2 class="text-4xl tracking-[.1em] font-extralight mb-5">03 • 10 • 25</h2>
 				<h2 class="mt-2 tracking-[.35em]">MELBOURNE, AUSTRALIA</h2>
 			</div>
 			<hr class="border-1 border-black w-1/4 mx-auto">
-			<p class="tracking-wide tracking-wide roboto-mono my-5 uppercase">
+			<p class="tracking-[.25em] roboto-mono mt-5 uppercase">
 				Join us in celebrating happily ever after!<br/>Formal invitation to follow.
 			</p>
     </div>
