@@ -36,19 +36,18 @@ const home = `
 			}
 		</style>
 </head>
-<body class="bg-stone-300 min-h-screen flex items-center justify-center bg-cover">
+<body class="bg-stone-300 text-xl min-h-screen flex items-center justify-center bg-cover">
     <div class="text-center backdrop-blur-sm bg-white/30 p-10">
 			<img src="https://cdn-icons-png.flaticon.com/512/620/620812.png" alt="Don Pabo & Kushan" class="mx-auto w-12 mb-5">
-			<h1 class="tracking-[.9em] roboto-mono mb-5 uppercase">Pabo &<br/> Kushan</h1>
+			<h1 class="tracking-[.9em] text-center roboto-mono uppercase">Pabo &</h1>
+			<h1 class="tracking-[.9em] text-center roboto-mono mb-5 uppercase">Kushan</h1>
 			<hr class="border-1 border-black w-1/4 mx-auto">
 			<div class="my-5 roboto-mono">
-				<h1 class="tracking-[.9em] roboto-mono mb-5 uppercase">031025</h1>
-				<h2 class="mt-2 tracking-[.4em]">MELBOURNE<br/>AUSTRALIA</h2>
+				<h1 class="tracking-[.5em] roboto-mono mb-5 uppercase text-center">03.10.25</h1>
+				<h2 class="tracking-[.4em]">MELBOURNE</h2>
+				<h2 class="tracking-[.4em]">AUSTRALIA</h2>
 			</div>
 			<hr class="border-1 border-black w-1/4 mx-auto">
-			<p class="tracking-[.25em] roboto-mono mt-5 uppercase">
-				Join us in celebrating happily ever after!<br/>Formal invitation to follow.
-			</p>
     </div>
 </body>
 </html>
