@@ -21,19 +21,16 @@ resource "google_project_iam_binding" "actions_sa_binding" {
 }
 
 import {
-  count = contains(["prod"], var.environment) ? 1 : 0
   to    = google_service_account.actions_sa[0]
   id    = "projects/dknathalage/serviceAccounts/gha-ci-sa@dknathalage.iam.gserviceaccount.com"
 }
 
 import {
-  count = contains(["prod"], var.environment) ? 1 : 0
   to    = google_service_account_iam_member.actions_sa_member[0]
   id    = "projects/dknathalage/serviceAccounts/gha-ci-sa@dknathalage.iam.gserviceaccount.com roles/iam.workloadIdentityUser principalSet://iam.googleapis.com/projects/719430876063/locations/global/workloadIdentityPools/id-pool/*"
 }
 
 import {
-  count = contains(["prod"], var.environment) ? 1 : 0
   to    = google_project_iam_binding.actions_sa_binding[0]
   id    = "dknathalage roles/editor serviceAccount:gha-ci-sa@dknathalage.iam.gserviceaccount.com"
 }
@@ -44,7 +41,6 @@ resource "google_iam_workload_identity_pool" "dkn_identity_pool" {
 }
 
 import {
-  count = contains(["prod"], var.environment) ? 1 : 0
   id    = "projects/dknathalage/locations/global/workloadIdentityPools/id-pool"
   to    = google_iam_workload_identity_pool.dkn_identity_pool[0]
 }
@@ -69,7 +65,6 @@ resource "google_iam_workload_identity_pool_provider" "gha_provider" {
 }
 
 import {
-  count = contains(["prod"], var.environment) ? 1 : 0
   id    = "projects/dknathalage/locations/global/workloadIdentityPools/id-pool/providers/github-actions"
   to    = google_iam_workload_identity_pool_provider.gha_provider[0]
 }
