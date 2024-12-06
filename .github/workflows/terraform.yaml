@@ -30,3 +30,4 @@ jobs:
       workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
       ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
       tfvars: ${{ matrix.module.tfvars }}
+      folder: infra
