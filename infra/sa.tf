@@ -6,9 +6,9 @@ resource "google_service_account" "actions_sa" {
 
 resource "google_service_account_iam_member" "actions_sa_member" {
   count              = contains(var.environment, "prod") ? 1 : 0
-  service_account_id = "projects/dknathalage/serviceAccounts/${google_service_account.actions_sa.email}"
+  service_account_id = "projects/dknathalage/serviceAccounts/${google_service_account.actions_sa[0].email}"
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.dkn_identity_pool.name}/*"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.dkn_identity_pool[0].name}/*"
 }
 
 resource "google_project_iam_binding" "actions_sa_binding" {
@@ -16,7 +16,7 @@ resource "google_project_iam_binding" "actions_sa_binding" {
   project = "dknathalage"
   role    = "roles/editor"
   members = [
-    "serviceAccount:${google_service_account.actions_sa.email}"
+    "serviceAccount:${google_service_account.actions_sa[0].email}"
   ]
 }
 
