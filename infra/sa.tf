@@ -1,18 +1,18 @@
 
 resource "google_service_account" "actions_sa" {
-  count      = contains(var.environment, "prod") ? 1 : 0
+  count      = contains(["prod"], var.environment) ? 1 : 0
   account_id = "gha-ci-sa"
 }
 
 resource "google_service_account_iam_member" "actions_sa_member" {
-  count              = contains(var.environment, "prod") ? 1 : 0
+  count              = contains(["prod"], var.environment) ? 1 : 0
   service_account_id = "projects/dknathalage/serviceAccounts/${google_service_account.actions_sa[0].email}"
   role               = "roles/iam.workloadIdentityUser"
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.dkn_identity_pool[0].name}/*"
 }
 
 resource "google_project_iam_binding" "actions_sa_binding" {
-  count   = contains(var.environment, "prod") ? 1 : 0
+  count   = contains(["prod"], var.environment) ? 1 : 0
   project = "dknathalage"
   role    = "roles/editor"
   members = [
@@ -37,7 +37,7 @@ import {
 }
 
 resource "google_iam_workload_identity_pool" "dkn_identity_pool" {
-  count                     = contains(var.environment, "prod") ? 1 : 0
+  count                     = contains(["prod"], var.environment) ? 1 : 0
   workload_identity_pool_id = "id-pool"
 }
 
@@ -47,7 +47,7 @@ import {
 }
 
 resource "google_iam_workload_identity_pool_provider" "gha_provider" {
-  count                              = contains(var.environment, "prod") ? 1 : 0
+  count                              = contains(["prod"], var.environment) ? 1 : 0
   project                            = "dknathalage"
   workload_identity_pool_id          = google_iam_workload_identity_pool.dkn_identity_pool[0].workload_identity_pool_id
   workload_identity_pool_provider_id = "github-actions"
