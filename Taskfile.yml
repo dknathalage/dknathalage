@@ -39,56 +39,10 @@ tasks:
     cmds:
       - ./tools/golangci-lint run --timeout 2m
 
-  run.invoice:
-    desc: Run invoice service
+  tf-dev:
+    desc: Terraform plan
+    dir: ./infra
     cmds:
-      - ./tools/air --build.cmd="go build -o ./bin/invoice ./modules/invoice/cmd" --build.bin ./bin/invoice
-
-  tf.shared:
-    desc: Terraform shared
-    cmds:
-      - task: tf.shared.init
-      - task: tf.shared.plan
-      - task: tf.shared.apply
-
-  tf.shared.init:
-    desc: Initialize Terraform
-    cmds:
-      - terraform -chdir=$INFRA_DIR/shared init
-
-  tf.shared.plan:
-    desc: Plan Terraform
-    cmds:
-      - terraform -chdir=$INFRA_DIR/shared plan -out=../../reports/plan.out
-
-  tf.shared.apply:
-    desc: Apply Terraform
-    cmds:
-      - terraform -chdir=$INFRA_DIR/shared apply -auto-approve
-
-  tf.services:
-    desc: Terraform services
-    cmds:
-      - task: tf.services.init
-      - task: tf.services.plan
-      - task: tf.services.apply
-
-  tf.services.init:
-    desc: Initialize Terraform
-    cmds:
-      - terraform -chdir=$INFRA_DIR/services init
-
-  tf.services.plan:
-    desc: Plan Terraform
-    cmds:
-      - terraform -chdir=$INFRA_DIR/services plan -out=../../reports/plan.out
-
-  tf.services.apply:
-    desc: Apply Terraform
-    cmds:
-      - terraform -chdir=$INFRA_DIR/services apply -auto-approve
-
-  run.wedding:
-    desc: Run wedding service
-    cmds:
-      - $TOOLS_DIR/air --build.cmd="go build -o ./bin/wedding ./modules/don-pabo-wedding/cmd" --build.bin ./bin/wedding
+      - terraform init
+      - terraform plan -var-file=./tfvars/dev.tfvars -var-file=./tfvars/common.tfvars -out=tfplan.plan
+      - terraform apply -auto-approve tfplan.plan
