@@ -5,12 +5,10 @@ go 1.23.1
 require (
 	github.com/google/go-github/v66 v66.0.0
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/labstack/echo/v4 v4.12.0
-	gopkg.in/yaml.v3 v3.0.1
+	github.com/labstack/echo/v4 v4.13.0
 )
 
 require (
-	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -22,5 +20,4 @@ require (
 	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/text v0.19.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
-	gopkg.in/validator.v2 v2.0.1 // indirect
 )
