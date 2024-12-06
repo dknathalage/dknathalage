@@ -18,12 +18,6 @@ const home = `
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Imperial+Script&family=Lora:ital,wght@0,400..700;1,400..700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
 		<style>
-			.lora {
-				font-family: "Lora", serif;
-				font-optical-sizing: auto;
-				font-weight: <weight>;
-				font-style: normal;
-			}
 			.imperial-script-regular {
 				font-family: "Imperial Script", cursive;
 				font-weight: 400;
@@ -39,14 +33,16 @@ const home = `
 <body class="bg-stone-300 text-xl min-h-screen flex items-center justify-center bg-cover">
     <div class="text-center backdrop-blur-sm bg-white/30 p-10">
 			<img src="https://cdn-icons-png.flaticon.com/512/620/620812.png" alt="Don Pabo & Kushan" class="mx-auto w-12 mb-5">
-			<h1 class="tracking-[.9em] text-center roboto-mono uppercase">Pabo &</h1>
-			<h1 class="tracking-[.9em] text-center roboto-mono mb-5 uppercase">Kushan</h1>
+			<p class="tracking-[.9em] text-center roboto-mono uppercase">Pabo &</p>
+			<p class="tracking-[.9em] text-center roboto-mono uppercase mb-4">Kushan</p>
 			<hr class="border-1 border-black w-1/4 mx-auto">
+
 			<div class="my-5 roboto-mono">
-				<h1 class="tracking-[.5em] roboto-mono mb-5 uppercase text-center">03.10.25</h1>
-				<h2 class="tracking-[.4em]">MELBOURNE</h2>
-				<h2 class="tracking-[.4em]">AUSTRALIA</h2>
+				<p class="tracking-[.5em] roboto-mono mb-5 uppercase text-center">03.10.25</p>
+				<p class="tracking-[.4em]">MELBOURNE</p>
+				<p class="tracking-[.4em]">AUSTRALIA</p>
 			</div>
+			
 			<hr class="border-1 border-black w-1/4 mx-auto">
     </div>
 </body>

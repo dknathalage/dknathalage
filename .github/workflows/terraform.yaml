@@ -22,17 +22,12 @@ jobs:
       max-parallel: 1
       matrix:
         module:
-          - folder: shared
-            tfvars: shared.tfvars
-          - folder: environment
-            tfvars: dev.tfvars
-          - folder: environment
-            tfvars: np.tfvars
-          - folder: environment
-            tfvars: prod.tfvars
+          - tfvars: dev.tfvars
+          - tfvars: np.tfvars
+          - tfvars: prod.tfvars
     uses: dknathalage/dknathalage/.github/workflows/terraform-plan-apply.yaml@main
     with:
       workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
       ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
-      folder: ${{ matrix.module.folder }}
       tfvars: ${{ matrix.module.tfvars }}
+      folder: infra
