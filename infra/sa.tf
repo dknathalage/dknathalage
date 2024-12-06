@@ -49,7 +49,7 @@ import {
 resource "google_iam_workload_identity_pool_provider" "gha_provider" {
   count                              = contains(var.environment, "prod") ? 1 : 0
   project                            = "dknathalage"
-  workload_identity_pool_id          = google_iam_workload_identity_pool.dkn_identity_pool.workload_identity_pool_id[0]
+  workload_identity_pool_id          = google_iam_workload_identity_pool.dkn_identity_pool[0].workload_identity_pool_id
   workload_identity_pool_provider_id = "github-actions"
   attribute_condition                = "attribute.repository_owner==\"dknathalage\""
   attribute_mapping = {
