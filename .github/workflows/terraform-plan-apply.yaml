@@ -12,6 +12,7 @@ on:
       folder:
         description: "Folder containing Terraform configuration"
         required: true
+        default: ""
         type: string
       tfvars:
         description: "Terraform variables file"
@@ -36,13 +37,13 @@ jobs:
           terraform init
           terraform plan -var-file=./tfvars/${{ inputs.tfvars }} -var-file=./tfvars/common.tfvars -out=tfplan.plan
           terraform show -no-color -json tfplan.plan > tfplan.json
-        working-directory: ./infra/${{ inputs.folder }}
+        working-directory: ${{ inputs.folder }}
         shell: bash
       - uses: liatrio/terraform-change-pr-commenter@v1.7.0
         with:
-          json-file: ./infra/${{ inputs.folder }}/tfplan.json
+          json-file: ${{ inputs.folder }}/tfplan.json
           include-plan-job-summary: true
           include-workflow-link: true
       - run: terraform apply -auto-approve tfplan.plan
         shell: bash
-        working-directory: ./infra/${{ inputs.folder }}
+        working-directory: ${{ inputs.folder }}
