@@ -2,6 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
+    paths:
+      - .github/workflows/cicd.yaml
+      - modules/**
   workflow_dispatch:
 
 permissions:
