@@ -20,13 +20,14 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        module:
-          - tfvars: dev.tfvars
-          - tfvars: np.tfvars
-          - tfvars: prod.tfvars
+        environment:
+          - dev
+          - np
+          - prod
     uses: dknathalage/dknathalage/.github/workflows/terraform-plan-apply.yaml@main
     with:
       workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
       ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
-      tfvars: ${{ matrix.module.tfvars }}
+      tfvars: ${{ matrix.tfvars }}.tfvars
+      environment: ${{ matrix.env }}
       folder: infra
