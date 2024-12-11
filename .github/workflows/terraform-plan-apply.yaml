@@ -63,5 +63,3 @@ jobs:
           name: ${{ inputs.environment }}-tfplan
       - run: |
           terraform apply -auto-approve tfplan.plan
-        working-directory: ${{ inputs.folder }}
-        shell: bash
