@@ -58,6 +58,15 @@ jobs:
     needs: plan
     steps:
       - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: ${{ inputs.workload_idp }}
+          service_account: ${{ inputs.ci_sa }}
+          access_token_lifetime: 300s
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
       - uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.environment }}-tfplan
