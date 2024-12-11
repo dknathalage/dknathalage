@@ -1,0 +1,32 @@
+version: "3"
+
+env:
+  REGISTRY: australia-southeast1-docker.pkg.dev/dknathalage/dknathalage
+
+tasks:
+  deploy:
+    cmds:
+      - task: docker
+      - task: cloudrun.deploy
+
+  docker:
+    cmds:
+      - task: docker.auth
+      - task: docker.build
+      - task: docker.push
+
+  docker.auth:
+    cmds:
+      - gcloud auth configure-docker australia-southeast1-docker.pkg.dev
+
+  docker.build:
+    cmds:
+      - docker build -t $REGISTRY/invoissential/web:latest .
+
+  docker.push:
+    cmds:
+      - docker push $REGISTRY/invoissential/web:latest
+
+  cloudrun.deploy:
+    cmds:
+      - gcloud run deploy invoissential-web --image $REGISTRY/invoissential/web:latest --platform managed --region australia-southeast1 --allow-unauthenticated --port 3000 --project invoissential

@@ -1,0 +1,13 @@
+{
+  "hosting": {
+    "rewrites": [
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "invoissential-web",
+          "region": "australia-southeast1"
+        }
+      }
+    ]
+  }
+}
