@@ -15,6 +15,6 @@ terraform {
 terraform {
   backend "gcs" {
     bucket = "dknathalage-tfstate"
-    prefix = "terraform/state/project/${var.project}/environment/${var.environment}"
+    prefix = "terraform/state/environment"
   }
 }
