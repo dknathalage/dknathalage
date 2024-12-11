@@ -75,7 +75,9 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.environment }}-tfplan
+          path: ${{ inputs.folder }}
       - run: |
           rm -rf .terraform
           terraform init -upgrade
           terraform apply -auto-approve tfplan.plan
+        working-directory: ${{ inputs.folder }}
