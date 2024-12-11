@@ -71,4 +71,5 @@ jobs:
         with:
           name: ${{ inputs.environment }}-tfplan
       - run: |
+          terraform init -upgrade
           terraform apply -auto-approve tfplan.plan
