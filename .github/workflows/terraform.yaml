@@ -16,18 +16,29 @@ permissions:
   id-token: write
 
 jobs:
-  plan-apply:
-    strategy:
-      max-parallel: 1
-      matrix:
-        environment:
-          - dev
-          - np
-          - prod
+  dev-tf:
     uses: dknathalage/dknathalage/.github/workflows/terraform-plan-apply.yaml@main
     with:
       workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
       ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
-      tfvars: ${{ matrix.environment }}.tfvars
-      environment: ${{ matrix.environment }}
+      tfvars: dev.tfvars
+      environment: dev
+      folder: infra
+  np-tf:
+    needs: dev-tf
+    uses: dknathalage/dknathalage/.github/workflows/terraform-plan-apply.yaml@main
+    with:
+      workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
+      ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+      tfvars: np.tfvars
+      environment: np
+      folder: infra
+  prod-tf:
+    needs: np-tf
+    uses: dknathalage/dknathalage/.github/workflows/terraform-plan-apply.yaml@main
+    with:
+      workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
+      ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+      tfvars: prod.tfvars
+      environment: prod
       folder: infra

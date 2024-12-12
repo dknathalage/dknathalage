@@ -25,6 +25,7 @@ on:
 jobs:
   plan:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v2
@@ -59,6 +60,7 @@ jobs:
 
   apply:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     if: github.ref == 'refs/heads/main'
     needs: plan
     steps:
