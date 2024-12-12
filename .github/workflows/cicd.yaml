@@ -19,12 +19,18 @@ jobs:
   unit-test:
     uses: ./.github/workflows/go-quality.yaml
 
-  invs-build:
+  docker-builds:
     uses: ./.github/workflows/reuse-docker-build-push.yaml
+    strategy:
+      matrix:
+        images:
+          - name: invoissential/web
+            context: ./modules/invoissential-web
+            dockerfile: ./modules/invoissential-web/Dockerfile
     with:
-      dockerfile: ./modules/invoissential-web/Dockerfile
       idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
       sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
       region: australia-southeast1
-      image_name: australia-southeast1-docker.pkg.dev/dknathalage/dknathalage/invoissential/web:${{ github.sha }}
-      docker_context: ./modules/invoissential-web
+      dockerfile: ${{ matrix.images.dockerfile }}
+      image_name: australia-southeast1-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.images.name }}:${{ github.sha }}
+      docker_context: ${{ matrix.images.context }}
