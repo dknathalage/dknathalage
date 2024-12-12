@@ -15,64 +15,15 @@ permissions:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
-env:
-  WORKLOAD_IDP: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
-  CI_SA: gha-ci-sa@dknathalage.iam.gserviceaccount.com
-  GAR_REGISTRY: australia-southeast2-docker.pkg.dev
-  IMAGE_PREFIX: australia-southeast2-docker.pkg.dev/dknathalage/dknathalage
-  REGION: australia-southeast2
-  CLOUDRUN_FLAGS: ""
-
 jobs:
   unit-test:
-    uses: dknathalage/dknathalage/.github/workflows/go-quality.yaml@main
+    uses: ./.github/workflows/go-quality.yaml
 
-  dev-build:
-    strategy:
-      fail-fast: false
-      matrix:
-        service:
-          - don-pabo-wedding
-    uses: dknathalage/dknathalage/.github/workflows/docker-build-push.yaml@main
+  invs-build:
+    uses: ./.github/workflows/reuse-docker-build-push.yaml
     with:
-      dockerfile: ./config/docker/${{ matrix.service }}.Dockerfile
+      dockerfile: ./modules/invoissential-web/Dockerfile
       idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
       sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
       region: australia-southeast1
-      project: dknathalage
-      repository: dknathalage
-      service: ${{ matrix.service }}
-
-  dev-deploy:
-    needs: dev-build
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        service:
-          - name: don-pabo-wedding
-            project: dknathalage
-            region: australia-southeast1
-    steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - id: auth
-        uses: google-github-actions/auth@v2
-        with:
-          token_format: access_token
-          workload_identity_provider: ${{ env.WORKLOAD_IDP }}
-          service_account: ${{ env.CI_SA }}
-          access_token_lifetime: 300s
-
-      - name: Deploy to CloudRun 🚀
-        run: |
-          gcloud run deploy ${{ matrix.service.name }} \
-            --image ${{ needs.dev-build.outputs.image }} \
-            --region ${{ matrix.service.region }} \
-            --port 80 \
-            --project ${{ matrix.service.project }} \
-            --allow-unauthenticated \
-            --tag latest
-
-      - name: Update Traffic 🚦
-        run: gcloud run services update-traffic ${{ matrix.service.name }} --platform managed --region ${{ matrix.service.region }} --to-tags latest=100 --project ${{ matrix.service.project }}
+      image_name: australia-southeast1-docker.pkg.dev/dknathalage/dknathalage/invoissential/web:${{ github.sha }}

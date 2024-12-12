@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   dev-tf:
-    uses: dknathalage/dknathalage/.github/workflows/terraform-plan-apply.yaml@main
+    uses: ./.github/workflows/reuse-terraform-plan-apply.yaml
     with:
       workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
       ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
@@ -26,7 +26,7 @@ jobs:
       folder: infra
   np-tf:
     needs: dev-tf
-    uses: dknathalage/dknathalage/.github/workflows/terraform-plan-apply.yaml@main
+    uses: ./.github/workflows/reuse-terraform-plan-apply.yaml
     with:
       workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
       ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
@@ -35,7 +35,7 @@ jobs:
       folder: infra
   prod-tf:
     needs: np-tf
-    uses: dknathalage/dknathalage/.github/workflows/terraform-plan-apply.yaml@main
+    uses: ./.github/workflows/reuse-terraform-plan-apply.yaml
     with:
       workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
       ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com

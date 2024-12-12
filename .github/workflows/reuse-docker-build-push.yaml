@@ -1,0 +1,52 @@
+on:
+  workflow_call:
+    inputs:
+      dockerfile:
+        type: string
+        description: "Path to the Dockerfile"
+      docker_context:
+        type: string
+        description: "Path to the Docker context"
+        default: "."
+      idp:
+        type: string
+        description: "Workload Identity Provider"
+      sa:
+        type: string
+        description: "Service Account"
+      region:
+        type: string
+        description: "Region"
+      image_name:
+        type: string
+        description: "image name with registry/project/repo/image:tag"
+      additional_image:
+        type: string
+        description: "image name with registry/project/repo/image:tag"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: ${{ inputs.idp }}
+          service_account: ${{ inputs.sa }}
+          access_token_lifetime: 300s
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ inputs.region }}-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+      - shell: bash
+        run: |
+          docker build -t ${{ inputs.image_name }} -f ${{ inputs.dockerfile }} ${{ inputs.docker_context }}
+          docker push ${{ inputs.image_name }}
+      - shell: bash
+        if: ${{ inputs.additional_image }}
+        run: |
+          docker tag ${{ inputs.image_name }} ${{ inputs.additional_image }}
+          docker push ${{ inputs.additional_image }}
