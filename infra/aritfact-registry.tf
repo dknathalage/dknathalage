@@ -15,6 +15,7 @@ resource "google_artifact_registry_repository" "docker-artifacts" {
 }
 
 import {
-  to = google_artifact_registry_repository.docker-artifacts["australia-southeast1"]
-  id = "${var.project}/australia-southeast1/dknathalage"
+  count = length(var.artifact_registries)
+  to    = google_artifact_registry_repository.docker-artifacts["australia-southeast1"]
+  id    = "${var.project}/australia-southeast1/dknathalage"
 }
