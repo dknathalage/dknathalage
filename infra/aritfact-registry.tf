@@ -16,6 +16,6 @@ resource "google_artifact_registry_repository" "docker-artifacts" {
 
 import {
   for_each = var.artifact_registries
-  to       = google_artifact_registry_repository.docker-artifacts
+  to       = google_artifact_registry_repository.docker-artifacts[each.key]
   id       = "${var.project}/${each.value.location}/${each.value.repository_id}"
 }

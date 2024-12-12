@@ -25,7 +25,6 @@ on:
 jobs:
   plan:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v2
@@ -46,6 +45,7 @@ jobs:
                          -out=tfplan.plan
           terraform show -no-color -json tfplan.plan > tfplan.json
         working-directory: ${{ inputs.folder }}
+        name: Terraform Plan
         shell: bash
       - uses: actions/upload-artifact@v4
         with:
