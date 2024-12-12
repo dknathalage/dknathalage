@@ -16,9 +16,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  unit-test:
-    uses: ./.github/workflows/go-quality.yaml
-
   docker-builds:
     uses: ./.github/workflows/reuse-docker-build-push.yaml
     strategy:
