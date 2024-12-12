@@ -27,3 +27,4 @@ jobs:
       sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
       region: australia-southeast1
       image_name: australia-southeast1-docker.pkg.dev/dknathalage/dknathalage/invoissential/web:${{ github.sha }}
+      docker_context: ./modules/invoissential-web
