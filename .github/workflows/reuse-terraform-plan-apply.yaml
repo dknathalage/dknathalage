@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.6.0
+          terraform_version: 1.10.0
           terraform_wrapper: false
       - uses: google-github-actions/auth@v2
         with:
@@ -73,7 +73,7 @@ jobs:
           access_token_lifetime: 600s
       - uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.6.0
+          terraform_version: 1.10.0
           terraform_wrapper: false
       - uses: actions/download-artifact@v4
         with:
