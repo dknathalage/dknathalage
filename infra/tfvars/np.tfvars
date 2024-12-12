@@ -1,2 +1,1 @@
 environment = "np"
-project     = "dknathalage"
