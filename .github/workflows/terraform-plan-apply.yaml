@@ -59,6 +59,7 @@ jobs:
 
   apply:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     needs: plan
     steps:
       - uses: actions/checkout@v4
