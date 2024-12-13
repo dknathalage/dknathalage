@@ -12,9 +12,3 @@ resource "google_project" "my_project" {
   project_id          = each.value.project_id
   auto_create_network = false
 }
-
-import {
-  for_each = var.project_map
-  id       = "dknathalage"
-  to       = google_project.my_project[each.key]
-}
