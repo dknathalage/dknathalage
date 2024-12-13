@@ -21,5 +21,5 @@ resource "google_storage_bucket_iam_member" "bucket_reader" {
   count  = var.bucket != null ? 1 : 0
   bucket = google_storage_bucket.bucket[0].name
   role   = "roles/storage.objectAdmin"
-  member = "serviceAccount:${google_service_account.cloud_run_sa.email}"
+  member = "serviceAccount:${google_service_account.service_account.email}"
 }
