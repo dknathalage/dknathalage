@@ -4,7 +4,7 @@ variable "sa_roles" {
 }
 
 resource "google_service_account" "service_account" {
-  account_id   = "service-${var.name}-sa-${random_id.service_account_id.hex}"
+  account_id   = "cloudrun-sa-${var.name}"
   display_name = "CloudRun Service Account for ${var.name}"
 }
 
@@ -13,8 +13,4 @@ resource "google_service_account_iam_member" "service-account-iam" {
   service_account_id = google_service_account.service_account.email
   role               = each.value
   member             = "serviceAccount:${google_service_account.service_account.email}"
-}
-
-resource "random_id" "service_account_id" {
-  byte_length = 8
 }
