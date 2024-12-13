@@ -21,6 +21,10 @@ on:
         description: "Environment"
         required: true
         type: string
+      run_apply:
+        description: "Run apply job"
+        default: true
+        type: boolean
 
 jobs:
   plan:
@@ -61,7 +65,7 @@ jobs:
   apply:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && ${{ inputs.run_apply }}
     needs: plan
     steps:
       - uses: actions/checkout@v4
