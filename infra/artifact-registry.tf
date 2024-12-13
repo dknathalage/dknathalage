@@ -40,3 +40,9 @@ resource "google_artifact_registry_repository" "docker-artifacts" {
     immutable_tags = false
   }
 }
+
+import {
+  for_each = var.artifact_registries
+  id       = each.key
+  to       = google_artifact_registry_repository.docker-artifacts[each.key]
+}
