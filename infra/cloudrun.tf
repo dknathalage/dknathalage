@@ -6,4 +6,10 @@ module "test" {
   bucket = {
     location = "australia-southeast1"
   }
+
+  sa_roles = [
+    "roles/run.invoker",
+    "roles/storage.objectViewer",
+    "storage.objects.list"
+  ]
 }
