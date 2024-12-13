@@ -7,7 +7,7 @@ artifact_registries = {
   }
 }
 
-main_project = {
+project_map = {
   dknathalage = {
     project_id = "dknathalage"
   }
