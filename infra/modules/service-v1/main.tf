@@ -31,7 +31,7 @@ resource "google_cloud_run_v2_service" "service" {
         for_each = var.bucket != null ? [1] : []
         content {
           mount_path = "/mnt/data"
-          name       = google_storage_bucket.bucket.name
+          name       = google_storage_bucket.bucket[0].name
         }
       }
     }
@@ -39,9 +39,9 @@ resource "google_cloud_run_v2_service" "service" {
     dynamic "volumes" {
       for_each = var.bucket != null ? [1] : []
       content {
-        name = google_storage_bucket.bucket.name
+        name = google_storage_bucket.bucket[0].name
         gcs {
-          bucket    = google_storage_bucket.bucket.name
+          bucket    = google_storage_bucket.bucket[0].name
           read_only = false
         }
       }

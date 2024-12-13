@@ -8,7 +8,7 @@ variable "bucket" {
 resource "google_storage_bucket" "bucket" {
   count = var.bucket != null ? 1 : 0
 
-  name     = "service-${var.name}-bucket-${random_id.bucket_id.hex}"
+  name     = "service-${var.name}-bucket-${random_id.bucket_id[0].hex}"
   location = var.bucket.location
 }
 
