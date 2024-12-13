@@ -12,7 +12,7 @@ resource "google_service_account_iam_member" "service-account-iam" {
   for_each           = { for role in var.sa_roles : role => role }
   service_account_id = google_service_account.service_account.email
   role               = each.value
-  member             = "serviceAccount:${google_cloud_run_service.service.service_account_email}"
+  member             = "serviceAccount:${google_service_account.service_account.email}"
 }
 
 resource "random_id" "service_account_id" {

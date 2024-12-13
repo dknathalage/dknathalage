@@ -23,6 +23,7 @@ resource "google_cloud_run_v2_service" "service" {
 
   template {
     execution_environment = "EXECUTION_ENVIRONMENT_GEN2"
+    service_account       = google_service_account.service_account.email
 
     containers {
       image = var.container_image
