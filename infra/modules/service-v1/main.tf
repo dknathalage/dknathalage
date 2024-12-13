@@ -27,9 +27,6 @@ resource "google_cloud_run_v2_service" "service" {
     service_account       = google_service_account.service_account.email
 
     containers {
-      ports {
-        container_port = 1234
-      }
       image = var.container_image
 
       dynamic "volume_mounts" {
