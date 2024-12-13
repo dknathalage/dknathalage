@@ -17,9 +17,10 @@ variable "container_image" {
 }
 
 resource "google_cloud_run_v2_service" "service" {
-  name     = var.name
-  location = var.location
-  ingress  = var.ingress
+  name                = var.name
+  location            = var.location
+  ingress             = var.ingress
+  deletion_protection = false
 
   template {
     execution_environment = "EXECUTION_ENVIRONMENT_GEN2"
