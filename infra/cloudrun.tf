@@ -7,6 +7,8 @@ module "test" {
     location = "australia-southeast1"
   }
 
+  project = var.project
+
   sa_roles = [
     "roles/run.invoker",
     "roles/storage.objectViewer",

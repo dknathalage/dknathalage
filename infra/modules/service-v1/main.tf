@@ -16,6 +16,10 @@ variable "container_image" {
   type = string
 }
 
+variable "project" {
+  type = string
+}
+
 resource "google_cloud_run_v2_service" "service" {
   name                = var.name
   location            = var.location
@@ -24,7 +28,7 @@ resource "google_cloud_run_v2_service" "service" {
 
   template {
     execution_environment = "EXECUTION_ENVIRONMENT_GEN2"
-    service_account       = google_service_account.service_account.email
+    service_account       = "projects/${var.project}/serviceAccounts/${google_service_account.service_account.email}"
 
     containers {
       image = var.container_image
