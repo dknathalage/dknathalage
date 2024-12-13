@@ -6,9 +6,6 @@ on:
       - infra/**
       - .github/workflows/terraform.yaml
       - .github/workflows/terraform-plan-apply.yaml
-  release:
-    types:
-      - published
 
 permissions:
   contents: read
