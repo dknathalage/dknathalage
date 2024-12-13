@@ -1,8 +1,8 @@
 module "test" {
   source = "./modules/service-v1"
 
-  name            = "test"
-  container_image = "australia-southeast1-docker.pkg.dev/dknathalage/dknathalage/invoissential/web"
+  name            = "test-${var.environment}"
+  container_image = "gcr.io/cloudrun/hello"
   bucket = {
     location = "australia-southeast1"
   }
