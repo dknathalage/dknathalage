@@ -6,3 +6,9 @@ artifact_registries = {
     repository_id = "dknathalage"
   }
 }
+
+main_project = {
+  dknathalage = {
+    project_id = "dknathalage"
+  }
+}
