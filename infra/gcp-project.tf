@@ -7,9 +7,9 @@ variable "project_map" {
 }
 
 resource "google_project" "my_project" {
-  for_each   = var.project_map
-  name       = each.key
-  project_id = each.value.project_id
+  for_each            = var.project_map
+  name                = each.key
+  project_id          = each.value.project_id
   auto_create_network = false
 }
 
