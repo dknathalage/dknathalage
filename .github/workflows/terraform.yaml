@@ -16,23 +16,7 @@ permissions:
   id-token: write
 
 jobs:
-  plan:
-    strategy:
-      matrix:
-        env:
-          - dev
-          - np
-          - prod
-    uses: ./.github/workflows/reuse-terraform-plan-apply.yaml
-    with:
-      workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
-      ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
-      tfvars: ${{ matrix.env }}.tfvars
-      environment: ${{ matrix.env }}
-      folder: infra
-      run_apply: false
   dev-tf:
-    needs: plan
     uses: ./.github/workflows/reuse-terraform-plan-apply.yaml
     with:
       workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
