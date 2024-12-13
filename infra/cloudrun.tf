@@ -10,8 +10,6 @@ module "test" {
   project = var.project
 
   sa_roles = [
-    "roles/run.invoker",
     "roles/storage.objectViewer",
-    "storage.objects.list"
   ]
 }
