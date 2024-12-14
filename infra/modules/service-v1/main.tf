@@ -28,6 +28,7 @@ variable "invokers" {
 resource "google_cloud_run_v2_service" "service" {
   name                = var.name
   location            = var.location
+  project             = var.project
   ingress             = var.ingress
   deletion_protection = false
 
