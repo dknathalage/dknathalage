@@ -60,7 +60,7 @@ resource "google_cloud_run_v2_service" "service" {
   }
 }
 
-resource "google_cloud_run_service_iam_member" "invokers" {
+resource "google_cloud_run_v2_service_iam_member" "invokers" {
   for_each = { for i, value in var.invokers : i => value }
   service  = google_cloud_run_v2_service.service.name
   location = google_cloud_run_v2_service.service.location
