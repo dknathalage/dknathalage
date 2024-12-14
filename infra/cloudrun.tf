@@ -12,4 +12,8 @@ module "test" {
   sa_roles = [
     "roles/storage.objectViewer",
   ]
+
+  invokers = [
+    "allUsers",
+  ]
 }
