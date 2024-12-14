@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - .github/workflows/cicd.yaml
+      - .github/workflows/reuse-docker-build-push.yaml
       - modules/**
   workflow_dispatch:
 
