@@ -1,8 +1,8 @@
 module "test" {
   source = "./modules/service-v1"
 
-  name            = "test-${var.environment}"
-  container_image = "us-docker.pkg.dev/cloudrun/container/hello"
+  name            = "invoissential-web-${var.environment}"
+  container_image = "${google_artifact_registry_repository.docker-artifacts.id}/invoissential/web"
   bucket = {
     location = "australia-southeast1"
   }
