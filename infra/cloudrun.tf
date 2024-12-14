@@ -2,7 +2,7 @@ module "test" {
   source = "./modules/service-v1"
 
   name            = "invoissential-web-${var.environment}"
-  container_image = "${google_artifact_registry_repository.docker-artifacts.id}/invoissential/web"
+  container_image = "australia-southeast1-docker.pkg.dev/dknathalage/dknathalage/invoissential/web"
   bucket = {
     location = "australia-southeast1"
   }
