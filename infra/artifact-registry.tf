@@ -40,7 +40,7 @@ resource "google_artifact_registry_repository" "docker-artifacts" {
     id     = "keep-last"
     action = "KEEP"
     most_recent_versions {
-      keep_count = 1
+      keep_count = 5
     }
   }
 
