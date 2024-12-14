@@ -12,7 +12,15 @@ variable "ingress" {
   default = "INGRESS_TRAFFIC_ALL"
 }
 
-variable "container_image" {
+variable "artifact_registry" {
+  type = string
+}
+
+variable "image_name" {
+  type = string
+}
+
+variable "region" {
   type = string
 }
 
@@ -37,25 +45,19 @@ resource "google_cloud_run_v2_service" "service" {
     service_account       = google_service_account.service_account.email
 
     containers {
-      image = var.container_image
+      image = "${var.region}-docker.pkg.dev/${var.project}/${var.artifact_registry}/${var.image_name}"
 
-      dynamic "volume_mounts" {
-        for_each = var.bucket != null ? [1] : []
-        content {
-          mount_path = "/mnt/data"
-          name       = google_storage_bucket.bucket[0].name
-        }
+      volume_mounts {
+        mount_path = "/mnt/data"
+        name       = google_storage_bucket.bucket.name
       }
     }
 
-    dynamic "volumes" {
-      for_each = var.bucket != null ? [1] : []
-      content {
-        name = google_storage_bucket.bucket[0].name
-        gcs {
-          bucket    = google_storage_bucket.bucket[0].name
-          read_only = false
-        }
+    volumes {
+      name = google_storage_bucket.bucket.name
+      gcs {
+        bucket    = google_storage_bucket.bucket.name
+        read_only = false
       }
     }
   }
