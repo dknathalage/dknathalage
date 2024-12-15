@@ -26,6 +26,7 @@ jobs:
   pre-plan:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - run: |
           echo "git_sha=${{ github.sha }}" >> base.tfvars
         shell: bash
@@ -37,6 +38,7 @@ jobs:
 
   plan:
     runs-on: ubuntu-latest
+    needs: pre-plan
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v2
@@ -78,7 +80,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     if: github.ref == 'refs/heads/main'
-    needs: plan
+    needs:
+      - plan
+      - pre-plan
     steps:
       - uses: actions/checkout@v4
       - uses: google-github-actions/auth@v2
