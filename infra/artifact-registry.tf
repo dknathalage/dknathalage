@@ -48,3 +48,12 @@ resource "google_artifact_registry_repository" "docker-artifacts" {
     immutable_tags = false
   }
 }
+
+
+resource "google_artifact_registry_repository_iam_member" "member" {
+  project    = google_artifact_registry_repository.docker-artifacts.project
+  location   = google_artifact_registry_repository.docker-artifacts.location
+  repository = google_artifact_registry_repository.docker-artifacts.repository_id
+  role       = "roles/artifactregistry.reader"
+  member     = "serviceAccount:${test.service_account.email}"
+}
