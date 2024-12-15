@@ -8,8 +8,10 @@ module "test" {
   region            = "australia-southeast1"
   project           = var.project
 
-  sa_roles = [
+  roles = [
     "roles/storage.objectViewer",
+    "roles/artifactregistry.reader",
+    "roles/artifactregistry.writer",
   ]
 
   invokers = [
