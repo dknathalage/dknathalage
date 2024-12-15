@@ -54,12 +54,13 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: base-tfvars
+          path: ${{ inputs.folder }}/tfvars
       - run: |
           rm -rf .terraform
           terraform init -backend-config="prefix=terraform/state/${{ inputs.environment }}" 
           terraform plan -var-file=./tfvars/${{ inputs.tfvars }} \
                          -var-file=./tfvars/common.tfvars \
-                         -var-file=base.tfvars \
+                         -var-file=./tfvars/base.tfvars \
                          -out=tfplan.plan
           terraform show -no-color -json tfplan.plan > tfplan.json
         working-directory: ${{ inputs.folder }}
