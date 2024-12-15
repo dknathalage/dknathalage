@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - .github/workflows/cicd.yaml
-      - .github/workflows/terraform.yaml
       - .github/workflows/reuse-docker-build-push.yaml
       - .github/workflows/reuse-terraform-plan-apply.yaml
       - modules/**
@@ -36,6 +35,32 @@ jobs:
       image_name: australia-southeast1-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.images.name }}:${{ github.sha }}
       docker_context: ${{ matrix.images.context }}
 
-  terraform-deploy:
+  dev-tf:
     needs: docker-builds
-    uses: ./.github/workflows/terraform.yaml
+    uses: ./.github/workflows/reuse-terraform-plan-apply.yaml
+    with:
+      workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
+      ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+      tfvars: dev.tfvars
+      environment: dev
+      folder: infra
+
+  np-tf:
+    needs: dev-tf
+    uses: ./.github/workflows/reuse-terraform-plan-apply.yaml
+    with:
+      workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
+      ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+      tfvars: np.tfvars
+      environment: np
+      folder: infra
+
+  prod-tf:
+    needs: np-tf
+    uses: ./.github/workflows/reuse-terraform-plan-apply.yaml
+    with:
+      workload_idp: projects/719430876063/locations/global/workloadIdentityPools/id-pool/providers/github-actions
+      ci_sa: gha-ci-sa@dknathalage.iam.gserviceaccount.com
+      tfvars: prod.tfvars
+      environment: prod
+      folder: infra
