@@ -9,7 +9,6 @@ module "test" {
   project           = var.project
 
   roles = [
-    "roles/storage.objectViewer",
     "roles/artifactregistry.reader",
     "roles/artifactregistry.writer",
   ]
