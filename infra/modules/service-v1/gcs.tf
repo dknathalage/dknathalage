@@ -1,6 +1,6 @@
 resource "google_storage_bucket" "bucket" {
   name     = "service-${var.name}-bucket-${random_id.bucket_id.hex}"
-  location = var.bucket.location
+  location = var.location
 }
 
 resource "random_id" "bucket_id" {
