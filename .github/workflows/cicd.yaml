@@ -4,8 +4,11 @@ on:
   push:
     paths:
       - .github/workflows/cicd.yaml
+      - .github/workflows/terraform.yaml
       - .github/workflows/reuse-docker-build-push.yaml
+      - .github/workflows/reuse-terraform-plan-apply.yaml
       - modules/**
+      - infra/**
   workflow_dispatch:
 
 permissions:
@@ -32,3 +35,7 @@ jobs:
       dockerfile: ${{ matrix.images.dockerfile }}
       image_name: australia-southeast1-docker.pkg.dev/dknathalage/dknathalage/${{ matrix.images.name }}:${{ github.sha }}
       docker_context: ${{ matrix.images.context }}
+
+  terraform-deploy:
+    needs: docker-builds
+    uses: ./.github/workflows/terraform.yaml

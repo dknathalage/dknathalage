@@ -23,6 +23,18 @@ on:
         type: string
 
 jobs:
+  pre-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "git_sha=${{ github.sha }}" >> base.tfvars
+        shell: bash
+        working-directory: ${{ inputs.folder }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: base-tfvars
+          path: ${{ inputs.folder }}/base.tfvars
+
   plan:
     runs-on: ubuntu-latest
     steps:
@@ -37,11 +49,15 @@ jobs:
           workload_identity_provider: ${{ inputs.workload_idp }}
           service_account: ${{ inputs.ci_sa }}
           access_token_lifetime: 600s
+      - uses: actions/download-artifact@v4
+        with:
+          name: base-tfvars
       - run: |
           rm -rf .terraform
           terraform init -backend-config="prefix=terraform/state/${{ inputs.environment }}" 
           terraform plan -var-file=./tfvars/${{ inputs.tfvars }} \
                          -var-file=./tfvars/common.tfvars \
+                         -var-file=base.tfvars \
                          -out=tfplan.plan
           terraform show -no-color -json tfplan.plan > tfplan.json
         working-directory: ${{ inputs.folder }}
