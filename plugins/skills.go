@@ -12,8 +12,12 @@ func (s *SkillSection) Generate() (string, error) {
 	template := `
 <table>
 	<tr>
+		<th>Programming Languages</th>
+		<th>Tools</th>
+		<th>Cloud Providers</th>
+	</tr>
+	<tr>
 		<td>
-			<h3>Programming Languages</h3>
 			<ul>
 				<li>Go</li>
 				<li>Python</li>
@@ -22,7 +26,6 @@ func (s *SkillSection) Generate() (string, error) {
 			</ul>
 		</td>
 		<td>
-			<h3>DevOps Tools</h3>
 			<ul>
 				<li>Docker</li>
 				<li>Kubernetes</li>
@@ -31,7 +34,6 @@ func (s *SkillSection) Generate() (string, error) {
 			</ul>
 		</td>
 		<td>
-			<h3>Cloud Platforms</h3>
 			<ul>
 				<li>AWS</li>
 				<li>GCP</li>
