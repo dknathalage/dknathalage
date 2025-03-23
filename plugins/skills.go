@@ -10,21 +10,35 @@ func (s *SkillSection) Name() string {
 
 func (s *SkillSection) Generate() (string, error) {
 	template := `
-### Programming Languages
-- Go
-- Python
-- JavaScript
-- Swift
-
-### DevOps Tools
-- Docker
-- Kubernetes
-- Terraform
-- GitHub Actions
-
-### Cloud Platforms
-- AWS
-- GCP
+<table>
+	<tr>
+		<td>
+			<h3>Programming Languages</h3>
+			<ul>
+				<li>Go</li>
+				<li>Python</li>
+				<li>JavaScript</li>
+				<li>Swift</li>
+			</ul>
+		</td>
+		<td>
+			<h3>DevOps Tools</h3>
+			<ul>
+				<li>Docker</li>
+				<li>Kubernetes</li>
+				<li>Terraform</li>
+				<li>GitHub Actions</li>
+			</ul>
+		</td>
+		<td>
+			<h3>Cloud Platforms</h3>
+			<ul>
+				<li>AWS</li>
+				<li>GCP</li>
+			</ul>
+		</td>
+	</tr>
+</table>
 `
 
 	return template, nil
