@@ -2,7 +2,7 @@
 
 ## Profile 👔
 
-Software engineer passionate about distributed systems and Go programming.
+Software engineer passionate about distributed systems, DevOps and Go programming.
 
 ## Projects 🚀
 
