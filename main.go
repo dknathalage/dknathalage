@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/dknathalage/dknathalage/internal"
+	_ "github.com/dknathalage/dknathalage/plugins" // Register plugins
 )
 
 func main() {

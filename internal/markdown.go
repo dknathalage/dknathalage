@@ -3,6 +3,8 @@ package internal
 import (
 	"fmt"
 	"os"
+	"sort"
+	"strings"
 )
 
 func SaveMarkdown(config *Config, markdown string) error {
@@ -43,5 +45,24 @@ func CheckFileSize(config *Config) error {
 }
 
 func GenerateMarkdown() (string, error) {
-	return "# Don Athalage", nil
+	sections := GetRegisteredSections()
+
+	sort.Slice(sections, func(i, j int) bool {
+		return sections[i].Order() < sections[j].Order()
+	})
+
+	var content strings.Builder
+	content.WriteString("# Don Athalage\n\n")
+
+	for _, section := range sections {
+		sectionContent, err := section.Generate()
+		if err != nil {
+			return "", fmt.Errorf("error generating section '%s': %w", section.Name(), err)
+		}
+
+		content.WriteString("## " + section.Name() + "\n\n")
+		content.WriteString(sectionContent + "\n\n")
+	}
+
+	return content.String(), nil
 }
