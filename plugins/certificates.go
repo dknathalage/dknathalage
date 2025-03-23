@@ -5,7 +5,7 @@ import "github.com/dknathalage/dknathalage/internal"
 type CertificateSection struct{}
 
 func (s *CertificateSection) Name() string {
-	return "Certificates"
+	return "Certificates 📋"
 }
 
 func (s *CertificateSection) Generate() (string, error) {

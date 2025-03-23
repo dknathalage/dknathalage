@@ -7,7 +7,7 @@ import (
 type ProfileSection struct{}
 
 func (s *ProfileSection) Name() string {
-	return "Profile"
+	return "Profile 👔"
 }
 
 func (s *ProfileSection) Generate() (string, error) {

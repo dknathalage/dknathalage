@@ -7,7 +7,7 @@ import (
 type ProjectsSection struct{}
 
 func (s *ProjectsSection) Name() string {
-	return "Projects"
+	return "Projects 🚀"
 }
 
 func (s *ProjectsSection) Generate() (string, error) {

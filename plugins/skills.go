@@ -5,7 +5,7 @@ import "github.com/dknathalage/dknathalage/internal"
 type SkillSection struct{}
 
 func (s *SkillSection) Name() string {
-	return "Skills"
+	return "Skills 🛠️"
 }
 
 func (s *SkillSection) Generate() (string, error) {
