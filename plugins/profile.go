@@ -11,7 +11,7 @@ func (s *ProfileSection) Name() string {
 }
 
 func (s *ProfileSection) Generate() (string, error) {
-	return "Software engineer passionate about distributed systems and Go programming.", nil
+	return "Software engineer passionate about distributed systems, DevOps and Go programming.", nil
 }
 
 func (s *ProfileSection) Order() int {
