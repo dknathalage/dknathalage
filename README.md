@@ -32,8 +32,6 @@ Software engineer passionate about distributed systems and Go programming.
 				<li>GitHub Actions</li>
 			</ul>
 		</td>
-	</tr>
-	<tr>
 		<td>
 			<h3>Cloud Platforms</h3>
 			<ul>
