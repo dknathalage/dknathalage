@@ -10,10 +10,10 @@ func (s *CertificateSection) Name() string {
 
 func (s *CertificateSection) Generate() (string, error) {
 	template := `
-### AWS Certified Solutions Architect - Associate
-### AWS Certified Developer - Associate
-### AWS Certified DevOps - Professional
-### GCP Associate Cloud Engineer
+- AWS Certified Solutions Architect - Associate
+- AWS Certified Developer - Associate
+- AWS Certified DevOps - Professional
+- GCP Associate Cloud Engineer
 	`
 
 	return template, nil

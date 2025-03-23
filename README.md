@@ -32,9 +32,9 @@ Software engineer passionate about distributed systems and Go programming.
 ## Certificates
 
 
-### AWS Certified Solutions Architect - Associate
-### AWS Certified Developer - Associate
-### AWS Certified DevOps - Professional
-### GCP Associate Cloud Engineer
+- AWS Certified Solutions Architect - Associate
+- AWS Certified Developer - Associate
+- AWS Certified DevOps - Professional
+- GCP Associate Cloud Engineer
 	
 
