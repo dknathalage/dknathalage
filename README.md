@@ -1,15 +1,15 @@
 # Don Athalage
 
-## Profile
+## Profile 👔
 
 Software engineer passionate about distributed systems and Go programming.
 
-## Projects
+## Projects 🚀
 
 - **This Repo**: Self-updating GitHub profile
 - **Other Projects**: Coming soon!
 
-## Skills
+## Skills 🛠️
 
 
 <table>
@@ -45,7 +45,7 @@ Software engineer passionate about distributed systems and Go programming.
 </table>
 
 
-## Certificates
+## Certificates 📋
 
 
 - AWS Certified Solutions Architect - Associate
